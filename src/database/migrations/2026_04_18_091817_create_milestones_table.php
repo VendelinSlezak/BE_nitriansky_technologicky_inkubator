@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('milestones', function (Blueprint $table) {
             $table->id();
-            $table->string('title, 100');
+            $table->string('title', 100);
             $table->mediumText('description');
             $table->mediumText('comment');
             $table->date('date_of_reasisation');

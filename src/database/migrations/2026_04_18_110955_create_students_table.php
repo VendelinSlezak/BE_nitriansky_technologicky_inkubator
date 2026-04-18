@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('students', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('university, 90');
+            $table->string('university', 90);
             $table->boolean('is_accepted_by_admin');
             $table->boolean('is_invited_to_the_team');
             $table->boolean('is_a_teamleader');

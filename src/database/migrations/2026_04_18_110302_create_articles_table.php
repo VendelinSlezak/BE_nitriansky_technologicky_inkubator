@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('title, 80');
+            $table->string('title', 80);
             $table->mediumText('perex');
             $table->longText('text');
             $table->datetime('published_at');

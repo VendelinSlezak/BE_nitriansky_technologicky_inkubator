@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
-            $table->string('status, 100');
+            $table->string('status', 100);
             $table->timestamps();
         });
     }

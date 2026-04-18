@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('mentors', function (Blueprint $table) {
             $table->id();
-            $table->string('description, 100');
-            $table->string('expertise, 100');
+            $table->string('description', 100);
+            $table->string('expertise', 100);
             $table->mediumText('experience');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
