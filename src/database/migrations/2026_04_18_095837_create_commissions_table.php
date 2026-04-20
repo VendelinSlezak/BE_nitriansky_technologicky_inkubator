@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('commissions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
-            $table->string('status', 100);
-            $table->timestamps();
         });
     }
 

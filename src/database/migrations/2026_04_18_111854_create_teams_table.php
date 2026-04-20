@@ -14,10 +14,9 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name', 80);
-            $table->unique(['student_id', 'challenge_id']);
-            $table->string('status', 100);
-            $table->dateTime('active_at');
-            $table->dateTime('expires_at');
+            $table->dateTime('active_from');
+            $table->dateTime('active_to');
+            $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
