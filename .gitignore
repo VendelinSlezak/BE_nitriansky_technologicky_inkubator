@@ -6,7 +6,7 @@
 .phpactor.json
 .phpunit.result.cache
 /src/.fleet
-/src/.idea
+.idea
 /src/.nova
 /src/.phpunit.cache
 /src/.vscode
