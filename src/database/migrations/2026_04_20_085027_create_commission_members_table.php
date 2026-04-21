@@ -12,6 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('commission_members', function (Blueprint $table) {
+            $table->foreignId('commission_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->unique(['commission_id', 'user_id']);
             $table->string('status', 100);
             $table->timestamps();

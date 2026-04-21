@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->string('first_name', 50);
+            $table->string('last_name', 50);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('university', 90);
             $table->boolean('is_accepted_by_admin');
