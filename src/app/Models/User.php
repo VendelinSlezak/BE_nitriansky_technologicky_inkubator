@@ -3,15 +3,16 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Laravel\Sanctum\HasApiTokens;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
-{
-    /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+class User extends Authenticatable {
+    use HasFactory, Notifiable, HasApiTokens;
+    protected $table = 'users';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -19,9 +20,12 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
         'email',
         'password',
+        'role',
+        'email_verified_at',
+        'link_for_password_reset',
+        'expiration_of_link_for_password_reset',
     ];
 
     /**
@@ -30,20 +34,25 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $hidden = [
+        'email',
         'password',
-        'remember_token',
+        'role',
+        'email_verified_at',
+        'expiration_of_link_for_password_reset',
     ];
 
     /**
      * Get the attributes that should be cast.
      *
-     * @return array<string, string>
+     * @var list<string, string>
      */
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+    protected $casts =  [
+        'password' => 'hashed',
+        'email_verified_at' => 'datetime',
+        'expiration_of_link_for_password_reset' => 'datetime',
+    ];
+
+    public function isStudent(): bool {
+        return $this->role === 'student';
     }
 }

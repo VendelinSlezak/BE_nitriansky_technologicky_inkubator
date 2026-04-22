@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email')->unique();
             $table->longText('password');
-            $table->string('status', 50);
+            $table->string('role', 50);
             $table->string('email_verified_at')->nullable();
             $table->string('link_for_password_reset')->nullable();
             $table->dateTime('expiration_of_link_for_password_reset')->nullable();

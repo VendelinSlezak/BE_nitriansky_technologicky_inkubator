@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'email' => 'nti@bleskos.com',
                 'password' => Hash::make('aaa'),
-                'status' => 'student',
+                'role' => 'student',
                 'email_verified_at' => $now,
                 'link_for_password_reset' => null,
                 'expiration_of_link_for_password_reset' => null,
