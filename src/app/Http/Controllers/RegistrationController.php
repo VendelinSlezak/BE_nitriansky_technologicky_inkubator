@@ -33,6 +33,7 @@ class RegistrationController extends Controller
         try {
             return DB::transaction(function () use ($validated, $request, $disk, &$filePath) {
                 $user = User::create([
+                    'name' => $validated['first_name'] . ' ' . $validated['last_name'],
                     'email' => $validated['email'],
                     'password' => $validated['password'],
                     'role' => 'student',
@@ -57,8 +58,6 @@ class RegistrationController extends Controller
 
                 $student = Student::create([
                     'user_id' => $user->id,
-                    'first_name' => $validated['first_name'],
-                    'last_name' => $validated['last_name'],
                     'university' => $validated['university'],
                     'curriculum_vitae_id' => $newCV->id,
                     'is_accepted_by_admin' => false,

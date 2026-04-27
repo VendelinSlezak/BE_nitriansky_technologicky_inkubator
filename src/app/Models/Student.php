@@ -21,8 +21,6 @@ class Student extends Authenticatable {
      */
     protected $fillable = [
         'user_id',
-        'first_name',
-        'last_name',
         'university',
         'is_accepted_by_admin',
         'is_invited_to_the_team',
