@@ -35,4 +35,13 @@ return [
         ],
     ],
 
+    'email' => [
+        'admin' => env('ADMIN_EMAIL'),
+    ],
+
+    'recaptcha' => [
+        'secret' => env('RECAPTCHA_SECRET_KEY'),
+        'min_score' => 0.5,
+    ],
+
 ];

@@ -20,6 +20,8 @@ return new class extends Migration
             $table->boolean('is_accepted_by_admin');
             $table->boolean('is_invited_to_the_team');
             $table->boolean('is_a_teamleader');
+            $table->foreignId('curriculum_vitae_id')->constrained('attachments')->onDelete('cascade');    
+            $table->softDeletes();
             $table->timestamps();
         });
     }
