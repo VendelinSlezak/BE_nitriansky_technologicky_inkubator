@@ -19,6 +19,46 @@ class UserSeeder extends Seeder
             [
                 'email' => 'nti@bleskos.com',
                 'password' => Hash::make('aaa'),
+                'role' => 'admin',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'email' => 'nti1@bleskos.com',
+                'password' => Hash::make('bbb'),
+                'role' => 'student',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'email' => 'nti2@bleskos.com',
+                'password' => Hash::make('ccc'),
+                'role' => 'student',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'email' => 'nti3@bleskos.com',
+                'password' => Hash::make('ddd'),
+                'role' => 'student',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'email' => 'nti4@bleskos.com',
+                'password' => Hash::make('eee'),
                 'role' => 'student',
                 'email_verified_at' => $now,
                 'link_for_password_reset' => null,
