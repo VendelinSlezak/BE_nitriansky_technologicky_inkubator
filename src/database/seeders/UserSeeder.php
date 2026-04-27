@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         $now = now();
         DB::table('users')->insert([
             [
+                'name' => 'Admin',
                 'email' => 'nti@bleskos.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'admin',
@@ -27,6 +28,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'name' => 'Student1',
                 'email' => 'nti1@bleskos.com',
                 'password' => Hash::make('bbb'),
                 'role' => 'student',
@@ -37,6 +39,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'name' => 'Student2',
                 'email' => 'nti2@bleskos.com',
                 'password' => Hash::make('ccc'),
                 'role' => 'student',
@@ -47,6 +50,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'name' => 'Student3',
                 'email' => 'nti3@bleskos.com',
                 'password' => Hash::make('ddd'),
                 'role' => 'student',
@@ -57,6 +61,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'name' => 'Student4',
                 'email' => 'nti4@bleskos.com',
                 'password' => Hash::make('eee'),
                 'role' => 'student',

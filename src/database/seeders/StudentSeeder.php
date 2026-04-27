@@ -20,6 +20,7 @@ class StudentSeeder extends Seeder
                 'is_accepted_by_admin' => true,
                 'is_invited_to_the_team' => true,
                 'is_a_teamleader' => true,
+                'curriculum_vitae_id' => 1
             ],
             [
                 'user_id' => 2,
@@ -27,6 +28,7 @@ class StudentSeeder extends Seeder
                 'is_accepted_by_admin' => true,
                 'is_invited_to_the_team' => false,
                 'is_a_teamleader' => true,
+                'curriculum_vitae_id' => 1
             ],
             [
                 'user_id' => 3,
@@ -34,6 +36,7 @@ class StudentSeeder extends Seeder
                 'is_accepted_by_admin' => false,
                 'is_invited_to_the_team' => true,
                 'is_a_teamleader' => true,
+                'curriculum_vitae_id' => 1
             ],
             [
                 'user_id' => 4,
@@ -41,6 +44,7 @@ class StudentSeeder extends Seeder
                 'is_accepted_by_admin' => true,
                 'is_invited_to_the_team' => true,
                 'is_a_teamleader' => false,
+                'curriculum_vitae_id' => 1
             ],
             [
                 'user_id' => 5,
@@ -48,6 +52,7 @@ class StudentSeeder extends Seeder
                 'is_accepted_by_admin' => true,
                 'is_invited_to_the_team' => true,
                 'is_a_teamleader' => true,
+                'curriculum_vitae_id' => 1
             ]
         ]);
     }
