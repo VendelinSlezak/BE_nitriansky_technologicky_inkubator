@@ -18,6 +18,7 @@ return new class extends Migration
             $table->longText('text');
             $table->datetime('published_at');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

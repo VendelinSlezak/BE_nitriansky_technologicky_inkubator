@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('expertise', 100);
             $table->mediumText('experience');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
