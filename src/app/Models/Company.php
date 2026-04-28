@@ -32,6 +32,18 @@ class Company extends Model
         'logo_id'
     ];
 
+    protected $hidden = [
+        'user_id',
+        'company_address',
+        'ico',
+        'dic',
+        'name_of_contact_person',
+        'is_approved_by_admin',
+        'show_logo_image',
+        'created_at',
+        'updated_at',
+        'deleted_at',];
+
     public function user()
     {
         return $this->belongsTo(User::class);

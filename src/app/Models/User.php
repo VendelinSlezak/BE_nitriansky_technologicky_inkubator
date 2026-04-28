@@ -3,11 +3,13 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Laravel\Sanctum\HasApiTokens;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable {
     use HasFactory, Notifiable, HasApiTokens;
@@ -53,6 +55,21 @@ class User extends Authenticatable {
         'expiration_of_link_for_password_reset' => 'datetime',
     ];
 
+    public function articles(): HasMany {
+        return $this->hasMany(Article::class);
+    }
+
+    public function mentors(): HasOne{
+        return $this->hasOne(Mentor::class);
+    }
+
+    public function students(): HasOne {
+        return $this->hasOne(Student::class);
+    }
+
+    public function companies(): HasOne {
+        return $this->hasOne(Company::class);
+    }
     public function isStudent(): bool {
         return $this->role === 'student';
     }
