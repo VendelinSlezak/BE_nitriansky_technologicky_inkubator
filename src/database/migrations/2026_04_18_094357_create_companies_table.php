@@ -16,13 +16,15 @@ return new class extends Migration
             $table->string('company_name', 80);
             $table->string('company_address', 150);
             $table->mediumText('description');
-            $table->longText('organization_identification_number');
-            $table->longText('tax_identification_number');
+            $table->string('ico', 8);
+            $table->string('dic', 10);
             $table->mediumText('category');
-            $table->string('name_of_contact_person',60);
+            $table->string('name_of_contact_person', 60);
             $table->boolean('is_approved_by_admin');
             $table->boolean('show_logo_image');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('logo_id')->constrained('attachments')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

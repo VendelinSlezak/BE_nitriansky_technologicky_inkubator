@@ -28,6 +28,11 @@ class Student extends Authenticatable {
         'curriculum_vitae_id',
     ];
 
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function curriculumVitae()
     {
         return $this->belongsTo(Attachment::class, 'curriculum_vitae_id');
