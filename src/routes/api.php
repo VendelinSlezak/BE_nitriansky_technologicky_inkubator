@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CompanyController;
+use App\Http\Controllers\MentorController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -17,3 +20,7 @@ Route::prefix('auth')->group(function () {
     });
 });
 
+Route::get('/articles', [ArticleController::class, 'index']);
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+Route::get('/all-mentors-info', [MentorController::class, 'index']);
+Route::get('/all-companies-info', [CompanyController::class, 'index']);
