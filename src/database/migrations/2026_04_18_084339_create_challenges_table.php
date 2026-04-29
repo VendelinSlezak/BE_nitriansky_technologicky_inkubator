@@ -18,7 +18,7 @@ return new class extends Migration
             $table->boolean('automatically_create_team_after_approval');
             $table->mediumText('description');
             $table->integer('proposal_file_id');
-            $table->float('budget')->nullable();
+            $table->float('reward')->nullable();
             $table->string('status', 45);
             $table->mediumText('comment_of_commission')->nullable();
             $table->mediumText('final_assessment')->nullable();
