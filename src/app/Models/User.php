@@ -70,6 +70,10 @@ class User extends Authenticatable {
     public function companies(): HasOne {
         return $this->hasOne(Company::class);
     }
+
+    public function challenges(): HasMany {
+        return $this->hasMany(Challenge::class);
+    }
     public function isStudent(): bool {
         return $this->role === 'student';
     }
