@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\MentorController;
 use Illuminate\Http\Request;
@@ -24,3 +25,5 @@ Route::get('/articles', [ArticleController::class, 'index']);
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/all-mentors-info', [MentorController::class, 'index']);
 Route::get('/all-companies-info', [CompanyController::class, 'index']);
+Route::get('/challenges/preview',[ChallengeController::class,'index']);
+Route::get('/challenges/{id}',[ChallengeController::class,'show']);
