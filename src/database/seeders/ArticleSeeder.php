@@ -24,7 +24,9 @@ class ArticleSeeder extends Seeder
 
                             Proces výberu pozostáva z dvoch kôl – formálneho posúdenia biznis plánu a následného osobného "pitchingu".',
                 'published_at' => $date,
-                'user_id' => 1
+                'user_id' => 1,
+                'image_id' => 5,
+                'image_description' => 'NTI s radosťou oznamuje otvorenie jarného kola prihlášok...'
              ],
             [
                 'title' => 'NTI víta nových partnerov z IT sektora',
@@ -35,7 +37,9 @@ class ArticleSeeder extends Seeder
 
                             Proces výberu pozostáva z dvoch kôl – formálneho posúdenia biznis plánu a následného osobného "pitchingu."',
                 'published_at' => $date,
-                'user_id' => 2
+                'user_id' => 2,
+                'image_id' => 5,
+                'image_description' => 'NTI s radosťou oznamuje otvorenie jarného kola prihlášok...'
             ],
             [
                 'title' => 'Absolvent NTI získal investíciu pre svoj startup',
@@ -46,7 +50,9 @@ class ArticleSeeder extends Seeder
 
                             Proces výberu pozostáva z dvoch kôl – formálneho posúdenia biznis plánu a následného osobného "pitchingu."',
                 'published_at' => $date,
-                'user_id' => 3
+                'user_id' => 3,
+                'image_id' => 5,
+                'image_description' => 'NTI s radosťou oznamuje otvorenie jarného kola prihlášok...'
             ],
             [
                 'title' => 'NTI rozširuje portfólio mentorov',
@@ -57,7 +63,9 @@ class ArticleSeeder extends Seeder
 
                             Proces výberu pozostáva z dvoch kôl – formálneho posúdenia biznis plánu a následného osobného "pitchingu."',
                 'published_at' => $date,
-                'user_id' => 3
+                'user_id' => 3,
+                'image_id' => 5,
+                'image_description' => 'NTI s radosťou oznamuje otvorenie jarného kola prihlášok...'
             ],
             [
                 'title' => 'Úspešný projekt od tímu CodeMasters pre firmu TechCorp',
@@ -68,7 +76,9 @@ class ArticleSeeder extends Seeder
 
                             Proces výberu pozostáva z dvoch kôl – formálneho posúdenia biznis plánu a následného osobného "pitchingu."',
                 'published_at' => $date,
-                'user_id' => 2
+                'user_id' => 2,
+                'image_id' => 5,
+                'image_description' => 'NTI s radosťou oznamuje otvorenie jarného kola prihlášok...'
             ]
         ]);
     }

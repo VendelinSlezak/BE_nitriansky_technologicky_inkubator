@@ -73,6 +73,21 @@ class AttachmentSeeder extends Seeder
                 'created_at' => $date,
                 'updated_at' => $date
             ],
+            [
+                'public_id' => 5,
+                'attachable_id' => 5,
+                'attachable_type' => 'App\Models\Article',
+                'collection' => 'attachment',
+                'visibility' => 'public',
+                'disk' => 'public',
+                'path' => 'logos/logo-ukf2.png',
+                'original_name' => 'logo-ukf2.png',
+                'stored_name' => 'logo-ukf2.png',
+                'mime_type' => 'image/png',
+                'size' => 123,
+                'created_at' => $date,
+                'updated_at' => $date
+            ],
         ]);
     }
 }
