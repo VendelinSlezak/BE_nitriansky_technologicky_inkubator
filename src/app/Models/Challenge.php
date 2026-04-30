@@ -32,7 +32,6 @@ class Challenge extends Model
         'proposal_file_id',
         'status',
         'comment_of_commission',
-        'program_a_category_id',
         'final_assessment',
         'created_at',
         'updated_at',
@@ -49,5 +48,9 @@ class Challenge extends Model
 
     public function attachments(): MorphMany {
         return $this->morphMany(Attachment::class, 'attachable');
+    }
+
+    public function program_a_categories(): BelongsTo {
+        return $this->belongsTo(ProgramACategory::class, 'program_a_category_id');
     }
 }
