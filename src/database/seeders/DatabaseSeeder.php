@@ -23,13 +23,13 @@ class DatabaseSeeder extends Seeder
             CompanyEmployeeSeeder::class,
             MentorSeeder::class,
             StudentSeeder::class,
+            ProgramACategorySeeder::class,
             ChallengeSeeder::class,
             TeamSeeder::class,
             TeamMemberSeeder::class,
             CommissionSeeder::class,
             CommissionMemberSeeder::class,
             MilestoneSeeder::class,
-            ProgramACategorySeeder::class,
         ]);
     }
 }

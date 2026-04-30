@@ -13,6 +13,7 @@ class ChallengeSeeder extends Seeder
      */
     public function run(): void
     {
+        $date = now();
         DB::table('challenges')->insert([
             [
                 'program' => 'A',
@@ -24,6 +25,10 @@ class ChallengeSeeder extends Seeder
                 'status' => 'Published',
                 'user_id' => 1,
                 'mentor_id' => 1,
+                'program_a_category_id' => 1,
+                'deleted_at' => $date,
+                'created_at' => $date,
+                'updated_at' => $date,
              ],
             [
                 'program' => 'B',
@@ -35,6 +40,10 @@ class ChallengeSeeder extends Seeder
                 'status' => 'Published',
                 'user_id' => 2,
                 'mentor_id' => 2,
+                'program_a_category_id' => null,
+                'deleted_at' => $date,
+                'created_at' => $date,
+                'updated_at' => $date,
             ],
             [
                 'program' => 'A',
@@ -46,6 +55,10 @@ class ChallengeSeeder extends Seeder
                 'status' => 'Created',
                 'user_id' => 3,
                 'mentor_id' => 2,
+                'program_a_category_id' => 2,
+                'deleted_at' => $date,
+                'created_at' => $date,
+                'updated_at' => $date,
             ],
             [
                 'program' => 'B',
@@ -57,6 +70,10 @@ class ChallengeSeeder extends Seeder
                 'status' => 'Published',
                 'user_id' => 4,
                 'mentor_id' => 3,
+                'program_a_category_id' => null,
+                'deleted_at' => $date,
+                'created_at' => $date,
+                'updated_at' => $date,
             ],
             [
                 'program' => 'B',
@@ -68,6 +85,10 @@ class ChallengeSeeder extends Seeder
                 'status' => 'Published',
                 'user_id' => 5,
                 'mentor_id' => 4,
+                'program_a_category_id' => null,
+                'deleted_at' => $date,
+                'created_at' => $date,
+                'updated_at' => $date,
             ]
         ]);
     }
