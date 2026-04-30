@@ -14,8 +14,8 @@ class ChallengeController extends Controller
      */
     public function index()
     {
-        $challenges = Challenge::all();
-        return response()->json(['vyzvy' => $challenges], Response::HTTP_OK);
+        $challenges = Challenge::with('program_a_categories')->get();
+        return ChallengeResource::collection($challenges);
     }
 
     /**
