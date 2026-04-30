@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ChallengeResource;
 use App\Models\Challenge;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -30,7 +31,9 @@ class ChallengeController extends Controller
      */
     public function show(string $id)
     {
-        $challenge = Challenge::select([
+        $challenge = Challenge::with(['attachments', 'program_a_categories'])->findOrFail($id);
+        return new ChallengeResource($challenge);
+        /*$challenge = Challenge::select([
                 'challenges.id',
                 'challenges.program',
                 'challenges.name',
