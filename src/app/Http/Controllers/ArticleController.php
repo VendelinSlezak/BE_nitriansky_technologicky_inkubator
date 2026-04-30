@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Article;
 use Illuminate\Http\Response;
+use App\Http\Resources\ArticleResource;
 
 class ArticleController extends Controller
 {
@@ -14,7 +15,7 @@ class ArticleController extends Controller
     public function index()
     {
         $articles = Article::all();
-        return response()->json(['clanky' => $articles], Response::HTTP_OK);
+        return ArticleResource::collection($articles);
     }
 
     /**
@@ -31,8 +32,8 @@ class ArticleController extends Controller
      */
     public function show(string $id)
     {
-        $article = Article::find($id);
-        return response()->json(['clanky' => $article], Response::HTTP_OK);
+        $article = Article::findOrFail($id);
+        return new ArticleResource($article);
     }
 
     /**
