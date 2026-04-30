@@ -25,7 +25,7 @@ class CompanySeeder extends Seeder
                 'is_approved_by_admin' => true,
                 'show_logo_image' => true,
                 'user_id' => 1,
-                'logo_id' => 1,
+                'logo_id' => 4,
             ],
             [
                 'company_name' => 'DataVision Analytics',
@@ -38,7 +38,7 @@ class CompanySeeder extends Seeder
                 'is_approved_by_admin' => true,
                 'show_logo_image' => true,
                 'user_id' => 2,
-                'logo_id' => 2,
+                'logo_id' => 4,
             ],
             [
                 'company_name' => 'MobileDev Studio',
@@ -51,7 +51,7 @@ class CompanySeeder extends Seeder
                 'is_approved_by_admin' => true,
                 'show_logo_image' => true,
                 'user_id' => 3,
-                'logo_id' => 3,
+                'logo_id' => 4,
             ],
             [
                 'company_name' => 'GameForge Studios',
@@ -77,7 +77,7 @@ class CompanySeeder extends Seeder
                 'is_approved_by_admin' => true,
                 'show_logo_image' => true,
                 'user_id' => 5,
-                'logo_id' => 5,
+                'logo_id' => 4,
             ],
 
         ]);

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Attachment;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class AttachmentSeeder extends Seeder
 {
@@ -13,6 +14,7 @@ class AttachmentSeeder extends Seeder
         $date = now();
         DB::table('attachments')->insert([
             [
+                'public_id' => 1,
                 'attachable_id' => 1,
                 'attachable_type' => 'App\Models\Challenge',
                 'collection' => 'attachment',
@@ -27,6 +29,7 @@ class AttachmentSeeder extends Seeder
                 'updated_at' => $date
             ],
             [
+                'public_id' => 2,
                 'attachable_id' => 2,
                 'attachable_type' => 'App\Models\Challenge',
                 'collection' => 'attachment',
@@ -41,6 +44,7 @@ class AttachmentSeeder extends Seeder
                 'updated_at' => $date
             ],
             [
+                'public_id' => 3,
                 'attachable_id' => 3,
                 'attachable_type' => 'App\Models\Challenge',
                 'collection' => 'attachment',
@@ -55,6 +59,7 @@ class AttachmentSeeder extends Seeder
                 'updated_at' => $date
             ],
             [
+                'public_id' => 4,
                 'attachable_id' => 4,
                 'attachable_type' => 'App\Models\Company',
                 'collection' => 'attachment',
