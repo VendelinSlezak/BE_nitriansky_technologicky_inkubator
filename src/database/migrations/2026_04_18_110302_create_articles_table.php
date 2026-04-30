@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title', 80);
             $table->mediumText('perex');
-            $table->longText('text');
+            $table->longText('content');
             $table->datetime('published_at');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('image_id')->constrained('attachments')->onDelete('cascade');
