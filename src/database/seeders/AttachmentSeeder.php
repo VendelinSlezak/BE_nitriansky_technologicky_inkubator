@@ -10,20 +10,64 @@ class AttachmentSeeder extends Seeder
 {
     public function run(): void
     {
-        $users = User::all();
-
-        if ($users->isEmpty()) {
-            $this->command->info('Najprv spusti UserSeeder, aby mal k čomu priradiť prílohy.');
-            return;
-        }
-
-        foreach ($users as $user) {
-            Attachment::factory()
-                ->count(rand(1, 3))
-                ->create([
-                    'attachable_id' => $user->id,
-                    'attachable_type' => get_class($user),
-                ]);
-        }
+        $date = now();
+        DB::table('attachments')->insert([
+            [
+                'attachable_id' => 1,
+                'attachable_type' => 'App\Models\Challenge',
+                'collection' => 'attachment',
+                'visibility' => 'public',
+                'disk' => 'public',
+                'path' => 'documents/document1.txt',
+                'original_name' => 'document1.txt',
+                'stored_name' => 'document1.txt',
+                'mime_type' => 'text/plain',
+                'size' => 123,
+                'created_at' => $date,
+                'updated_at' => $date
+            ],
+            [
+                'attachable_id' => 2,
+                'attachable_type' => 'App\Models\Challenge',
+                'collection' => 'attachment',
+                'visibility' => 'public',
+                'disk' => 'public',
+                'path' => 'documents/document2.txt',
+                'original_name' => 'document2.txt',
+                'stored_name' => 'document2.txt',
+                'mime_type' => 'text/plain',
+                'size' => 123,
+                'created_at' => $date,
+                'updated_at' => $date
+            ],
+            [
+                'attachable_id' => 3,
+                'attachable_type' => 'App\Models\Challenge',
+                'collection' => 'attachment',
+                'visibility' => 'public',
+                'disk' => 'public',
+                'path' => 'documents/document3.txt',
+                'original_name' => 'document3.txt',
+                'stored_name' => 'document3.txt',
+                'mime_type' => 'text/plain',
+                'size' => 123,
+                'created_at' => $date,
+                'updated_at' => $date
+            ],
+            [
+                'attachable_id' => 4,
+                'attachable_type' => 'App\Models\Company',
+                'collection' => 'attachment',
+                'visibility' => 'public',
+                'disk' => 'public',
+                'path' => 'logos/logo-ukf.png',
+                'original_name' => 'logo-ukf.png',
+                'stored_name' => 'logo-ukf.png',
+                'mime_type' => 'image/png',
+                'size' => 123,
+                'created_at' => $date,
+                'updated_at' => $date
+            ],
+        ]);
     }
 }
