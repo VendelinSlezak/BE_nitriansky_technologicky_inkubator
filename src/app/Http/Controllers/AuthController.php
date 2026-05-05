@@ -21,6 +21,12 @@ class AuthController extends Controller {
             ], Response::HTTP_UNAUTHORIZED);
         }
 
+        if($user->isStudent() && $user->student->is_accepted_by_admin == false) {
+            return response()->json([
+                'message' => 'Používateľ nie je potvrdený adminom.',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $token = $user->createToken('auth-token')->plainTextToken;
         return response()->json([
             'token' => $token,

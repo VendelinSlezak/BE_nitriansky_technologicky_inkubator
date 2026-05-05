@@ -9,18 +9,22 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\FaqQuestionController;
+use App\Http\Controllers\StudentController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
-    Route::post('/logout', [AuthController::class, 'logout']);
-    Route::post('/logout-from-all-devices', [AuthController::class, 'logoutAll']);
     Route::prefix('registration')->group(function () {
         Route::post('student', [RegistrationController::class, 'registerStudent']);
         Route::post('company', [RegistrationController::class, 'registerCompany']);
     });
 
     Route::middleware('auth:sanctum')->group(function () {
-        // TODO
+        Route::post('/logout', [AuthController::class, 'logout']);
+        Route::post('/logout-from-all-devices', [AuthController::class, 'logoutAll']);
+
+        Route::middleware('student')->group(function () {
+            Route::get('/student', [StudentController::class, 'dashboard']);
+        });
     });
 });
 

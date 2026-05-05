@@ -59,21 +59,22 @@ class User extends Authenticatable {
         return $this->hasMany(Article::class);
     }
 
-    public function mentors(): HasOne{
+    public function mentor(): HasOne{
         return $this->hasOne(Mentor::class);
     }
 
-    public function students(): HasOne {
+    public function student(): HasOne {
         return $this->hasOne(Student::class);
     }
 
-    public function companies(): HasOne {
+    public function company(): HasOne {
         return $this->hasOne(Company::class);
     }
 
     public function challenges(): HasMany {
         return $this->hasMany(Challenge::class);
     }
+
     public function isStudent(): bool {
         return $this->role === 'student';
     }

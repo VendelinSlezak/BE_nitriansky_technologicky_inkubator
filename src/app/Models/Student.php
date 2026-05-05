@@ -23,8 +23,7 @@ class Student extends Authenticatable {
         'user_id',
         'university',
         'is_accepted_by_admin',
-        'is_invited_to_the_team',
-        'is_a_teamleader',
+        'team_status',
         'curriculum_vitae_id',
     ];
 
@@ -36,5 +35,13 @@ class Student extends Authenticatable {
     public function curriculumVitae()
     {
         return $this->belongsTo(Attachment::class, 'curriculum_vitae_id');
+    }
+
+    public function is_invited_to_the_team(): bool {
+        return $this->team_status === 'invited';
+    }
+
+    public function is_member_of_the_team(): bool {
+        return $this->team_status === 'team_member' || $this->team_status === 'teamleader';
     }
 }
