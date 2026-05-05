@@ -26,4 +26,18 @@ class AuthController extends Controller {
             'token' => $token,
         ], Response::HTTP_OK);
     }
+
+    public function logout(Request $request) {
+        $request->user()->currentAccessToken()->delete();
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ], Response::HTTP_OK);
+    }
+
+    public function logoutAll(Request $request) {
+        $request->user()->tokens()->delete();
+        return response()->json([
+            'message' => 'Successfully logged out from all devices'
+        ], Response::HTTP_OK);
+    }
 }

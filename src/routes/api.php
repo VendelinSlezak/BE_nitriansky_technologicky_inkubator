@@ -12,6 +12,8 @@ use App\Http\Controllers\FaqQuestionController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
+    Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/logout-from-all-devices', [AuthController::class, 'logoutAll']);
     Route::prefix('registration')->group(function () {
         Route::post('student', [RegistrationController::class, 'registerStudent']);
         Route::post('company', [RegistrationController::class, 'registerCompany']);
