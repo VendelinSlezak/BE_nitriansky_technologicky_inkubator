@@ -8,6 +8,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Student extends Authenticatable {
     use HasFactory, Notifiable, HasApiTokens;
@@ -37,11 +38,32 @@ class Student extends Authenticatable {
         return $this->belongsTo(Attachment::class, 'curriculum_vitae_id');
     }
 
+    public function teams() : BelongsToMany {
+        return $this->belongsToMany(Team::class, 'team_member')
+            ->withPivot('status', 'active_from', 'active_to')
+            ->withTimestamps();
+    }
+
     public function is_invited_to_the_team(): bool {
         return $this->team_status === 'invited';
     }
 
     public function is_member_of_the_team(): bool {
         return $this->team_status === 'team_member' || $this->team_status === 'teamleader';
+    }
+
+    public function active_team()
+    {
+        $now = now(); // Toto vráti objekt s dátumom AJ časom
+        $pivotTable = $this->teams()->getTable(); 
+
+        return $this->teams()
+            ->select('team_member.status', 'teams.name', 'teams.challenge_id', 'teams.active_from')
+            ->where("{$pivotTable}.active_from", '<=', $now)
+            ->where(function ($query) use ($now, $pivotTable) {
+                $query->whereNull("{$pivotTable}.active_to")
+                    ->orWhere("{$pivotTable}.active_to", '>=', $now);
+            })
+            ->limit(1);
     }
 }

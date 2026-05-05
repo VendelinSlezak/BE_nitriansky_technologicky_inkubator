@@ -50,7 +50,11 @@ class Challenge extends Model
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
-    public function program_a_categories(): BelongsTo {
+    public function program_a_category(): BelongsTo {
         return $this->belongsTo(ProgramACategory::class, 'program_a_category_id');
+    }
+
+    public function milestones(): HasMany {
+        return $this->hasMany(Milestone::class);
     }
 }

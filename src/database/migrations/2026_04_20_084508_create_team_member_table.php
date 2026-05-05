@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('team_members', function (Blueprint $table) {
+        Schema::create('team_member', function (Blueprint $table) {
             $table->foreignId('team_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->unique(['team_id', 'user_id']);
-            $table->string('status', 100);
-            $table->dateTime('active_at');
-            $table->dateTime('expires_at');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->unique(['team_id', 'student_id']);
+            $table->string('status', 100); // "invited", "teamleader", "team_member"
+            $table->dateTime('active_from');
+            $table->dateTime('active_to');
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('team_members');
+        Schema::dropIfExists('team_member');
     }
 };

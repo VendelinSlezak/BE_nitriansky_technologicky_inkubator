@@ -13,44 +13,45 @@ class TeamMemberSeeder extends Seeder
      */
     public function run(): void
     {
-        $date = now();
-        DB::table('team_members')->insert([
+        $now = now();
+        $oneWeekLater = now()->addWeek();
+
+        DB::table('team_member')->insert([
             [
                 'team_id' => 1,
-                'user_id' => 1,
+                'student_id' => 1,
                 'status' => 'active',
-                'active_at' => $date,
-                'expires_at' => $date,
+                'active_from' => $now,
+                'active_to' => $oneWeekLater,
             ],
             [
                 'team_id' => 2,
-                'user_id' => 2,
+                'student_id' => 2,
                 'status' => 'inactive',
-                'active_at' => $date,
-                'expires_at' => $date,
+                'active_from' => $now,
+                'active_to' => $oneWeekLater,
             ],
             [
                 'team_id' => 3,
-                'user_id' => 3,
+                'student_id' => 3,
                 'status' => 'active',
-                'active_at' => $date,
-                'expires_at' => $date,
+                'active_from' => $now,
+                'active_to' => $oneWeekLater,
             ],
             [
                 'team_id' => 4,
-                'user_id' => 4,
+                'student_id' => 4,
                 'status' => 'active',
-                'active_at' => $date,
-                'expires_at' => $date,
+                'active_from' => $now,
+                'active_to' => $oneWeekLater,
             ],
             [
                 'team_id' => 5,
-                'user_id' => 5,
+                'student_id' => 5,
                 'status' => 'inactive',
-                'active_at' => $date,
-                'expires_at' => $date,
+                'active_from' => $now,
+                'active_to' => $oneWeekLater,
             ]
-
         ]);
     }
 }
