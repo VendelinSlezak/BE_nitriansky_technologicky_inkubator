@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegistrationController;
+use App\Http\Controllers\FaqQuestionController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
@@ -23,9 +24,15 @@ Route::prefix('auth')->group(function () {
 
 Route::get('/articles', [ArticleController::class, 'index']);
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
 Route::get('/all-mentors-info', [MentorController::class, 'index']);
+
 Route::get('/all-companies-info', [CompanyController::class, 'index']);
 Route::get('/all-companies-logos', [CompanyController::class, 'getAllLogos']);
+
 Route::get('/challenges/preview',[ChallengeController::class,'index']);
 Route::get('/challenges/preview/three-random',[ChallengeController::class,'getThreeRandomChallenges']);
 Route::get('/challenges/{id}',[ChallengeController::class,'show']);
+
+Route::get('/faq/a', [FaqQuestionController::class, 'getFaqFromProgramA']);
+Route::get('/faq/b', [FaqQuestionController::class, 'getFaqFromProgramB']);

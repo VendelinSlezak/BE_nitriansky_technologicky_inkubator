@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             CommissionSeeder::class,
             CommissionMemberSeeder::class,
             MilestoneSeeder::class,
+            FaqQuestionSeeder::class
         ]);
     }
 }
