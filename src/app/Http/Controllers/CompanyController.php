@@ -60,6 +60,6 @@ class CompanyController extends Controller
                 ];
             });
 
-        return response()->json($logos);
+        return response()->json($logos, Response::HTTP_OK);
     }
 }

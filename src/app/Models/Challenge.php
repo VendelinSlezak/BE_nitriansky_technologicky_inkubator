@@ -22,7 +22,7 @@ class Challenge extends Model
         'status',
         'comment_of_commission',
         'final_assessment',
-        'program_a_category'
+        'program_a_category_id'
     ];
 
     protected $hidden = [

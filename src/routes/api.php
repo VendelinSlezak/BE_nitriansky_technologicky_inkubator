@@ -27,4 +27,5 @@ Route::get('/all-mentors-info', [MentorController::class, 'index']);
 Route::get('/all-companies-info', [CompanyController::class, 'index']);
 Route::get('/all-companies-logos', [CompanyController::class, 'getAllLogos']);
 Route::get('/challenges/preview',[ChallengeController::class,'index']);
+Route::get('/challenges/preview/three-random',[ChallengeController::class,'getThreeRandomChallenges']);
 Route::get('/challenges/{id}',[ChallengeController::class,'show']);

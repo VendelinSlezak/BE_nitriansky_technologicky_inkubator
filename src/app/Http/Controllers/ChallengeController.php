@@ -61,4 +61,34 @@ class ChallengeController extends Controller
     {
         //
     }
+
+    public function getThreeRandomChallenges() {
+        $challenges = Challenge::select('id', 'program', 'name', 'description', 'reward', 'program_a_category_id')
+            ->with('program_a_categories')
+            ->inRandomOrder()
+            ->limit(3)
+            ->get()
+            ->map(function ($challenge) {
+                if($challenge->program == 'A') {
+                    return [
+                        'id' => $challenge->id,
+                        'program' => 'A',
+                        'title' => $challenge->name,
+                        'description' => $challenge->description,
+                        'category' => $challenge->program_a_categories->title,
+                    ];
+                }
+                else {
+                    return [
+                        'id' => $challenge->id,
+                        'program' => 'B',
+                        'title' => $challenge->name,
+                        'description' => $challenge->description,
+                        'reward' => $challenge->reward
+                    ];
+                }
+            });
+
+        return response()->json($challenges, Response::HTTP_OK);
+    }
 }
