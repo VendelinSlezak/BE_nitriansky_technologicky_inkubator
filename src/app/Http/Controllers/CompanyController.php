@@ -48,4 +48,18 @@ class CompanyController extends Controller
     {
         //
     }
+
+    public function getAllLogos()
+    {
+        $logos = Company::select('company_name', 'logo_id')
+            ->get()
+            ->map(function ($company) {
+                return [
+                    'name' => $company->company_name,
+                    'logo' => asset($company->logo->path),
+                ];
+            });
+
+        return response()->json($logos);
+    }
 }
