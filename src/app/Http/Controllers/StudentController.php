@@ -11,6 +11,16 @@ class StudentController extends Controller
         $student = $user->student;
         
         $response['status'] = 'basic';
+        $response['finished_projects'] = $student->teams()
+            ->whereRelation('challenge', 'status', 'finished')
+            ->get()
+            ->map(function ($team) {
+                return [
+                    'name' => $team->challenge->name,
+                    'date_of_completion' => $team->challenge->date_of_completion,
+                    'final_assessment' => $team->challenge->final_assessment,
+                ];
+            });
 
         $active_team = $student->active_team()->first();
         if($active_team) {
@@ -26,7 +36,7 @@ class StudentController extends Controller
                     $response['category_name'] = $challenge->program_a_category->title;
                     $response['description_of_skills'] = $challenge->program_a_category->description_of_skills;
                 }
-                // $response['link_to_statutory_declaration'] = $challenge->link_to_statutory_declaration->url;
+                $response['link_to_statutory_declaration'] = $$challenge->program_a_category->statutory_declaration->url;
             }
             else {
                 $response['status'] = 'member_of_team';
@@ -35,8 +45,8 @@ class StudentController extends Controller
                 }
                 else {
                     $response['status_of_team'] = 'approved';
-                    // $response['technical_specification'] = $challenge->technical_specification->url;
-                    // $response['proposal_of_implementation'] = $challenge->proposal_of_implementation->url;
+                    $response['technical_specification'] = $challenge->proposal_file->url;
+                    $response['proposal_of_implementation'] = $active_team->proposal_of_implementation->url;
                     $response['milestones'] = $challenge->milestones;
                 }
             }

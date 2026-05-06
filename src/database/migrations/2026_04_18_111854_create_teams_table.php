@@ -17,6 +17,7 @@ return new class extends Migration
             $table->dateTime('active_from');
             $table->dateTime('active_to');
             $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
+            $table->foreignId('proposal_of_implementation_id')->constrained('files')->onDelete('cascade');
             $table->timestamps();
         });
     }

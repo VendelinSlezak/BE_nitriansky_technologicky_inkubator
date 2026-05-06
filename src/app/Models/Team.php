@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -14,8 +15,8 @@ class Team extends Model
     protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id'];
     protected $hidden = ['pivot'];
 
-    public function challenge() {
-        return $this->belongsTo(Challenge::class);
+    public function challenge() : BelongsTo {
+        return $this->belongsTo(Challenge::class, 'challenge_id');
     }
 
     public function teamMembers() {
@@ -26,5 +27,13 @@ class Team extends Model
         return $this->belongsToMany(Student::class, 'team_member')
             ->withPivot('status', 'active_from', 'active_to')
             ->withTimestamps();
+    }
+
+    public function files() : BelongsTo {
+        return $this->belongsTo(File::class, 'proposal_of_implementation_id');
+    }
+
+    public function proposal_of_implementation() {
+        return $this->belongsTo(File::class, 'proposal_of_implementation_id');
     }
 }

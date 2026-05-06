@@ -19,12 +19,13 @@ return new class extends Migration
             $table->mediumText('description');
             $table->foreignId('proposal_file_id')->constrained('files')->onDelete('cascade');
             $table->float('reward')->nullable();
-            $table->string('status', 45);
+            $table->string('status', 45); // "proposed" / "open" / "in_evaluation" / "in_progress" / "finished"
             $table->mediumText('comment_of_commission')->nullable();
             $table->mediumText('final_assessment')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('mentor_id')->nullable()->constrained()->onDelete('cascade');
             $table->foreignId('program_a_category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->dateTime('date_of_completion')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

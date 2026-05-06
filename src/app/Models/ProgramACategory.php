@@ -14,4 +14,12 @@ class ProgramACategory extends Model
     public function challenges(): HasMany {
         return $this->hasMany(Challenge::class);
     }
+
+    public function files(): BelongsTo {
+        return $this->belongsTo(File::class, 'statutory_declaration_id');
+    }
+
+    public function statutory_declaration() {
+        return $this->belongsTo(File::class, 'statutory_declaration_id');
+    }
 }
