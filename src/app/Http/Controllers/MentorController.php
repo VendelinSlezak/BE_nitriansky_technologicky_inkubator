@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\MentorResource;
 use Illuminate\Http\Request;
 use App\Models\Mentor;
 
@@ -49,5 +50,11 @@ class MentorController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function adminMentorsInfo()
+    {
+        $mentor = Mentor::with('user')->get();
+        return MentorResource::collection($mentor);
     }
 }

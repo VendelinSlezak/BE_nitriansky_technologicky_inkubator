@@ -91,4 +91,9 @@ class ChallengeController extends Controller
 
         return response()->json($challenges, Response::HTTP_OK);
     }
+
+    public function adminChallengesInfo() {
+        $challenges = Challenge::with('teams')->get();
+        return ChallengeResource::collection($challenges);
+    }
 }

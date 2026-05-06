@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -56,5 +57,9 @@ class Challenge extends Model
 
     public function milestones(): HasMany {
         return $this->hasMany(Milestone::class);
+    }
+
+    public function teams(): HasMany {
+        return $this->hasMany(Team::class);
     }
 }
