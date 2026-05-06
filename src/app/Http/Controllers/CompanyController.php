@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Resources\CompanyResource;
+use Symfony\Component\HttpFoundation\Response;
 
 class CompanyController extends Controller
 {
@@ -56,7 +57,7 @@ class CompanyController extends Controller
             ->map(function ($company) {
                 return [
                     'name' => $company->company_name,
-                    'logo' => asset($company->logo->path),
+                    'logo' => $company->logo->url,
                 ];
             });
 

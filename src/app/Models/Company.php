@@ -42,7 +42,8 @@ class Company extends Model
         'show_logo_image',
         'created_at',
         'updated_at',
-        'deleted_at',];
+        'deleted_at',
+    ];
 
     public function user()
     {
@@ -51,6 +52,6 @@ class Company extends Model
 
     public function logo()
     {
-        return $this->belongsTo(Attachment::class, 'logo_id');
+        return $this->belongsTo(File::class, 'logo_id');
     }
 }

@@ -35,7 +35,7 @@ class Student extends Authenticatable {
 
     public function curriculumVitae()
     {
-        return $this->belongsTo(Attachment::class, 'curriculum_vitae_id');
+        return $this->belongsTo(File::class, 'curriculum_vitae_id');
     }
 
     public function teams() : BelongsToMany {

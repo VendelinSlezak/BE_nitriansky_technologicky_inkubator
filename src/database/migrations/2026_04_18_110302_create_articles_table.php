@@ -18,7 +18,7 @@ return new class extends Migration
             $table->longText('content');
             $table->datetime('published_at');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('image_id')->constrained('attachments')->onDelete('cascade');
+            $table->foreignId('image_id')->constrained('files')->onDelete('cascade');
             $table->mediumText('image_description');
             $table->softDeletes();
             $table->timestamps();

@@ -15,10 +15,12 @@ use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 use App\Models\Attachment;
+use App\Services\FileService;
+use App\Models\File;
 
 class RegistrationController extends Controller
 {
-    public function registerStudent(Request $request) {
+    public function registerStudent(Request $request, FileService $fileService) {
         $validated = $request->validate([
             'first_name' => 'required',
             'last_name' => 'required',
@@ -27,67 +29,103 @@ class RegistrationController extends Controller
             'password' => 'required|confirmed',
             'gdpr' => 'required|accepted',
             'cv' => 'required|file|max:2048',
-            'g-recaptcha-response' => ['required', new Recaptcha],
+            //'g-recaptcha-response' => ['required', new Recaptcha],
         ]);
 
-        $filePath = null;
-        $disk = 'public';
         try {
-            return DB::transaction(function () use ($validated, $request, $disk, &$filePath) {
-                $user = User::create([
-                    'name' => $validated['first_name'] . ' ' . $validated['last_name'],
-                    'email' => $validated['email'],
-                    'password' => $validated['password'],
-                    'role' => 'student',
-                ]);
+            $file = $fileService->uploadAndCreateRecord(
+                $request->file('cv'), 
+                'curriculum_vitaes', 
+                'private',
+                function (File $fileRecord) use ($validated) {
+                    $user = User::create([
+                        'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+                        'email' => $validated['email'],
+                        'password' => $validated['password'],
+                        'role' => 'student',
+                    ]);
 
-                $cvFile = $request->file('cv');
-                $directory = 'curriculum_vitae/users/' . $user->id;
-                $filePath = $cvFile->store($directory, $disk);
-                $newCV = Attachment::create([
-                    'public_id' => (string) Str::ulid(),
-                    'collection' => 'curriculum_vitae',
-                    'visibility' => 'private',
-                    'disk' => $disk,
-                    'path' => $filePath,
-                    'stored_name' => basename($filePath),
-                    'original_name' => $cvFile->getClientOriginalName(),
-                    'mime_type' => $cvFile->getMimeType(),
-                    'size' => $cvFile->getSize(),
-                    'attachable_id'   => 0, // Dočasná hodnota
-                    'attachable_type' => Student::class,
-                ]);
+                    $student = Student::create([
+                        'user_id' => $user->id,
+                        'university' => $validated['university'],
+                        'curriculum_vitae_id' => $fileRecord->id,
+                        'is_accepted_by_admin' => false,
+                        'team_status' => "not_in_team",
+                    ]);
 
-                $student = Student::create([
-                    'user_id' => $user->id,
-                    'university' => $validated['university'],
-                    'curriculum_vitae_id' => $newCV->id,
-                    'is_accepted_by_admin' => false,
-                    'is_invited_to_the_team' => false,
-                    'is_a_teamleader' => false,
-                ]);
+                    event(new StudentRegistered($user, $student));
+                }
+            );
 
-                $newCV->update([
-                    'attachable_id' => $student->id,
-                ]);
-
-                event(new StudentRegistered($user, $student));
-
-                return response()->json([
-                    'message' => 'Študent bol úspešne zaregistrovaný.',
-                ], Response::HTTP_CREATED);
-            });
+            return response()->json([
+                'message' => 'Študent bol úspešne zaregistrovaný.',
+            ], Response::HTTP_CREATED);
         }
         catch (Throwable $e) {
-            if ($filePath && Storage::disk($disk)->exists($filePath)) {
-                Storage::disk($disk)->delete($filePath);
-            }
-
             return response()->json([
                 'message' => 'Registrácia zlyhala. Skúste to neskôr.',
                 'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        // $filePath = null;
+        // $disk = 'public';
+        // try {
+        //     return DB::transaction(function () use ($validated, $request, $disk, &$filePath) {
+        //         $user = User::create([
+        //             'name' => $validated['first_name'] . ' ' . $validated['last_name'],
+        //             'email' => $validated['email'],
+        //             'password' => $validated['password'],
+        //             'role' => 'student',
+        //         ]);
+
+        //         $cvFile = $request->file('cv');
+        //         $directory = 'curriculum_vitae/users/' . $user->id;
+        //         $filePath = $cvFile->store($directory, $disk);
+        //         $newCV = Attachment::create([
+        //             'public_id' => (string) Str::ulid(),
+        //             'collection' => 'curriculum_vitae',
+        //             'visibility' => 'private',
+        //             'disk' => $disk,
+        //             'path' => $filePath,
+        //             'stored_name' => basename($filePath),
+        //             'original_name' => $cvFile->getClientOriginalName(),
+        //             'mime_type' => $cvFile->getMimeType(),
+        //             'size' => $cvFile->getSize(),
+        //             'attachable_id'   => 0, // Dočasná hodnota
+        //             'attachable_type' => Student::class,
+        //         ]);
+
+        //         $student = Student::create([
+        //             'user_id' => $user->id,
+        //             'university' => $validated['university'],
+        //             'curriculum_vitae_id' => $newCV->id,
+        //             'is_accepted_by_admin' => false,
+        //             'is_invited_to_the_team' => false,
+        //             'is_a_teamleader' => false,
+        //         ]);
+
+        //         $newCV->update([
+        //             'attachable_id' => $student->id,
+        //         ]);
+
+        //         event(new StudentRegistered($user, $student));
+
+        //         return response()->json([
+        //             'message' => 'Študent bol úspešne zaregistrovaný.',
+        //         ], Response::HTTP_CREATED);
+        //     });
+        // }
+        // catch (Throwable $e) {
+        //     if ($filePath && Storage::disk($disk)->exists($filePath)) {
+        //         Storage::disk($disk)->delete($filePath);
+        //     }
+
+        //     return response()->json([
+        //         'message' => 'Registrácia zlyhala. Skúste to neskôr.',
+        //         'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
+        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
     }
 
     public function registerCompany(Request $request) {
@@ -103,71 +141,113 @@ class RegistrationController extends Controller
             'password' => 'required|confirmed',
             'logo' => 'required|file|max:2048',
             'gdpr' => 'required|accepted',
-           // 'g-recaptcha-response' => ['required', new Recaptcha],
+            // 'g-recaptcha-response' => ['required', new Recaptcha],
         ]);
 
-        $filePath = null;
-        $disk = 'public';
         try {
-            return DB::transaction(function () use ($validated, $request, $disk, &$filePath) {
-                $user = User::create([
-                    'name' => $validated['company_name'],
-                    'email' => $validated['email'],
-                    'password' => $validated['password'],
-                    'role' => 'company',
-                ]);
+            $file = $fileService->uploadAndCreateRecord(
+                $request->file('cv'), 
+                'company_logos', 
+                'public',
+                function (File $fileRecord) use ($validated) {
+                    $user = User::create([
+                        'name' => $validated['company_name'],
+                        'email' => $validated['email'],
+                        'password' => $validated['password'],
+                        'role' => 'company',
+                    ]);
 
-                $logoFile = $request->file('logo');
-                $directory = 'logos/users/' . $user->id;
-                $filePath = $logoFile->store($directory, $disk);
-                $newLogo = Attachment::create([
-                    'public_id' => (string) Str::ulid(),
-                    'collection' => 'logo',
-                    'visibility' => 'public',
-                    'disk' => $disk,
-                    'path' => $filePath,
-                    'stored_name' => basename($filePath),
-                    'original_name' => $logoFile->getClientOriginalName(),
-                    'mime_type' => $logoFile->getMimeType(),
-                    'size' => $logoFile->getSize(),
-                    'attachable_id'   => 0, // Dočasná hodnota
-                    'attachable_type' => Company::class,
-                ]);
+                    $company = Company::create([
+                        'user_id' => $user->id,
+                        'company_name' => $validated['company_name'],
+                        'company_address' => $validated['company_address'],
+                        'description' => $validated['description'],
+                        'category' => $validated['category'],
+                        'ico' => $validated['ico'],
+                        'dic' => $validated['dic'],
+                        'name_of_contact_person' => $validated['name_of_contact_person'],
+                        'is_approved_by_admin' => false,
+                        'show_logo_image' => true,
+                        'logo_id' => $fileRecord->id,
+                    ]);
 
-                $company = Company::create([
-                    'user_id' => $user->id,
-                    'company_name' => $validated['company_name'],
-                    'company_address' => $validated['company_address'],
-                    'description' => $validated['description'],
-                    'category' => $validated['category'],
-                    'ico' => $validated['ico'],
-                    'dic' => $validated['dic'],
-                    'name_of_contact_person' => $validated['name_of_contact_person'],
-                    'is_approved_by_admin' => false,
-                    'show_logo_image' => true,
-                    'logo_id' => $newLogo->id
-                ]);
+                    event(new StudentRegistered($user, $student));
+                }
+            );
 
-                $newLogo->update([
-                    'attachable_id' => $company->id,
-                ]);
-
-                event(new CompanyRegistered($user, $company));
-
-                return response()->json([
-                    'message' => 'Firma bola úspešne zaregistrovaná.',
-                ], Response::HTTP_CREATED);
-            });
+            return response()->json([
+                'message' => 'Firma bola úspešne zaregistrovaná.',
+            ], Response::HTTP_CREATED);
         }
         catch (Throwable $e) {
-            if ($filePath && Storage::disk($disk)->exists($filePath)) {
-                Storage::disk($disk)->delete($filePath);
-            }
-
             return response()->json([
                 'message' => 'Registrácia zlyhala. Skúste to neskôr.',
                 'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        // $filePath = null;
+        // $disk = 'public';
+        // try {
+        //     return DB::transaction(function () use ($validated, $request, $disk, &$filePath) {
+        //         $user = User::create([
+        //             'name' => $validated['company_name'],
+        //             'email' => $validated['email'],
+        //             'password' => $validated['password'],
+        //             'role' => 'company',
+        //         ]);
+
+        //         $logoFile = $request->file('logo');
+        //         $directory = 'logos/users/' . $user->id;
+        //         $filePath = $logoFile->store($directory, $disk);
+        //         $newLogo = Attachment::create([
+        //             'public_id' => (string) Str::ulid(),
+        //             'collection' => 'logo',
+        //             'visibility' => 'public',
+        //             'disk' => $disk,
+        //             'path' => $filePath,
+        //             'stored_name' => basename($filePath),
+        //             'original_name' => $logoFile->getClientOriginalName(),
+        //             'mime_type' => $logoFile->getMimeType(),
+        //             'size' => $logoFile->getSize(),
+        //             'attachable_id'   => 0, // Dočasná hodnota
+        //             'attachable_type' => Company::class,
+        //         ]);
+
+        //         $company = Company::create([
+        //             'user_id' => $user->id,
+        //             'company_name' => $validated['company_name'],
+        //             'company_address' => $validated['company_address'],
+        //             'description' => $validated['description'],
+        //             'category' => $validated['category'],
+        //             'ico' => $validated['ico'],
+        //             'dic' => $validated['dic'],
+        //             'name_of_contact_person' => $validated['name_of_contact_person'],
+        //             'is_approved_by_admin' => false,
+        //             'show_logo_image' => true,
+        //             'logo_id' => $newLogo->id
+        //         ]);
+
+        //         $newLogo->update([
+        //             'attachable_id' => $company->id,
+        //         ]);
+
+        //         event(new CompanyRegistered($user, $company));
+
+        //         return response()->json([
+        //             'message' => 'Firma bola úspešne zaregistrovaná.',
+        //         ], Response::HTTP_CREATED);
+        //     });
+        // }
+        // catch (Throwable $e) {
+        //     if ($filePath && Storage::disk($disk)->exists($filePath)) {
+        //         Storage::disk($disk)->delete($filePath);
+        //     }
+
+        //     return response()->json([
+        //         'message' => 'Registrácia zlyhala. Skúste to neskôr.',
+        //         'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
+        //     ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        // }
     }
 }

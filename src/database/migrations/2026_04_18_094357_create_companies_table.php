@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_approved_by_admin');
             $table->boolean('show_logo_image');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('logo_id')->constrained('attachments')->onDelete('cascade');
+            $table->foreignId('logo_id')->constrained('files')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

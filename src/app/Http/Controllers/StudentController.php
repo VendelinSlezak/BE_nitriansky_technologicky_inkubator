@@ -23,9 +23,10 @@ class StudentController extends Controller
             if($active_team->status == 'invited') {
                 $response['status'] = 'invited';
                 if($challenge->program == 'A') {
+                    $response['category_name'] = $challenge->program_a_category->title;
                     $response['description_of_skills'] = $challenge->program_a_category->description_of_skills;
                 }
-                // TODO: link_to_statutory_declaration
+                // $response['link_to_statutory_declaration'] = $challenge->link_to_statutory_declaration->url;
             }
             else {
                 $response['status'] = 'member_of_team';
@@ -34,8 +35,8 @@ class StudentController extends Controller
                 }
                 else {
                     $response['status_of_team'] = 'approved';
-                    // TODO: technical_specification
-                    // TODO: proposal_of_implementation
+                    // $response['technical_specification'] = $challenge->technical_specification->url;
+                    // $response['proposal_of_implementation'] = $challenge->proposal_of_implementation->url;
                     $response['milestones'] = $challenge->milestones;
                 }
             }

@@ -17,7 +17,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             UserSeeder::class,
-            AttachmentSeeder::class,
+            FileSeeder::class,
             ArticleSeeder::class,
             CompanySeeder::class,
             CompanyEmployeeSeeder::class,
@@ -30,7 +30,7 @@ class DatabaseSeeder extends Seeder
             CommissionSeeder::class,
             CommissionMemberSeeder::class,
             MilestoneSeeder::class,
-            FaqQuestionSeeder::class
+            FaqQuestionSeeder::class,
         ]);
     }
 }
