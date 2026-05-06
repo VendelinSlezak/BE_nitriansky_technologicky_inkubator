@@ -22,30 +22,35 @@ class TeamSeeder extends Seeder
                 'name' => 'HTTP Error 404 team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
+                'proposal_of_implementation_id' => 1,
             ],
             [
                 'challenge_id' => 2,
                 'name' => 'HTTP Error 500 team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
+                'proposal_of_implementation_id' => 1,
             ],
             [
                 'challenge_id' => 3,
                 'name' => 'Request timed out team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
+                'proposal_of_implementation_id' => 1,
             ],
             [
                 'challenge_id' => 4,
                 'name' => 'Destination host unreachable team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
+                'proposal_of_implementation_id' => 1,
             ],
             [
                 'challenge_id' => 5,
                 'name' => 'HTTP Error 400 team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
+                'proposal_of_implementation_id' => 1,
             ]
         ]);
     }

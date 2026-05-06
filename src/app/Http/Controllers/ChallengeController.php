@@ -31,19 +31,8 @@ class ChallengeController extends Controller
      */
     public function show(string $id)
     {
-        $challenge = Challenge::with(['attachments', 'program_a_categories'])->findOrFail($id);
+        $challenge = Challenge::with(['files', 'program_a_categories'])->findOrFail($id);
         return new ChallengeResource($challenge);
-        /*$challenge = Challenge::select([
-                'challenges.id',
-                'challenges.program',
-                'challenges.name',
-                'challenges.description',
-                'challenges.reward'])
-            ->with(['attachments:id,path,original_name,size,attachable_id,attachable_type'])
-            ->find($id);
-        return response()->json(['vyzvy' => $challenge], Response::HTTP_OK);
-        /*$challenge = Challenge::find($id);
-        return response()->json(['vyzva' => $challenge], Response::HTTP_OK);*/
     }
 
     /**

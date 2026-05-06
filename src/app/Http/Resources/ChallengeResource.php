@@ -19,15 +19,16 @@ class ChallengeResource extends JsonResource
             'program' => $this->program,
             'name' => $this->name,
 
+
             $this->mergeWhen($request->routeIs('challenges.*'), [
                 'category' => $this->whenNotNull($this->program_a_categories?->title),
                 'description' => $this->description,
                 'reward' => $this->whenNotNull($this->reward),
             ]),
-             $this->mergeWhen($request->routeIs('challenges.show'), [
-                 'skillsDescription' => $this->whenNotNull($this->program_a_categories?->description_of_skills),
-                 'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'))
-             ]),
+            $this->mergeWhen($request->routeIs('challenges.show'), [
+                'skillsDescription' => $this->whenNotNull($this->program_a_categories?->description_of_skills),
+                'proposal_file_id' => $this->proposal_file->url,
+            ]),
 
             'admin_info' => $this->mergeWhen($request->user()?->isAdmin(), [
                 'status' => $this->status,
@@ -37,7 +38,6 @@ class ChallengeResource extends JsonResource
                         : $this->teams()->count();
                 }),
             ]),
-
         ];
     }
 }

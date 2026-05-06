@@ -58,7 +58,7 @@ class Student extends Authenticatable {
         $pivotTable = $this->teams()->getTable(); 
 
         return $this->teams()
-            ->select('team_member.status', 'teams.name', 'teams.challenge_id', 'teams.active_from')
+            ->select('team_member.status', 'teams.name', 'teams.challenge_id', 'teams.active_from', 'teams.proposal_of_implementation_id')
             ->where("{$pivotTable}.active_from", '<=', $now)
             ->where(function ($query) use ($now, $pivotTable) {
                 $query->whereNull("{$pivotTable}.active_to")

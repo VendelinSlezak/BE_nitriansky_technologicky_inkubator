@@ -39,27 +39,40 @@ class Challenge extends Model
         'deleted_at'
     ];
 
-    public function mentors(): BelongsTo {
+    public function mentors(): BelongsTo
+    {
         return $this->belongsTo(Mentor::class);
     }
 
-    public function users(): BelongsTo {
+    public function users(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function attachments(): MorphMany {
-        return $this->morphMany(Attachment::class, 'attachable');
+    public function files(): BelongsTo
+    {
+        return $this->belongsTo(File::class, 'proposal_file_id');
     }
 
-    public function program_a_categories(): BelongsTo {
+    public function program_a_categories(): BelongsTo
+    {
         return $this->belongsTo(ProgramACategory::class, 'program_a_category_id');
     }
 
-    public function milestones(): HasMany {
+    public function milestones(): HasMany
+    {
         return $this->hasMany(Milestone::class);
     }
 
-    public function teams(): HasMany {
+    public function teams(): HasMany
+    {
         return $this->hasMany(Team::class);
     }
+
+    public function proposal_file(): BelongsTo
+    {
+        return $this->belongsTo(File::class, 'proposal_file_id');
+    }
 }
+
+

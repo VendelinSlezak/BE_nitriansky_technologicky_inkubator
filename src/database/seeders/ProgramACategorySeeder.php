@@ -16,23 +16,28 @@ class ProgramACategorySeeder extends Seeder
         DB::table('program_a_categories')->insert([
             [
                 'title' => 'AI a dátové technológie',
-                'description_of_skills' => 'Zaklady AI v pythone, Uvod do strojoveho ucenia, Neuronove siete'
+                'description_of_skills' => 'Zaklady AI v pythone, Uvod do strojoveho ucenia, Neuronove siete',
+                'statutory_declaration_id' => 2,
             ],
             [
                 'title' => 'Web development',
-                'description_of_skills' => 'Zaklady frontendu a backendu, jeden webový framework'
+                'description_of_skills' => 'Zaklady frontendu a backendu, jeden webový framework',
+                'statutory_declaration_id' => 2,
             ],
             [
                 'title' => 'IoT',
-                'description_of_skills' => 'Zaklady elektroniky, programovanie Arduina'
+                'description_of_skills' => 'Zaklady elektroniky, programovanie Arduina',
+                'statutory_declaration_id' => 2,
             ],
             [
                 'title' => 'Siete a kybernetika',
-                'description_of_skills' => 'Zaklady pocitacovych sieti a Kali Linux'
+                'description_of_skills' => 'Zaklady pocitacovych sieti a Kali Linux',
+                'statutory_declaration_id' => 2,
             ],
             [
                 'title' => 'Mobilne aplikacie',
-                'description_of_skills' => 'Zaklady Javy a Kotlin'
+                'description_of_skills' => 'Zaklady Javy a Kotlin',
+                'statutory_declaration_id' => 2,
             ]
 
         ]);
