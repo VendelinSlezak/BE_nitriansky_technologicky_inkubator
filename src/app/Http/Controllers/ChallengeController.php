@@ -157,4 +157,9 @@ class ChallengeController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function adminChallengesInfo() {
+        $challenges = Challenge::with('teams')->get();
+        return ChallengeResource::collection($challenges);
+    }
 }

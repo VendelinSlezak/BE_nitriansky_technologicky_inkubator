@@ -32,6 +32,11 @@ Route::prefix('auth')->group(function () {
             Route::get('/program-a', [ChallengeController::class, 'getProgramAChallenges']);
             Route::get('/program-b', [ChallengeController::class, 'getProgramBChallenges']);
         });
+
+        Route::middleware('admin')->group(function () {
+            Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
+            Route::get('/accounts/mentors', [MentorController::class, 'adminMentorsInfo']);
+        });
     });
 });
 
@@ -43,9 +48,9 @@ Route::get('/all-mentors-info', [MentorController::class, 'index']);
 Route::get('/all-companies-info', [CompanyController::class, 'index']);
 Route::get('/all-companies-logos', [CompanyController::class, 'getAllLogos']);
 
-Route::get('/challenges/preview',[ChallengeController::class,'index']);
-Route::get('/challenges/preview/three-random',[ChallengeController::class,'getThreeRandomChallenges']);
-Route::get('/challenges/{id}',[ChallengeController::class,'show']);
+Route::get('/challenges/preview',[ChallengeController::class,'index'])->name('challenges.preview');
+Route::get('/challenges/preview/three-random',[ChallengeController::class,'getThreeRandomChallenges'])->name('challenges.three-random');
+Route::get('/challenges/{id}',[ChallengeController::class,'show'])->name('challenges.show');
 
 Route::get('/faq/a', [FaqQuestionController::class, 'getFaqFromProgramA']);
 Route::get('/faq/b', [FaqQuestionController::class, 'getFaqFromProgramB']);

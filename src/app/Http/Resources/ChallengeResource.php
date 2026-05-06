@@ -17,12 +17,27 @@ class ChallengeResource extends JsonResource
         return [
             'id' => $this->id,
             'program' => $this->program,
-            'category' => $this->whenNotNull($this->program_a_categories?->title),
-            'skillsDescription' => $this->whenNotNull($this->program_a_categories?->description_of_skills),
             'name' => $this->name,
-            'description' => $this->description,
-            'reward' => $this->whenNotNull($this->reward),
-            'proposal_file_id' => $this->proposal_file->url,
+
+
+            $this->mergeWhen($request->routeIs('challenges.*'), [
+                'category' => $this->whenNotNull($this->program_a_categories?->title),
+                'description' => $this->description,
+                'reward' => $this->whenNotNull($this->reward),
+            ]),
+            $this->mergeWhen($request->routeIs('challenges.show'), [
+                'skillsDescription' => $this->whenNotNull($this->program_a_categories?->description_of_skills),
+                'proposal_file_id' => $this->proposal_file->url,
+            ]),
+
+            'admin_info' => $this->mergeWhen($request->user()?->isAdmin(), [
+                'status' => $this->status,
+                'teams' => $this->when($this->status === 'open', function() {
+                    return $this->relationLoaded('teams')
+                        ? $this->teams->count()
+                        : $this->teams()->count();
+                }),
+            ]),
         ];
     }
 }

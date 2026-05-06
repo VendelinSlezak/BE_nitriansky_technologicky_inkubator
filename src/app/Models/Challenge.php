@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 
@@ -40,27 +41,40 @@ class Challenge extends Model
         'deleted_at'
     ];
 
-    public function mentors(): BelongsTo {
+    public function mentors(): BelongsTo
+    {
         return $this->belongsTo(Mentor::class);
     }
 
-    public function users(): BelongsTo {
+    public function users(): BelongsTo
+    {
         return $this->belongsTo(User::class);
     }
 
-    public function files(): BelongsTo {
+    public function files(): BelongsTo
+    {
         return $this->belongsTo(File::class, 'proposal_file_id');
     }
 
-    public function program_a_categories(): BelongsTo {
+    public function program_a_categories(): BelongsTo
+    {
         return $this->belongsTo(ProgramACategory::class, 'program_a_category_id');
     }
 
-    public function milestones(): HasMany {
+    public function milestones(): HasMany
+    {
         return $this->hasMany(Milestone::class);
     }
 
-    public function proposal_file() {
+    public function teams(): HasMany
+    {
+        return $this->hasMany(Team::class);
+    }
+
+    public function proposal_file(): BelongsTo
+    {
         return $this->belongsTo(File::class, 'proposal_file_id');
     }
 }
+
+

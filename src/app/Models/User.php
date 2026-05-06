@@ -39,11 +39,13 @@ class User extends Authenticatable {
      * @var list<string>
      */
     protected $hidden = [
-        'email',
         'password',
         'role',
         'email_verified_at',
         'expiration_of_link_for_password_reset',
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     /**
