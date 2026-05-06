@@ -10,6 +10,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\FaqQuestionController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\FileController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
@@ -24,6 +25,12 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('student')->group(function () {
             Route::get('/student', [StudentController::class, 'dashboard']);
+            Route::post('/program-a/create', [ChallengeController::class, 'createProgramAChallenge']);
+        });
+
+        Route::middleware('admin_or_student')->group(function () {
+            Route::get('/program-a', [ChallengeController::class, 'getProgramAChallenges']);
+            Route::get('/program-b', [ChallengeController::class, 'getProgramBChallenges']);
         });
     });
 });
@@ -42,3 +49,7 @@ Route::get('/challenges/{id}',[ChallengeController::class,'show']);
 
 Route::get('/faq/a', [FaqQuestionController::class, 'getFaqFromProgramA']);
 Route::get('/faq/b', [FaqQuestionController::class, 'getFaqFromProgramB']);
+
+Route::get('/files/download/{file}', [FileController::class, 'download'])
+    ->name('files.download')
+    ->middleware('signed');

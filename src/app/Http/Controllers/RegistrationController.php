@@ -34,7 +34,7 @@ class RegistrationController extends Controller
         try {
             $file = $fileService->uploadAndCreateRecord(
                 $request->file('cv'), 
-                'curriculum_vitaes', 
+                'curriculum_vitaes',
                 'private',
                 function (File $fileRecord) use ($validated) {
                     $user = User::create([

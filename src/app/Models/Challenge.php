@@ -15,6 +15,7 @@ class Challenge extends Model
 
     protected $fillable = [
         'program',
+        'user_id',
         'name',
         'automatically_create_team_after_approval',
         'description',
@@ -22,7 +23,8 @@ class Challenge extends Model
         'status',
         'comment_of_commission',
         'final_assessment',
-        'program_a_category_id'
+        'program_a_category_id',
+        'proposal_file_id',
     ];
 
     protected $hidden = [
