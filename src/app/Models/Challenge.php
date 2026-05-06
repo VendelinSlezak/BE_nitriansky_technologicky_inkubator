@@ -46,8 +46,8 @@ class Challenge extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function attachments(): MorphMany {
-        return $this->morphMany(Attachment::class, 'attachable');
+    public function files(): BelongsTo {
+        return $this->belongsTo(File::class, 'proposal_file_id');
     }
 
     public function program_a_categories(): BelongsTo {
@@ -56,5 +56,9 @@ class Challenge extends Model
 
     public function milestones(): HasMany {
         return $this->hasMany(Milestone::class);
+    }
+
+    public function proposal_file() {
+        return $this->belongsTo(File::class, 'proposal_file_id');
     }
 }

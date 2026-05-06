@@ -22,7 +22,7 @@ class ChallengeResource extends JsonResource
             'name' => $this->name,
             'description' => $this->description,
             'reward' => $this->whenNotNull($this->reward),
-            'attachments' => AttachmentResource::collection($this->whenLoaded('attachments'))
+            'proposal_file_id' => $this->proposal_file->url,
         ];
     }
 }
