@@ -4,6 +4,7 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ChallengeController;
 use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\MentorController;
+use App\Http\Controllers\TeamController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -36,6 +37,7 @@ Route::prefix('auth')->group(function () {
         Route::middleware('admin')->group(function () {
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
             Route::get('/accounts/mentors', [MentorController::class, 'adminMentorsInfo']);
+            Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
         });
     });
 });

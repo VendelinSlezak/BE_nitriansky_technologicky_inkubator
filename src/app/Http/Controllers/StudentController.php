@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\StudentResource;
+use App\Models\Student;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -9,7 +11,7 @@ class StudentController extends Controller
     public function dashboard(Request $request) {
         $user = $request->user();
         $student = $user->student;
-        
+
         $response['status'] = 'basic';
         $response['finished_projects'] = $student->teams()
             ->whereRelation('challenge', 'status', 'finished')
@@ -53,5 +55,10 @@ class StudentController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function adminStudentsInfo() {
+        $students = Student::with('user')->get();
+        return StudentResource::collection($students);
     }
 }
