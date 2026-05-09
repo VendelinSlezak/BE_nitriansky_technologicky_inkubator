@@ -41,6 +41,8 @@ Route::prefix('auth')->group(function () {
             Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
             Route::post('/program-a/create-category', [ProgramAController::class, 'store']);
             Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
+            Route::delete('/team/{id}', [TeamController::class, 'destroy']);
+            Route::delete('/student/{id}', [StudentController::class, 'destroy']);
         });
     });
 });

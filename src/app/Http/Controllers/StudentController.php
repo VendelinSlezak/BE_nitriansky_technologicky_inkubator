@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class StudentController extends Controller
 {
@@ -60,5 +61,15 @@ class StudentController extends Controller
     public function adminStudentsInfo() {
         $students = Student::with('user')->get();
         return StudentResource::collection($students);
+    }
+
+    public function destroy(string $id)
+    {
+        $student = Student::find($id);
+        if (!$student) {
+            return response()->json(['message' => 'Student not found'], Response::HTTP_NOT_FOUND);
+        }
+        $student->delete();
+        return response()->json(['message' => 'Student deleted successfully'], Response::HTTP_OK);
     }
 }
