@@ -19,39 +19,20 @@ class TeamMemberSeeder extends Seeder
         DB::table('team_member')->insert([
             [
                 'team_id' => 1,
-                'student_id' => 1,
-                'status' => 'active',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-            ],
-            [
-                'team_id' => 2,
                 'student_id' => 2,
-                'status' => 'inactive',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
+                'status' => 'invited',
+                'active_from' => null,
+                'active_to' => null,
+                'statuory_declaration_id' => null,
             ],
             [
-                'team_id' => 3,
+                'team_id' => 1,
                 'student_id' => 3,
-                'status' => 'active',
+                'status' => 'teamleader',
                 'active_from' => $now,
-                'active_to' => $oneWeekLater,
+                'active_to' => null,
+                'statuory_declaration_id' => 1,
             ],
-            [
-                'team_id' => 4,
-                'student_id' => 4,
-                'status' => 'active',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-            ],
-            [
-                'team_id' => 5,
-                'student_id' => 5,
-                'status' => 'inactive',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-            ]
         ]);
     }
 }

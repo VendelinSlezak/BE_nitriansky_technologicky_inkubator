@@ -28,6 +28,8 @@ Route::prefix('auth')->group(function () {
         Route::middleware('student')->group(function () {
             Route::get('/student', [StudentController::class, 'dashboard']);
             Route::post('/program-a/create', [ChallengeController::class, 'createProgramAChallenge']);
+            Route::post('/student/accept-invitation', [StudentController::class, 'acceptTeamInvitation']);
+            Route::post('/student/reject-invitation', [StudentController::class, 'rejectTeamInvitation']);
         });
 
         Route::middleware('admin_or_student')->group(function () {

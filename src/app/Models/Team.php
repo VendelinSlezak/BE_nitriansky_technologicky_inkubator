@@ -13,7 +13,7 @@ class Team extends Model
     protected $table = 'teams';
     protected $id = 'id';
     protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id'];
-    protected $hidden = ['pivot'];
+    //protected $hidden = ['pivot'];
 
     public function challenge() : BelongsTo {
         return $this->belongsTo(Challenge::class, 'challenge_id');

@@ -16,8 +16,9 @@ return new class extends Migration
             $table->foreignId('student_id')->constrained()->onDelete('cascade');
             $table->unique(['team_id', 'student_id']);
             $table->string('status', 100); // "invited", "teamleader", "team_member"
-            $table->dateTime('active_from');
-            $table->dateTime('active_to');
+            $table->dateTime('active_from')->nullable();
+            $table->dateTime('active_to')->nullable();
+            $table->foreignId('statuory_declaration_id')->nullable()->constrained('files')->onDelete('cascade');
             $table->timestamps();
         });
     }
