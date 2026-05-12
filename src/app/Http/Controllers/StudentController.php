@@ -36,14 +36,14 @@ class StudentController extends Controller
             $response['name_of_project'] = $challenge->name;
             $response['description_of_project'] = $challenge->description;
 
-            if($active_team->status == 'invited') {
+            if($active_team->pivot->status == 'invited') {
                 $response['status'] = 'invited';
                 if($challenge->program === 'A') {
                     $program_a_category = $challenge->program_a_categories;
                     $response['category_name'] = $program_a_category->title;
                     $response['description_of_skills'] = $program_a_category->description_of_skills;
                 }
-                // $response['link_to_statutory_declaration'] = $challenge->program_a_categories->statutory_declaration->url; // TODO: lepšie vymyslieť odkaz na statutory declaration
+                // $response['link_to_statutory_declaration'] = $challenge->pivot->program_a_categories->statutory_declaration->url; // TODO: lepšie vymyslieť odkaz na statutory declaration
             }
             else {
                 $response['status'] = 'member_of_team';
@@ -83,7 +83,7 @@ class StudentController extends Controller
         ]);
 
         $team = $request->user()->student->active_team()->first();
-        if(!$team || $team->status != 'invited') {
+        if(!$team || $team->pivot->status != 'invited') {
             return response()->json([
                 'message' => 'No active invitation found'
             ], Response::HTTP_NOT_FOUND);
@@ -119,7 +119,7 @@ class StudentController extends Controller
         $student = $request->user()->student;
         $team = $student->active_team()->first();
 
-        if(!$team || $team->status != 'invited') {
+        if(!$team || $team->pivot->status != 'invited') {
             return response()->json([
                 'message' => 'No active invitation found'
             ], Response::HTTP_NOT_FOUND);
@@ -129,6 +129,17 @@ class StudentController extends Controller
 
         return response()->json([
             'message' => 'Team invitation rejected and membership removed'
+        ], Response::HTTP_OK);
+    }
+
+    public function canBeInvited(Student $student) {
+        $hasActiveTeam = $student->teams()->where(function ($query) {
+            $query->whereNull('team_member.active_to')
+                ->orWhere('team_member.active_to', '>=', now());
+        })->exists();
+
+        return response()->json([
+            'status' => !$hasActiveTeam
         ], Response::HTTP_OK);
     }
 }

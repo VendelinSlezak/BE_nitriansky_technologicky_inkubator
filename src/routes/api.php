@@ -35,6 +35,7 @@ Route::prefix('auth')->group(function () {
         Route::middleware('admin_or_student')->group(function () {
             Route::get('/program-a', [ChallengeController::class, 'getProgramAChallenges']);
             Route::get('/program-b', [ChallengeController::class, 'getProgramBChallenges']);
+            Route::get('/student/{student}/can-be-invited', [StudentController::class, 'canBeInvited']);
         });
 
         Route::middleware('admin')->group(function () {

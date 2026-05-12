@@ -52,24 +52,18 @@ class Student extends Authenticatable {
         return $this->team_status === 'team_member' || $this->team_status === 'teamleader';
     }
 
-    public function active_team()
-    {
-        $now = now();
-        $pivotTable = $this->teams()->getTable(); 
-
-        return $this->teams()
-            ->select(   'team_member.status',
-                        'team_member.active_from',
-                        'team_member.active_to',
-                        'team_member.statuory_declaration_id',
-                        'teams.id',
-                        'teams.name',
-                        'teams.challenge_id',
-                        'teams.active_from',
-                        'teams.proposal_of_implementation_id')
-            ->where(function ($query) use ($now, $pivotTable) {
-                $query->whereNull("{$pivotTable}.active_to")
-                    ->orWhere("{$pivotTable}.active_to", '>=', $now);
+    public function active_team() {
+        return $this->belongsToMany(Team::class, 'team_member')
+            ->withPivot([
+                'status', 
+                'active_from', 
+                'active_to', 
+                'statuory_declaration_id'
+            ])
+            ->withTimestamps()
+            ->where(function ($query) {
+                $query->where('team_member.active_to', '>=', now())
+                    ->orWhereNull('team_member.active_to');
             })
             ->limit(1);
     }
