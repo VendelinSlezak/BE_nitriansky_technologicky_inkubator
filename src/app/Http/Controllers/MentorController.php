@@ -22,6 +22,11 @@ class MentorController extends Controller
         return response()->json(['mentori' => $mentors]);
     }
 
+    public function getAllMentorsShortInfo() {
+        $mentors = Mentor::with('user')->get();
+        return MentorResource::collection($mentors);
+    }
+
     /**
      * Store a newly created resource in storage.
      */

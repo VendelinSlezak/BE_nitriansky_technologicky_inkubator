@@ -9,6 +9,7 @@ use App\Http\Middleware\AdminStudentOnly;
 use App\Http\Middleware\MentorOnly;
 use App\Http\Middleware\CommissionMemberOrMentorOnly;
 use App\Http\Middleware\CommissionMemberOnly;
+use App\Http\Middleware\AdminOrCommissionMemberOnly;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -34,6 +35,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function ($middleware) {
         $middleware->alias(['commission_member' => CommissionMemberOnly::class]);
+    })
+    ->withMiddleware(function ($middleware) {
+        $middleware->alias(['admin_or_commission_member' => AdminOrCommissionMemberOnly::class]);
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //

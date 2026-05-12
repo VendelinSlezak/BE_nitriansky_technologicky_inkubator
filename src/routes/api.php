@@ -42,12 +42,15 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('admin')->group(function () {
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
-            Route::get('/accounts/mentors', [MentorController::class, 'adminMentorsInfo']);
             Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
             Route::post('/program-a/create-category', [ProgramAController::class, 'store']);
             Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
             Route::delete('/team/{id}', [TeamController::class, 'destroy']);
             Route::delete('/student/{id}', [StudentController::class, 'destroy']);
+        });
+
+        Route::middleware('admin_or_commission_member')->group(function () {
+            Route::get('/accounts/mentors', [MentorController::class, 'getAllMentorsShortInfo']);
         });
 
         Route::middleware('mentor')->group(function () {
