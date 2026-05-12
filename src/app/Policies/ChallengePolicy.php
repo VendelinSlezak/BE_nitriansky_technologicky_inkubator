@@ -46,6 +46,13 @@ class ChallengePolicy
         return false;
     }
 
+    public function updateMilestone(User $user, Challenge $challenge) : bool {
+        if($user->isAdmin() || $user->isMentor() && $challenge->mentor_id == $user->mentor->id) {
+            return true;
+        }
+        return false;
+    }
+
     /**
      * Determine whether the user can delete the model.
      */

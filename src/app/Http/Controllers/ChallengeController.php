@@ -10,6 +10,7 @@ use App\Services\FileService;
 use Throwable;
 use App\Models\File;
 use App\Events\ProgramAChallengeProposed;
+use App\Models\Milestone;
 
 class ChallengeController extends Controller
 {
@@ -189,5 +190,27 @@ class ChallengeController extends Controller
         $response['milestones'] = $challenge->milestones;
 
         return response()->json($response, Response::HTTP_OK);
+    }
+
+    public function setMilestoneComment(Request $request, Challenge $challenge, Milestone $milestone) {
+        $this->authorize('updateMilestone', $challenge);
+
+        if($challenge->milestones()->where('id', $milestone->id)->doesntExist()) {
+            return response()->json([
+                'message' => 'Milestone not found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        $validated = $request->validate([
+            'comment' => 'required|string',
+        ]);
+
+        $milestone->update([
+            'comment' => $validated['comment'],
+        ]);
+
+        return response()->json([
+            'message' => 'Comment on milestone updated successfully',
+        ], Response::HTTP_OK);
     }
 }

@@ -7,7 +7,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\StudentOnly;
 use App\Http\Middleware\AdminStudentOnly;
 use App\Http\Middleware\MentorOnly;
-use App\Http\Middleware\CommisionMemberOrMentorOnly;
+use App\Http\Middleware\CommissionMemberOrMentorOnly;
 use App\Http\Middleware\CommissionMemberOnly;
 
 return Application::configure(basePath: dirname(__DIR__))

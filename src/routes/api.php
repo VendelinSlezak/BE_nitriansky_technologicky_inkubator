@@ -52,9 +52,10 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('mentor')->group(function () {
             Route::get('/mentor/all-challenges', [MentorController::class, 'mentorChallengesInfo']);
+            Route::post('/challenge/{challenge}/set-milestone-comment/{milestone}', [ChallengeController::class, 'setMilestoneComment']);
         });
 
-        Route::middleware('commision_member_or_mentor')->group(function () {
+        Route::middleware('commission_member_or_mentor')->group(function () {
             Route::get('/challenge/{challenge}', [ChallengeController::class, 'getFullChallengeInfo']);
         });
 
