@@ -15,35 +15,17 @@ class MentorSeeder extends Seeder
     {
         DB::table('mentors')->insert([
             [
-                'user_id' => 1,
+                'user_id' => 6,
                 'description' => 'Expert na softverove inzinierstvo',
                 'expertise' => 'Softvérová architektúra, Cloud computing',
                 'experience' => '15+ rokov v IT'
             ],
             [
-                'user_id' => 2,
+                'user_id' => 7,
                 'description' => 'Expert na AI',
                 'expertise' => 'AI a Machine Learning',
                 'experience' => '10 rokov v data analytics'
             ],
-            [
-                'user_id' => 3,
-                'description' => 'Expert na mobilne aplikacie',
-                'expertise' => 'Mobilne aplikacie',
-                'experience' => '10 rokov v mobile dev'
-            ],
-            [
-                'user_id' => 4,
-                'description' => 'Expert na web development',
-                'expertise' => 'Web development',
-                'experience' => '20 rokov vo web dev'
-            ],
-            [
-                'user_id' => 5,
-                'description' => 'Expert na kybernetiku',
-                'expertise' => 'Kybernetika',
-                'experience' => '8 rokov vo kybernetike'
-            ]
         ]);
     }
 }

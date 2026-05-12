@@ -6,6 +6,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\StudentOnly;
 use App\Http\Middleware\AdminStudentOnly;
+use App\Http\Middleware\MentorOnly;
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -22,6 +23,9 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function ($middleware) {
         $middleware->alias(['admin' => AdminOnly::class]);
+    })
+    ->withMiddleware(function ($middleware) {
+        $middleware->alias(['mentor' => MentorOnly::class]);
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //

@@ -17,6 +17,7 @@ class Challenge extends Model
     protected $fillable = [
         'program',
         'user_id',
+        'mentor_id',
         'name',
         'automatically_create_team_after_approval',
         'description',
@@ -26,19 +27,6 @@ class Challenge extends Model
         'final_assessment',
         'program_a_category_id',
         'proposal_file_id',
-    ];
-
-    protected $hidden = [
-        'user_id',
-        'mentor_id',
-        'automatically_create_team_after_approval',
-        'proposal_file_id',
-        'status',
-        'comment_of_commission',
-        'final_assessment',
-        'created_at',
-        'updated_at',
-        'deleted_at'
     ];
 
     public function mentors(): BelongsTo
@@ -75,6 +63,10 @@ class Challenge extends Model
     {
         return $this->belongsTo(File::class, 'proposal_file_id');
     }
+
+    public function attached_team() {
+        return $this->hasOne(Team::class)
+            ->whereNotNull('active_from')
+            ->latestOfMany();
+    }
 }
-
-

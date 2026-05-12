@@ -48,6 +48,10 @@ Route::prefix('auth')->group(function () {
             Route::delete('/team/{id}', [TeamController::class, 'destroy']);
             Route::delete('/student/{id}', [StudentController::class, 'destroy']);
         });
+
+        Route::middleware('mentor')->group(function () {
+            Route::get('/mentor/all-challenges', [MentorController::class, 'mentorChallengesInfo']);
+        });
     });
 });
 

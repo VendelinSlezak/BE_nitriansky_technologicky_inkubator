@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         $now = now();
         DB::table('users')->insert([
             [
+                'id' => 1,
                 'name' => 'Admin',
                 'email' => 'nti@bleskos.com',
                 'password' => Hash::make('aaa'),
@@ -28,6 +29,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'id' => 2,
                 'name' => 'Student1',
                 'email' => 'nti1@bleskos.com',
                 'password' => Hash::make('bbb'),
@@ -39,6 +41,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'id' => 3,
                 'name' => 'Student2',
                 'email' => 'nti2@bleskos.com',
                 'password' => Hash::make('ccc'),
@@ -50,6 +53,7 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'id' => 4,
                 'name' => 'Student3',
                 'email' => 'nti3@bleskos.com',
                 'password' => Hash::make('ddd'),
@@ -61,10 +65,35 @@ class UserSeeder extends Seeder
                 'updated_at' => $now
             ],
             [
+                'id' => 5,
                 'name' => 'Student4',
                 'email' => 'nti4@bleskos.com',
                 'password' => Hash::make('eee'),
                 'role' => 'student',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 6,
+                'name' => 'Mentor1',
+                'email' => 'mentor1@bleskos.com',
+                'password' => Hash::make('aaa'),
+                'role' => 'mentor',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 7,
+                'name' => 'Mentor2',
+                'email' => 'mentor2@bleskos.com',
+                'password' => Hash::make('aaa'),
+                'role' => 'mentor',
                 'email_verified_at' => $now,
                 'link_for_password_reset' => null,
                 'expiration_of_link_for_password_reset' => null,
