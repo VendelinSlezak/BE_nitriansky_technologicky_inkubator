@@ -52,6 +52,10 @@ Route::prefix('auth')->group(function () {
         Route::middleware('mentor')->group(function () {
             Route::get('/mentor/all-challenges', [MentorController::class, 'mentorChallengesInfo']);
         });
+
+        Route::middleware('commision_member_or_mentor')->group(function () {
+            Route::get('/challenge/{challenge}', [ChallengeController::class, 'getFullChallengeInfo']);
+        });
     });
 });
 

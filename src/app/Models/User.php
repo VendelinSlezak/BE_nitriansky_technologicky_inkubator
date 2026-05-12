@@ -94,4 +94,8 @@ class User extends Authenticatable {
     public function isCompany(): bool {
         return $this->role === 'company';
     }
+
+    public function isCommitteeMember(): bool {
+        return $this->role === 'committee_member';
+    }
 }

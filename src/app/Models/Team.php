@@ -18,13 +18,13 @@ class Team extends Model
         return $this->belongsTo(Challenge::class, 'challenge_id');
     }
 
-    public function teamMembers() {
+    public function teamMembers() : HasMany {
         return $this->hasMany(TeamMember::class);
     }
 
     public function students() : BelongsToMany {
         return $this->belongsToMany(Student::class, 'team_member')
-            ->withPivot('status', 'active_from', 'active_to', 'statutory_declaration_id')
+            ->withPivot('status', 'active_from', 'active_to', 'statuory_declaration_id')
             ->withTimestamps();
     }
 

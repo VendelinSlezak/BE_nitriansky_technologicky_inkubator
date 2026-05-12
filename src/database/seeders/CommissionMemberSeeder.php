@@ -15,30 +15,25 @@ class CommissionMemberSeeder extends Seeder
     {
         DB::table('commission_members')->insert([
             [
-                'commission_id' => 1,
-                'user_id' => 1,
-                'status' => 'Finished',
+                'challenge_id' => 1,
+                'user_id' => 8,
+                'status' => 'recorder',
             ],
             [
-                'commission_id' => 2,
-                'user_id' => 2,
-                'status' => 'In Progress',
+                'challenge_id' => 2,
+                'user_id' => 8,
+                'status' => 'recorder',
             ],
             [
-                'commission_id' => 3,
-                'user_id' => 3,
-                'status' => 'In Progress',
+                'challenge_id' => 3,
+                'user_id' => 8,
+                'status' => 'recorder',
             ],
             [
-                'commission_id' => 4,
-                'user_id' => 3,
-                'status' => 'Finished',
+                'challenge_id' => 4,
+                'user_id' => 8,
+                'status' => 'recorder',
             ],
-            [
-                'commission_id' => 4,
-                'user_id' => 4,
-                'status' => 'Finished',
-            ]
         ]);
     }
 }

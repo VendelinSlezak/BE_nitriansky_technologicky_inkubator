@@ -27,7 +27,6 @@ class DatabaseSeeder extends Seeder
             ChallengeSeeder::class,
             TeamSeeder::class,
             TeamMemberSeeder::class,
-            CommissionSeeder::class,
             CommissionMemberSeeder::class,
             MilestoneSeeder::class,
             FaqQuestionSeeder::class,

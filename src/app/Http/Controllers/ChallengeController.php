@@ -162,4 +162,32 @@ class ChallengeController extends Controller
         $challenges = Challenge::with('teams')->get();
         return ChallengeResource::collection($challenges);
     }
+
+    public function getFullChallengeInfo(Challenge $challenge) {
+        $this->authorize('view', $challenge);
+
+        $response['id'] = $challenge->id;
+        $response['program'] = $challenge->program;
+        $response['name_of_challenge'] = $challenge->name;
+        $response['challenge_description'] = $challenge->description;
+        if($challenge->program == 'A') {
+            $response['category'] = $challenge->program_a_categories->title;
+            $response['category_skills'] = $challenge->program_a_categories->description_of_skills;
+        }
+        else {
+            $response['reward'] = $challenge->reward;
+        }
+        $response['proposal_file'] = $challenge->proposal_file->url;
+        $response['name_of_team'] = $challenge->attached_team->name;
+        $response['team_members'] = $challenge->attached_team->students->map(function ($teamMember) {
+            return [
+                'name' => $teamMember->user->name,
+                'email' => $teamMember->user->email,
+                'status' => $teamMember->pivot->status,
+            ];
+        });
+        $response['milestones'] = $challenge->milestones;
+
+        return response()->json($response, Response::HTTP_OK);
+    }
 }
