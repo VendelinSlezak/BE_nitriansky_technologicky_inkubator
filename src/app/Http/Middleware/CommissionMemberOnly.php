@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 
-class CommisionMemberOrMentorOnly
+class CommissionMemberOnly
 {
     /**
      * Handle an incoming request.
@@ -17,7 +17,7 @@ class CommisionMemberOrMentorOnly
     {
         $user = $request->user();
 
-        if(!$user || !($user->isMentor() || $user->isCommitteeMember())) {
+        if(!$user || !$user->isCommitteeMember()) {
             return response()->json([
                 'message' => 'Unauthorized'
             ], Response::HTTP_UNAUTHORIZED);

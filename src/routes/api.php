@@ -13,6 +13,7 @@ use App\Http\Controllers\RegistrationController;
 use App\Http\Controllers\FaqQuestionController;
 use App\Http\Controllers\StudentController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\CommissionMemberController;
 
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
@@ -55,6 +56,10 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('commision_member_or_mentor')->group(function () {
             Route::get('/challenge/{challenge}', [ChallengeController::class, 'getFullChallengeInfo']);
+        });
+
+        Route::middleware('commission_member')->group(function () {
+            Route::get('/commission-member/all-challenges', [CommissionMemberController::class, 'commissionMemberChallengesInfo']);
         });
     });
 });

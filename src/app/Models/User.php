@@ -79,6 +79,10 @@ class User extends Authenticatable {
         return $this->hasMany(Challenge::class);
     }
 
+    public function commision_member_challenges() : BelongsToMany {
+        return $this->belongsToMany(Challenge::class, 'commission_members');
+    }
+
     public function isStudent(): bool {
         return $this->role === 'student';
     }
