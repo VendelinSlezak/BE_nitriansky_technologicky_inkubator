@@ -67,4 +67,13 @@ class Student extends Authenticatable {
             })
             ->limit(1);
     }
+
+    public function can_be_invited() : bool {
+        $hasTeam = $this->teams()->where(function ($query) {
+            $query->whereNull('team_member.active_to')
+                ->orWhere('team_member.active_to', '>=', now());
+        })->exists();
+
+        return !$hasTeam;
+    }
 }

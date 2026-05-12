@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('teams', function (Blueprint $table) {
             $table->id();
             $table->string('name', 80);
-            $table->dateTime('active_from');
-            $table->dateTime('active_to');
+            $table->dateTime('active_from')->nullable();
+            $table->dateTime('active_to')->nullable();
             $table->foreignId('challenge_id')->constrained()->onDelete('cascade');
             $table->foreignId('proposal_of_implementation_id')->constrained('files')->onDelete('cascade');
+            $table->foreignId('cover_letter_id')->constrained('files')->onDelete('cascade');
             $table->timestamps();
         });
     }

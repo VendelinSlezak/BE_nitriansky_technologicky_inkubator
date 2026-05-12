@@ -133,13 +133,8 @@ class StudentController extends Controller
     }
 
     public function canBeInvited(Student $student) {
-        $hasActiveTeam = $student->teams()->where(function ($query) {
-            $query->whereNull('team_member.active_to')
-                ->orWhere('team_member.active_to', '>=', now());
-        })->exists();
-
         return response()->json([
-            'status' => !$hasActiveTeam
+            'status' => $student->can_be_invited()
         ], Response::HTTP_OK);
     }
 }

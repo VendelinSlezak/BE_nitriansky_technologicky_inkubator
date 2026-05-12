@@ -126,7 +126,7 @@ class ChallengeController extends Controller
         ]);
 
         try {
-            $file = $fileService->uploadAndCreateRecord(
+            $fileService->uploadAndCreateRecord(
                 $request->file('proposal_implemenation_file'), 
                 'proposal_implementation',
                 'private',

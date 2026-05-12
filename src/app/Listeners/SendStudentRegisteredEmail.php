@@ -15,7 +15,7 @@ class SendStudentRegisteredEmail
     /**
      * Create the event listener.
      */
-    public function __construct(User $user, Student $student)
+    public function __construct()
     {
 
     }

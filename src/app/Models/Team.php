@@ -12,8 +12,7 @@ class Team extends Model
 {
     protected $table = 'teams';
     protected $id = 'id';
-    protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id'];
-    //protected $hidden = ['pivot'];
+    protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id', 'proposal_of_implementation_id', 'cover_letter_id'];
 
     public function challenge() : BelongsTo {
         return $this->belongsTo(Challenge::class, 'challenge_id');
@@ -25,7 +24,7 @@ class Team extends Model
 
     public function students() : BelongsToMany {
         return $this->belongsToMany(Student::class, 'team_member')
-            ->withPivot('status', 'active_from', 'active_to')
+            ->withPivot('status', 'active_from', 'active_to', 'statutory_declaration_id')
             ->withTimestamps();
     }
 

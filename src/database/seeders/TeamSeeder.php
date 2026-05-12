@@ -23,6 +23,7 @@ class TeamSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
                 'proposal_of_implementation_id' => 1,
+                'cover_letter_id' => 1,
             ],
             [
                 'challenge_id' => 2,
@@ -30,6 +31,7 @@ class TeamSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
                 'proposal_of_implementation_id' => 1,
+                'cover_letter_id' => 1,
             ],
             [
                 'challenge_id' => 3,
@@ -37,6 +39,7 @@ class TeamSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
                 'proposal_of_implementation_id' => 1,
+                'cover_letter_id' => 1,
             ],
             [
                 'challenge_id' => 4,
@@ -44,6 +47,7 @@ class TeamSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
                 'proposal_of_implementation_id' => 1,
+                'cover_letter_id' => 1,
             ],
             [
                 'challenge_id' => 5,
@@ -51,6 +55,7 @@ class TeamSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,
                 'proposal_of_implementation_id' => 1,
+                'cover_letter_id' => 1,
             ]
         ]);
     }

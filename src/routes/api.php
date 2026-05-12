@@ -30,6 +30,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/program-a/create', [ChallengeController::class, 'createProgramAChallenge']);
             Route::post('/student/accept-invitation', [StudentController::class, 'acceptTeamInvitation']);
             Route::post('/student/reject-invitation', [StudentController::class, 'rejectTeamInvitation']);
+            Route::post('/student/create-team', [TeamController::class, 'store']);
         });
 
         Route::middleware('admin_or_student')->group(function () {
