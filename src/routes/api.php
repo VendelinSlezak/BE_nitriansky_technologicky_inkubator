@@ -66,6 +66,12 @@ Route::prefix('auth')->group(function () {
             Route::get('/commission-member/all-challenges', [CommissionMemberController::class, 'commissionMemberChallengesInfo']);
             Route::post('/challenge/{challenge}/set-commission-decision', [ChallengeController::class, 'setCommissionDecision']);
         });
+
+        Route::middleware('admin_or_web_editor')->group(function () {
+            Route::post('/article/create', [ArticleController::class, 'store']);
+            Route::post('/article/{article}', [ArticleController::class, 'update']);
+            Route::delete('/article/{article}', [ArticleController::class, 'destroy']);
+        });
     });
 });
 

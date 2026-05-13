@@ -102,4 +102,8 @@ class User extends Authenticatable {
     public function isCommitteeMember(): bool {
         return $this->role === 'committee_member';
     }
+
+    public function isWebEditor(): bool {
+        return $this->role === 'web_editor';
+    }
 }

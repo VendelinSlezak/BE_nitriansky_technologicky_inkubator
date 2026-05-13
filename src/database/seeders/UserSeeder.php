@@ -112,6 +112,18 @@ class UserSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now
             ],
+            [
+                'id' => 9,
+                'name' => 'WebEditor1',
+                'email' => 'we1@bleskos.com',
+                'password' => Hash::make('aaa'),
+                'role' => 'web_editor',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
         ]);
     }
 }

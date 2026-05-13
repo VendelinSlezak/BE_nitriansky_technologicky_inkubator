@@ -63,10 +63,15 @@ class FileService
         );
     }
 
-    public function deleteFile(File $file): bool
+    public function deleteFile(File $file, ?callable $dbLogic = null): bool
     {
-        return DB::transaction(function () use ($file) {
+        return DB::transaction(function () use ($file, $dbLogic) {
             Storage::disk($file->disk)->delete($file->path);
+
+            if($dbLogic) {
+                $dbLogic();
+            }
+
             return $file->delete();
         });
     }

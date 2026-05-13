@@ -11,7 +11,7 @@ class Article extends Model
     use SoftDeletes;
     protected $table = 'articles';
     protected $primaryKey = 'id';
-    protected $fillable = ['user_id', 'title', 'perex', 'content', 'published_at'];
+    protected $fillable = ['user_id', 'image_id', 'image_description', 'title', 'perex', 'content', 'published_at'];
 
     protected $hidden = ['updated_at','deleted_at'];
 
