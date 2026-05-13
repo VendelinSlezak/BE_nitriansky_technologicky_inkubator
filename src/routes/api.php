@@ -81,6 +81,7 @@ Route::prefix('auth')->group(function () {
             Route::get('/company/members', [CompanyController::class, 'companyMembersInfo']);
             Route::post('/company/create-member', [CompanyController::class, 'storeCompanyMember']);
             Route::delete('/company/member/{member}', [CompanyController::class, 'deleteCompanyMember']);
+            Route::post('/program-b/create', [ChallengeController::class, 'createProgramBChallenge']);
         });
 
         Route::middleware('company_admin_or_company_member')->group(function () {

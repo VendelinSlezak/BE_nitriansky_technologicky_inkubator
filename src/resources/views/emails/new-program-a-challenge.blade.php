@@ -1,3 +1,3 @@
 <div>
-    Nová žiadosť na schválenie do Programu A: {{ $challenge->title }} {{ $challenge->description }}
+    Nová žiadosť na schválenie do Programu A: {{ $challenge->name }} {{ $challenge->description }}
 </div>
