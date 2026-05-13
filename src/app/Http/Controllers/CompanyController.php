@@ -100,4 +100,13 @@ class CompanyController extends Controller
             'message' => 'Company member created successfully',
         ], Response::HTTP_CREATED);
     }
+
+    public function deleteCompanyMember(User $member) {
+        $company = auth()->user()->company;
+        $company->company_employees()->detach($member->id);
+        $member->delete();
+        return response()->json([
+            'message' => 'Company member deleted successfully',
+        ], Response::HTTP_OK);
+    }
 }
