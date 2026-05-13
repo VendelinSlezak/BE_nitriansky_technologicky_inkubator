@@ -83,6 +83,10 @@ class User extends Authenticatable {
         return $this->belongsToMany(Challenge::class, 'commission_members');
     }
 
+    public function company_employees() : BelongsToMany {
+        return $this->belongsToMany(User::class, 'company_employees');
+    }
+
     public function isStudent(): bool {
         return $this->role === 'student';
     }
@@ -105,5 +109,13 @@ class User extends Authenticatable {
 
     public function isWebEditor(): bool {
         return $this->role === 'web_editor';
+    }
+
+    public function isCompanyAdmin(): bool {
+        return $this->role === 'company_admin';
+    }
+
+    public function isCompanyMember(): bool {
+        return $this->role === 'company_member';
     }
 }

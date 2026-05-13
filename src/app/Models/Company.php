@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Company extends Model
 {
@@ -53,5 +55,9 @@ class Company extends Model
     public function logo()
     {
         return $this->belongsTo(File::class, 'logo_id');
+    }
+
+    public function company_employees() : BelongsToMany {
+        return $this->belongsToMany(User::class, 'company_employees');
     }
 }

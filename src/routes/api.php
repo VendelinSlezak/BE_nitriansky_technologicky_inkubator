@@ -75,6 +75,14 @@ Route::prefix('auth')->group(function () {
             Route::post('/faq/{faqQuestion}', [FaqQuestionController::class, 'update']);
             Route::delete('/faq/{faqQuestion}', [FaqQuestionController::class, 'destroy']);
         });
+
+        Route::middleware('company_admin')->group(function () {
+            Route::get('/company/members', [CompanyController::class, 'companyMembersInfo']);
+        });
+
+        Route::middleware('company_admin_or_company_member')->group(function () {
+
+        });
     });
 });
 

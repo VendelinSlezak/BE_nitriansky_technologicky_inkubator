@@ -63,4 +63,16 @@ class CompanyController extends Controller
 
         return response()->json($logos, Response::HTTP_OK);
     }
+
+    public function companyMembersInfo() {
+        $company = auth()->user()->company;
+        $members = $company->company_employees()->get()->map(function ($member) {
+            return [
+                'id' => $member->id,
+                'name' => $member->name,
+                'email' => $member->email,
+            ];
+        });
+        return response()->json($members, Response::HTTP_OK);
+    }
 }

@@ -23,6 +23,7 @@ return new class extends Migration
             $table->mediumText('final_assessment')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('mentor_id')->nullable()->constrained()->onDelete('cascade');
+            $table->foreignId('product_owner_id')->nullable()->constrained('users')->onDelete('set null');
             $table->foreignId('program_a_category_id')->nullable()->constrained()->onDelete('cascade');
             $table->dateTime('date_of_completion')->nullable();
             $table->mediumText('commission_comment')->nullable();

@@ -124,6 +124,30 @@ class UserSeeder extends Seeder
                 'created_at' => $now,
                 'updated_at' => $now
             ],
+            [
+                'id' => 10,
+                'name' => 'Company1',
+                'email' => 'company1@bleskos.com',
+                'password' => Hash::make('aaa'),
+                'role' => 'company_admin',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
+            [
+                'id' => 11,
+                'name' => 'CompanyMember1',
+                'email' => 'po1@bleskos.com',
+                'password' => Hash::make('aaa'),
+                'role' => 'company_member',
+                'email_verified_at' => $now,
+                'link_for_password_reset' => null,
+                'expiration_of_link_for_password_reset' => null,
+                'created_at' => $now,
+                'updated_at' => $now
+            ],
         ]);
     }
 }

@@ -24,7 +24,7 @@ class CompanySeeder extends Seeder
                 'name_of_contact_person' => 'Natasa',
                 'is_approved_by_admin' => true,
                 'show_logo_image' => true,
-                'user_id' => 1,
+                'user_id' => 10,
                 'logo_id' => 4,
             ],
             [
