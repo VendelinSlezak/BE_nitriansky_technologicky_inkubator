@@ -76,7 +76,7 @@ class Challenge extends Model
         return $this->belongsToMany(User::class, 'commission_members');
     }
 
-    public function product_owner() : HasOne {
-        return $this->hasOne(User::class, 'product_owner_id');
+    public function product_owner() : BelongsTo {
+        return $this->belongsTo(User::class, 'product_owner_id');
     }
 }

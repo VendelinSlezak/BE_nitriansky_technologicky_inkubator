@@ -49,7 +49,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias(['company_admin' => CompanyAdminOnly::class]);
     })
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->alias(['company_admin_or_company_member' => CompanyAdminOrCompanyMember::class]);
+        $middleware->alias(['company_admin_or_company_member' => CompanyAdminOrCompanyMemberOnly::class]);
     })
     ->withMiddleware(function (Middleware $middleware): void {
         //

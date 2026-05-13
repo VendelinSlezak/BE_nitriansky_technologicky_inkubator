@@ -85,7 +85,7 @@ Route::prefix('auth')->group(function () {
         });
 
         Route::middleware('company_admin_or_company_member')->group(function () {
-
+            Route::get('/company/challenges', [CompanyController::class, 'getAllChallenges']);
         });
     });
 });
