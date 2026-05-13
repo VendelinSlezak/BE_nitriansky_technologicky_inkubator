@@ -18,26 +18,31 @@ class ProgramACategorySeeder extends Seeder
                 'title' => 'AI a dátové technológie',
                 'description_of_skills' => 'Zaklady AI v pythone, Uvod do strojoveho ucenia, Neuronove siete',
                 'statutory_declaration_id' => 2,
+                'status' => 'visible'
             ],
             [
                 'title' => 'Web development',
                 'description_of_skills' => 'Zaklady frontendu a backendu, jeden webový framework',
                 'statutory_declaration_id' => 2,
+                'status' => 'invisible'
             ],
             [
                 'title' => 'IoT',
                 'description_of_skills' => 'Zaklady elektroniky, programovanie Arduina',
                 'statutory_declaration_id' => 2,
+                'status' => 'invisible'
             ],
             [
                 'title' => 'Siete a kybernetika',
                 'description_of_skills' => 'Zaklady pocitacovych sieti a Kali Linux',
                 'statutory_declaration_id' => 2,
+                'status' => 'visible'
             ],
             [
                 'title' => 'Mobilne aplikacie',
                 'description_of_skills' => 'Zaklady Javy a Kotlin',
                 'statutory_declaration_id' => 2,
+                'status' => 'visible'
             ]
 
         ]);

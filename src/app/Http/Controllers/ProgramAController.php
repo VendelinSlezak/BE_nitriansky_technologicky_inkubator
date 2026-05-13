@@ -43,7 +43,19 @@ class ProgramAController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $category = ProgramACategory::find($id);
+
+        if (!$category) {
+            return response()->json(['error' => 'Category Not Found'], Response::HTTP_NOT_FOUND);
+        }
+        $category->update([
+            'title' => $request->title,
+            'description_of_skills' => $request->skills_description,
+            'status' => $request->status,
+        ]);
+
+        return response()->json($category,Response::HTTP_OK);
+
     }
 
     /**

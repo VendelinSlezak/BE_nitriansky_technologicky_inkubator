@@ -10,7 +10,7 @@ class ProgramACategory extends Model
 {
     protected $table = 'program_a_categories';
     protected $primaryKey = 'id';
-    protected $fillable = ['title', 'description_of_skills', 'statutory_declaration_id'];
+    protected $fillable = ['title', 'description_of_skills', 'statutory_declaration_id', 'status'];
 
     public function challenges(): HasMany {
         return $this->hasMany(Challenge::class);
