@@ -24,7 +24,7 @@ class ChallengePolicy
         if($user->isMentor() && $challenge->mentor_id != $user->mentor->id) {
             return false;
         }
-        if($user->isCommitteeMember() && $challenge->commission_members->where('id', $user->id)->count() == 0) {
+        if($user->isCommitteeMember() && $challenge->commission_members->where('id', $user->id)->exists()) {
             return false;
         }
         return true;
@@ -48,6 +48,20 @@ class ChallengePolicy
 
     public function updateMilestone(User $user, Challenge $challenge) : bool {
         if($user->isAdmin() || $user->isMentor() && $challenge->mentor_id == $user->mentor->id) {
+            return true;
+        }
+        return false;
+    }
+
+    public function updateCommissionDecision(User $user, Challenge $challenge) : bool {
+        if( $user->isAdmin()
+            || (
+                $user->isCommitteeMember()
+                && $challenge->commission_members
+                ->where('id', $user->id)
+                ->where('status', 'recorder')
+                ->exists()
+            )) {
             return true;
         }
         return false;

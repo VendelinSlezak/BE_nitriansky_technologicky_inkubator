@@ -213,4 +213,33 @@ class ChallengeController extends Controller
             'message' => 'Comment on milestone updated successfully',
         ], Response::HTTP_OK);
     }
+
+    public function setCommissionDecision(Request $request, Challenge $challenge) {
+        $this->authorize('updateCommissionDecision', $challenge);
+
+        $validated = $request->validate([
+            'decision' => 'required|string|in:accepted,rejected',
+            'comment' => 'required|string',
+            'mentor_id' => 'required_if:decision,accepted|exists:mentors,id',
+        ]);
+
+        if($validated['decision'] == 'accepted') {
+            $challenge->update([
+                'status' => 'accepted_by_commission',
+                'mentor_id' => $validated['mentor_id'],
+            ]);
+        }
+        else {
+            $challenge->update([
+                'status' => 'rejected_by_commission',
+            ]);
+        }
+        $challenge->update([
+            'commission_comment' => $validated['comment'],
+        ]);
+
+        return response()->json([
+            'message' => 'Commission decision updated successfully',
+        ], Response::HTTP_OK);
+    }
 }

@@ -64,6 +64,7 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('commission_member')->group(function () {
             Route::get('/commission-member/all-challenges', [CommissionMemberController::class, 'commissionMemberChallengesInfo']);
+            Route::post('/challenge/{challenge}/set-commission-decision', [ChallengeController::class, 'setCommissionDecision']);
         });
     });
 });
