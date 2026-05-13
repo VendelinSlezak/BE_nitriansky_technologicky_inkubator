@@ -20,14 +20,15 @@ class Challenge extends Model
         'user_id',
         'mentor_id',
         'name',
-        'automatically_create_team_after_approval',
         'description',
         'reward',
         'status',
         'final_assessment',
         'program_a_category_id',
         'proposal_file_id',
-        'commission_id',
+        'commission_comment',
+        'date_of_completion',
+        'product_owner_id',
     ];
 
     public function mentors(): BelongsTo
@@ -73,5 +74,9 @@ class Challenge extends Model
 
     public function commission_members() : BelongsToMany {
         return $this->belongsToMany(User::class, 'commission_members');
+    }
+
+    public function product_owner() : BelongsTo {
+        return $this->belongsTo(User::class, 'product_owner_id');
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Resources\CompanyResource;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\User;
+use App\Models\Challenge;
 
 class CompanyController extends Controller
 {
@@ -108,5 +109,55 @@ class CompanyController extends Controller
         return response()->json([
             'message' => 'Company member deleted successfully',
         ], Response::HTTP_OK);
+    }
+
+    public function getAllChallenges() {
+        $user = auth()->user();
+        if($user->role === 'company_admin') {
+            $challenges = Challenge::where('user_id', $user->id)
+                ->whereNot('status', 'proposed')
+                ->get();
+        }
+        else if($user->role === 'company_member') {
+            $company = auth()->user()->company;
+            $company_admin = $company->user;
+            $challenges = Challenge::where('user_id', $company_admin->id)
+                ->whereNot('status', 'proposed')
+                ->where('product_owner_id', $user->id)
+                ->get();
+        }
+        
+        $response = $challenges->map(function ($challenge) {
+            $data = [
+                'id' => $challenge->id,
+                'status' => $challenge->status,
+                'name_of_project' => $challenge->name,
+                'name_of_product_owner' => $challenge->product_owner->name,
+                'documentation' => $challenge->proposal_file->url,
+                'project_description' => $challenge->description,
+                'reward' => $challenge->reward,
+            ];
+
+            if($challenge->status === 'in_progress' || $challenge->status=== 'finished') {
+                $data['name_of_team'] = $challenge->attached_team->name;
+                $data['team_members'] = $challenge->attached_team->teamMembers->map(function ($teamMember) {
+                    return [
+                        'name' => $teamMember->user->name,
+                        'email' => $teamMember->user->email,
+                        'status' => $teamMember->pivot->status,
+                    ];
+                });
+            }
+
+            if($challenge->status=== 'finished') {
+                $data['final_assessment'] = $challenge->final_assessment;
+            }
+
+            return $data;
+        });
+
+        
+
+        return response()->json($response, Response::HTTP_OK);
     }
 }

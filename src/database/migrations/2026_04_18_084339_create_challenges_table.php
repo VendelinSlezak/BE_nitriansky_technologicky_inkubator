@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('program', 1);
             $table->string('name', 45);
-            $table->boolean('automatically_create_team_after_approval');
             $table->mediumText('description');
             $table->foreignId('proposal_file_id')->constrained('files')->onDelete('cascade');
-            $table->float('reward')->nullable();
+            $table->double('reward')->nullable();
             $table->string('status', 45); // "proposed" / "open" / "in_evaluation" / "rejected_by_commission" / "accepted_by_commission" / "in_progress" / "finished"
             $table->mediumText('final_assessment')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');

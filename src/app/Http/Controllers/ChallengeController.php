@@ -10,6 +10,7 @@ use App\Services\FileService;
 use Throwable;
 use App\Models\File;
 use App\Events\ProgramAChallengeProposed;
+use App\Events\ProgramBChallengeProposed;
 use App\Models\Milestone;
 
 class ChallengeController extends Controller
@@ -122,7 +123,6 @@ class ChallengeController extends Controller
             'name_of_challenge' => 'required|string',
             'category_of_challenge_id' => 'required|string',
             'description_of_challenge' => 'required|string',
-            'automatically_became_leader' => 'required|boolean',
             'proposal_implemenation_file' => 'required|file|max:8192',
         ]);
 
@@ -136,7 +136,6 @@ class ChallengeController extends Controller
                         'program' => 'A',
                         'user_id' => auth()->user()->id,
                         'name' => $validated['name_of_challenge'],
-                        'automatically_create_team_after_approval' => $validated['automatically_became_leader'],
                         'description' => $validated['description_of_challenge'],
                         'status' => 'proposed',
                         'program_a_category_id' => $validated['category_of_challenge_id'],
@@ -156,6 +155,54 @@ class ChallengeController extends Controller
                 'message' => 'Registrácia výzvy zlyhala. Skúste to neskôr.',
                 'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function createProgramBChallenge(Request $request, FileService $fileService) {
+        $validated = $request->validate([
+            'name_of_challenge' => 'required|string',
+            'description_of_challenge' => 'required|string',
+            'reward' => 'required|decimal:0,2|min:0|max:100000',
+            'proposal_implemenation_file' => 'required|file|max:8192',
+            'product_owner_id' => 'required|exists:users,id',
+        ]);
+        $company = auth()->user()->company;
+        if(!$company->company_employees()->where('user_id', $validated['product_owner_id'])->exists()) { 
+            return response()->json([
+                'message' => 'Product owner does not belong to company',
+            ], Response::HTTP_FORBIDDEN);
+        }
+        
+        try {
+            $fileService->uploadAndCreateRecord(
+                $request->file('proposal_implemenation_file'), 
+                'proposal_implementation',
+                'private',
+                function (File $fileRecord) use ($validated) {
+                    $challenge = Challenge::create([
+                        'program' => 'B',
+                        'user_id' => auth()->user()->id,
+                        'name' => $validated['name_of_challenge'],
+                        'description' => $validated['description_of_challenge'],
+                        'reward' => $validated['reward'],
+                        'status' => 'proposed',
+                        'proposal_file_id' => $fileRecord->id,
+                        'product_owner_id' => $validated['product_owner_id'],
+                    ]);
+
+                    event(new ProgramBChallengeProposed($challenge));
+                }
+            );
+
+            return response()->json([
+                'message' => 'Výzva bola úspešne podaná.',
+            ], Response::HTTP_CREATED);
+        }
+        catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Registrácia výzvy zlyhala. Skúste to neskôr.',
+                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
+            ]);
         }
     }
 
