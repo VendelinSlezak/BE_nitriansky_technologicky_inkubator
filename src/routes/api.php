@@ -48,6 +48,7 @@ Route::prefix('auth')->group(function () {
             Route::delete('/team/{id}', [TeamController::class, 'destroy']);
             Route::delete('/student/{id}', [StudentController::class, 'destroy']);
             Route::patch('/program-a/category/{id}', [ProgramAController::class, 'update']);
+            Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
         });
 
         Route::middleware('admin_or_commission_member')->group(function () {
