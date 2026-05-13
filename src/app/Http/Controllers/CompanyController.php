@@ -6,6 +6,7 @@ use App\Models\Company;
 use Illuminate\Http\Request;
 use App\Http\Resources\CompanyResource;
 use Symfony\Component\HttpFoundation\Response;
+use App\Models\User;
 
 class CompanyController extends Controller
 {
@@ -74,5 +75,29 @@ class CompanyController extends Controller
             ];
         });
         return response()->json($members, Response::HTTP_OK);
+    }
+
+    public function storeCompanyMember(Request $request) {
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'email' => 'required|email|unique:users',
+            'password' => 'required',
+        ]);
+
+        $member = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'role' => 'company_member',
+            'email_verified_at' => now(),
+            'link_for_password_reset' => null,
+            'expiration_of_link_for_password_reset' => null
+        ]);
+        $company = auth()->user()->company;
+        $company->company_employees()->attach($member->id);
+
+        return response()->json([
+            'message' => 'Company member created successfully',
+        ], Response::HTTP_CREATED);
     }
 }

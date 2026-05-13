@@ -79,6 +79,7 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('company_admin')->group(function () {
             Route::get('/company/members', [CompanyController::class, 'companyMembersInfo']);
+            Route::post('/company/create-member', [CompanyController::class, 'storeCompanyMember']);
         });
 
         Route::middleware('company_admin_or_company_member')->group(function () {

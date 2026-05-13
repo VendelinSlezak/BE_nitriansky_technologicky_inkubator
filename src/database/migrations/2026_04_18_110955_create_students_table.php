@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('university', 90);
             $table->boolean('is_accepted_by_admin');
             $table->string('team_status', 45); // "not_in_team", "invited", "teamleader", "team_member"
-            $table->foreignId('curriculum_vitae_id')->constrained('files')->onDelete('cascade');    
+            $table->foreignId('curriculum_vitae_id')->constrained('files')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });
