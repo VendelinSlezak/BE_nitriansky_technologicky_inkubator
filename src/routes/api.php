@@ -71,6 +71,9 @@ Route::prefix('auth')->group(function () {
             Route::post('/article/create', [ArticleController::class, 'store']);
             Route::post('/article/{article}', [ArticleController::class, 'update']);
             Route::delete('/article/{article}', [ArticleController::class, 'destroy']);
+            Route::post('/faq/create', [FaqQuestionController::class, 'store']);
+            Route::post('/faq/{faqQuestion}', [FaqQuestionController::class, 'update']);
+            Route::delete('/faq/{faqQuestion}', [FaqQuestionController::class, 'destroy']);
         });
     });
 });
