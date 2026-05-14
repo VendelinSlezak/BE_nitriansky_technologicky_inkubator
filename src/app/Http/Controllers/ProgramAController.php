@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProgramAResource;
 use App\Models\ProgramACategory;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
@@ -13,7 +14,10 @@ class ProgramAController extends Controller
      */
     public function index()
     {
-        //
+        $categories = ProgramACategory::all();
+        return response()->json([
+            'categories' => ProgramAResource::collection($categories)
+        ]);
     }
 
     /**
