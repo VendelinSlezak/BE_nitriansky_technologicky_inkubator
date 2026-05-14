@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProgramAResource;
 use App\Http\Resources\StudentResource;
+use App\Models\ProgramACategory;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -136,5 +138,13 @@ class StudentController extends Controller
         return response()->json([
             'status' => $student->can_be_invited()
         ], Response::HTTP_OK);
+    }
+
+    public function getProgramACategories()
+    {
+        $categories = ProgramACategory::where('status', 'visible')->get();
+        return response()->json([
+            'categories' => ProgramAResource::collection($categories)
+        ]);
     }
 }

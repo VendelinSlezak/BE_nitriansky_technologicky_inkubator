@@ -18,7 +18,7 @@ class ProgramAResource extends JsonResource
             'id' => $this->id,
             'title' => $this->title,
             'skills_description' => $this->description_of_skills,
-            'status' => $this->status
+            'status' => $this->when($request->routeIs('admin.index'), $this->status)
         ];
     }
 }
