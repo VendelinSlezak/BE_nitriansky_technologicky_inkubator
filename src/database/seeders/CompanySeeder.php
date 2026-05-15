@@ -74,9 +74,9 @@ class CompanySeeder extends Seeder
                 'dic' => '1111',
                 'category' => 'IoT',
                 'name_of_contact_person' => 'Milan',
-                'is_approved_by_admin' => true,
+                'is_approved_by_admin' => false,
                 'show_logo_image' => true,
-                'user_id' => 5,
+                'user_id' => 12,
                 'logo_id' => 4,
             ],
 
