@@ -51,6 +51,8 @@ Route::prefix('auth')->group(function () {
             Route::patch('/program-a/category/{id}', [ProgramAController::class, 'update']);
             Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
             Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');
+            Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
+            Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
         });
 
         Route::middleware('admin_or_commission_member')->group(function () {

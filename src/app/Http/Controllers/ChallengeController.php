@@ -290,7 +290,7 @@ class ChallengeController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function updateMilestone(Request $request, Challenge $challenge, Milestone $milestone, string $id)
+    public function updateMilestone(Request $request, Challenge $challenge, Milestone $milestone)
     {
         $validated = $request->validate([
             'date_of_completion' => 'required|date',
@@ -299,16 +299,38 @@ class ChallengeController extends Controller
             'comment' => 'required|string',
         ]);
 
-        $mile = $milestone->find($id)->first();
-        if($validated && $mile) {
-            $mile->where('id', $id)->update([
-                'title' => $validated['name'],
-                'description' => $validated['description'],
-                'comment' => $validated['comment'],
-                'date_of_reasisation' => $validated['date_of_completion'],
+        $milestone->update([
+            'title' => $validated['name'],
+            'description' => $validated['description'],
+            'comment' => $validated['comment'],
+            'date_of_reasisation' => $validated['date_of_completion'],
+        ]);
+
+        return response('Milník bol úspešne aktualizovaný', Response::HTTP_OK);
+
+    }
+
+    public function addMilestone(Request $request, Challenge $challenge, Milestone $milestone, string $id) {
+        $validated = $request->validate([
+            'date_of_completion' => 'required|date',
+            'name' => 'required|string',
+            'description' => 'required|string'
             ]);
 
-            return response(Response::HTTP_OK);
+        $chal = $challenge->findOrFail($id);
+        if ($chal) {
+            $milestone->create([
+                'challenge_id' => $id,
+                'title' => $validated['name'],
+                'description' => $validated['description'],
+                'comment' => '',
+                'date_of_reasisation' => $validated['date_of_completion'],
+                'is_finished' => false
+            ]);
+
+            return response('Miľník bol úspešne pridaný', Response::HTTP_OK);
         }
+
     }
+
 }
