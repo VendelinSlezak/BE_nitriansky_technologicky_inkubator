@@ -147,4 +147,63 @@ class StudentController extends Controller
             'categories' => ProgramAResource::collection($categories)
         ]);
     }
+
+    public function getRegistrationRequests()
+    {
+        $students = Student::where('is_accepted_by_admin', false)
+            ->get()
+            ->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'name' => $student->user->name,
+                    'email' => $student->user->email,
+                    'university' => $student->university,
+                    'curriculum_vitae' => $student->curriculumVitae->url,
+                ];
+            });
+        
+        return response()->json([
+            'students' => $students
+        ], Response::HTTP_OK);
+    }
+
+    public function approveRegistration(Student $student) {
+        if($student->is_accepted_by_admin) {
+            return response()->json([
+                'message' => 'Registration request already approved'
+            ], Response::HTTP_OK);
+        }
+
+        $student->is_accepted_by_admin = true;
+        $student->save();
+        return response()->json([
+            'message' => 'Registration request approved'
+        ], Response::HTTP_OK);
+    }
+
+    public function rejectRegistration(Student $student, FileService $fileService) {
+        if($student->is_accepted_by_admin) {
+            return response()->json([
+                'message' => 'Registration request already approved'
+            ], Response::HTTP_OK);
+        }
+        
+        try {
+            DB::transaction(function () use ($student, $fileService) {
+                $curriculum_vitae = $student->curriculumVitae;
+                $student->delete();
+                $fileService->deleteFile($curriculum_vitae);
+            });
+        }
+        catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Internal server error',
+                'error' => $e->getMessage() // for debug only
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json([
+            'message' => 'Registration request rejected'
+        ], Response::HTTP_OK);
+    }
 }

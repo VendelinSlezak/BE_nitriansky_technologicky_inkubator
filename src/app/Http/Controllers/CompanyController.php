@@ -160,4 +160,64 @@ class CompanyController extends Controller
 
         return response()->json($response, Response::HTTP_OK);
     }
+
+    public function getRegistrationRequests() {
+        $companies = Company::where('is_approved_by_admin', false)
+            ->get()
+            ->map(function ($company) {
+                return [
+                    'id' => $company->id,
+                    'name_of_company' => $company->user->name,
+                    'ico' => $company->ico,
+                    'dic' => $company->dic,
+                    'name_of_contact_person' => $company->name_of_contact_person,
+                    'email' => $company->user->email,
+                    'logo' => $company->logo->url,
+                ];
+            });
+        
+        return response()->json([
+            'companies' => $companies
+        ], Response::HTTP_OK);
+    }
+
+    public function approveRegistration(Company $company) {
+        if($company->is_approved_by_admin) {
+            return response()->json([
+                'message' => 'Registration request already approved'
+            ], Response::HTTP_OK);
+        }
+
+        $company->is_approved_by_admin = true;
+        $company->save();
+        return response()->json([
+            'message' => 'Registration request approved'
+        ], Response::HTTP_OK);
+    }
+
+    public function rejectRegistration(Company $company, FileService $fileService) {
+        if($company->is_approved_by_admin) {
+            return response()->json([
+                'message' => 'Registration request already approved'
+            ], Response::HTTP_OK);
+        }
+        
+        try {
+            DB::transaction(function () use ($company, $fileService) {
+                $logo = $company->logo;
+                $company->delete();
+                $fileService->deleteFile($logo);
+            });
+        }
+        catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Internal server error',
+                'error' => $e->getMessage() // for debug only
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
+        return response()->json([
+            'message' => 'Registration request rejected'
+        ], Response::HTTP_OK);
+    }
 }
