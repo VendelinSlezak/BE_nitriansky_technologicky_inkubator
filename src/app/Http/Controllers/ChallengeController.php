@@ -128,7 +128,7 @@ class ChallengeController extends Controller
 
         try {
             $fileService->uploadAndCreateRecord(
-                $request->file('proposal_implemenation_file'), 
+                $request->file('proposal_implemenation_file'),
                 'proposal_implementation',
                 'private',
                 function (File $fileRecord) use ($validated) {
@@ -167,15 +167,15 @@ class ChallengeController extends Controller
             'product_owner_id' => 'required|exists:users,id',
         ]);
         $company = auth()->user()->company;
-        if(!$company->company_employees()->where('user_id', $validated['product_owner_id'])->exists()) { 
+        if(!$company->company_employees()->where('user_id', $validated['product_owner_id'])->exists()) {
             return response()->json([
                 'message' => 'Product owner does not belong to company',
             ], Response::HTTP_FORBIDDEN);
         }
-        
+
         try {
             $fileService->uploadAndCreateRecord(
-                $request->file('proposal_implemenation_file'), 
+                $request->file('proposal_implemenation_file'),
                 'proposal_implementation',
                 'private',
                 function (File $fileRecord) use ($validated) {
@@ -288,5 +288,27 @@ class ChallengeController extends Controller
         return response()->json([
             'message' => 'Commission decision updated successfully',
         ], Response::HTTP_OK);
+    }
+
+    public function updateMilestone(Request $request, Challenge $challenge, Milestone $milestone, string $id)
+    {
+        $validated = $request->validate([
+            'date_of_completion' => 'required|date',
+            'name' => 'required|string',
+            'description' => 'required|string',
+            'comment' => 'required|string',
+        ]);
+
+        $mile = $milestone->find($id)->first();
+        if($validated && $mile) {
+            $mile->where('id', $id)->update([
+                'title' => $validated['name'],
+                'description' => $validated['description'],
+                'comment' => $validated['comment'],
+                'date_of_reasisation' => $validated['date_of_completion'],
+            ]);
+
+            return response(Response::HTTP_OK);
+        }
     }
 }
