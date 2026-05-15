@@ -333,4 +333,10 @@ class ChallengeController extends Controller
 
     }
 
+    public function destroyMilestone(Milestone $milestone)
+    {
+        $milestone->delete();
+        return response('Miľník bol úspešne vymazaný', Response::HTTP_OK);
+    }
+
 }
