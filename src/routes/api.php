@@ -42,18 +42,29 @@ Route::prefix('auth')->group(function () {
         });
 
         Route::middleware('admin')->group(function () {
-            Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
-            Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
-            Route::post('/program-a/create-category', [ProgramAController::class, 'store']);
-            Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
-            Route::delete('/team/{id}', [TeamController::class, 'destroy']);
-            Route::delete('/student/{id}', [StudentController::class, 'destroy']);
-            Route::patch('/program-a/category/{id}', [ProgramAController::class, 'update']);
-            Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
-            Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');
             Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
+
+            Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
+            Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
+
+            Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');
+            Route::post('/program-a/create-category', [ProgramAController::class, 'store']);
+            Route::patch('/program-a/category/{id}', [ProgramAController::class, 'update']);
+            Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
+
+            Route::delete('/team/{id}', [TeamController::class, 'destroy']);
+            Route::delete('/student/{id}', [StudentController::class, 'destroy']);
+
+            Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
+            Route::get('/students/registration-requests', [StudentController::class, 'getRegistrationRequests']);
+            Route::post('/student/{student}/accept-registration-request', [StudentController::class, 'approveRegistration']);
+            Route::post('/student/{student}/reject-registration-request', [StudentController::class, 'rejectRegistration']);
+
+            Route::get('/companies/registration-requests', [CompanyController::class, 'getRegistrationRequests']);
+            Route::post('/company/{company}/accept-registration-request', [CompanyController::class, 'approveRegistration']);
+            Route::post('/company/{company}/reject-registration-request', [CompanyController::class, 'rejectRegistration']);
         });
 
         Route::middleware('admin_or_commission_member')->group(function () {
