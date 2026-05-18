@@ -47,6 +47,8 @@ Route::prefix('auth')->group(function () {
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
 
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
+            Route::post('/challenge/{challenge}/accept', [ChallengeController::class, 'acceptChallenge']);
+            Route::post('/challenge/{challenge}/close', [ChallengeController::class, 'closeChallenge']);
             Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
 
             Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');

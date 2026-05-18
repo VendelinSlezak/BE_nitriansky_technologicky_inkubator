@@ -339,4 +339,26 @@ class ChallengeController extends Controller
         return response('Miľník bol úspešne vymazaný', Response::HTTP_OK);
     }
 
+    public function acceptChallenge(Challenge $challenge)
+    {
+        $challenge->update([
+            'status' => 'open'
+        ]);
+
+        return response('Výzva bola úspešne akceptovaná', Response::HTTP_OK);
+    }
+
+    public function closeChallenge(Request $request, Challenge $challenge) {
+        $validated = $request->validate([
+            'evaluation_of_challenge' => 'required|string'
+        ]);
+
+        $challenge->update([
+            'status' => 'closed',
+            'final_assessment' => $validated['evaluation_of_challenge']
+        ]);
+
+        return response('Výzva bola úspešne ukončená', Response::HTTP_OK);
+    }
+
 }
