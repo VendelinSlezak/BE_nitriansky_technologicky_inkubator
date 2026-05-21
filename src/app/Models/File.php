@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Services\FileService;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class File extends Model
 {
@@ -19,5 +20,9 @@ class File extends Model
 
     public function getUrlAttribute(): string {
         return app(FileService::class)->getUrl($this);
+    }
+
+    public function challenge(): HasOne {
+        return $this->hasOne(Challenge::class);
     }
 }

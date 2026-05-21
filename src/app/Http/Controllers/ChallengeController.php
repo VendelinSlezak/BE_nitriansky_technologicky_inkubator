@@ -339,6 +339,41 @@ class ChallengeController extends Controller
         return response('Miľník bol úspešne vymazaný', Response::HTTP_OK);
     }
 
+    public function createChallenge(Request $request, Challenge $challenge, FileService $fileService) {
+        $validated = $request->validate([
+            'type' => 'required|string|in:A,B',
+            'name' => 'required|string',
+            'category_id' => 'required_if:type,A|exists:program_a_categories,id',
+            'reward' => 'required_if:type,B|numeric',
+            'description' => 'required|string',
+            'technical_specification' => 'required|file'
+        ]);
+
+        $fileRecord = $fileService->uploadAndCreateRecord(
+            file: $request->file('technical_specification'),
+            subFolder: 'challenges/specifications',
+            disk: 'public'
+        );
+
+        // 2. Teraz vytvoríme výzvu a priamo jej priradíme ID nového súboru.
+        // Nahraď 'technical_specification_file_id' presným názvom stĺpca, ktorý máš v migrácii challenges.
+        $newChallenge = $challenge->create([
+            'program' => $validated['type'],
+            'name' => $validated['name'],
+            'program_a_category_id' => $validated['category_id'] ?? null,
+            'reward' => $validated['reward'] ?? null,
+            'description' => $validated['description'],
+            'status' => 'open',
+            'user_id' => 1,
+            'proposal_file_id' => $fileRecord->id, // Týmto prepojíš výzvu so súborom
+        ]);
+
+        return response()->json([
+            'message' => 'Výzva bola úspešne vytvorená spolu so špecifikáciou.',
+            'challenge' => $newChallenge->load('file') // ak máš v modeli definovaný vzťah (belongsTo)
+        ], Response::HTTP_CREATED);
+    }
+
     public function acceptChallenge(Challenge $challenge)
     {
         $challenge->update([
@@ -354,11 +389,21 @@ class ChallengeController extends Controller
         ]);
 
         $challenge->update([
-            'status' => 'closed',
+            'status' => 'finished',
             'final_assessment' => $validated['evaluation_of_challenge']
         ]);
 
         return response('Výzva bola úspešne ukončená', Response::HTTP_OK);
+    }
+
+    public function destroyChallenge(Challenge $challenge, FileService $fileService)
+    {
+        $file = File::find($challenge->proposal_file_id);
+        $challenge->delete();
+        if ($file) {
+            $fileService->deleteFile($file);
+        }
+        return response('Výzva bola zmazaná', Response::HTTP_OK);
     }
 
 }

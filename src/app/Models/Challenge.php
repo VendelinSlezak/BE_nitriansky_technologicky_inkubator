@@ -79,4 +79,8 @@ class Challenge extends Model
     public function product_owner() : BelongsTo {
         return $this->belongsTo(User::class, 'product_owner_id');
     }
+
+    public function file(): BelongsTo {
+        return $this->belongsTo(File::class, 'proposal_file_id');
+    }
 }
