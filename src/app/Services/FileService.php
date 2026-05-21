@@ -53,7 +53,7 @@ class FileService
     public function getUrl(File $file): string
     {
         if ($file->disk === 'public') {
-            return Storage::url($file->path);
+            return asset(Storage::url($file->path));
         }
 
         return URL::temporarySignedRoute(
