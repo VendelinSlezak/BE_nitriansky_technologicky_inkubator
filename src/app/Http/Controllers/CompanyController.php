@@ -16,7 +16,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
+        $companies = Company::all()->where('is_approved_by_admin', true);
         return CompanyResource::collection($companies);
     }
 
@@ -55,6 +55,7 @@ class CompanyController extends Controller
     public function getAllLogos()
     {
         $logos = Company::select('company_name', 'logo_id')
+            ->where('is_approved_by_admin', true)
             ->get()
             ->map(function ($company) {
                 return [
@@ -91,8 +92,8 @@ class CompanyController extends Controller
             'password' => $validated['password'],
             'role' => 'company_member',
             'email_verified_at' => now(),
-            'link_for_password_reset' => null,
-            'expiration_of_link_for_password_reset' => null
+            'token_for_password_reset' => null,
+            'expiration_of_token_for_password_reset' => null
         ]);
         $company = auth()->user()->company;
         $company->company_employees()->attach($member->id);

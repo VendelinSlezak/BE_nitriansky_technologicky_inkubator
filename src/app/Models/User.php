@@ -29,8 +29,8 @@ class User extends Authenticatable {
         'password',
         'role',
         'email_verified_at',
-        'link_for_password_reset',
-        'expiration_of_link_for_password_reset',
+        'token_for_password_reset',
+        'expiration_of_token_for_password_reset',
     ];
 
     /**
@@ -42,7 +42,7 @@ class User extends Authenticatable {
         'password',
         'role',
         'email_verified_at',
-        'expiration_of_link_for_password_reset',
+        'expiration_of_token_for_password_reset',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -56,7 +56,7 @@ class User extends Authenticatable {
     protected $casts =  [
         'password' => 'hashed',
         'email_verified_at' => 'datetime',
-        'expiration_of_link_for_password_reset' => 'datetime',
+        'expiration_of_token_for_password_reset' => 'datetime',
     ];
 
     public function articles(): HasMany {
@@ -99,10 +99,6 @@ class User extends Authenticatable {
         return $this->role === 'mentor';
     }
 
-    public function isCompany(): bool {
-        return $this->role === 'company';
-    }
-
     public function isCommitteeMember(): bool {
         return $this->role === 'committee_member';
     }
@@ -117,5 +113,25 @@ class User extends Authenticatable {
 
     public function isCompanyMember(): bool {
         return $this->role === 'company_member';
+    }
+
+    public function getDashboardUrl(): string {
+        switch ($this->role) {
+            case 'student':
+                return "/student-dashboard";
+            case 'mentor':
+                return "/mentor-dashboard";
+            case 'committee_member':
+                return "/committee-member-dashboard";
+            case 'web_editor':
+                return "/editor-dashboard/edit-news";
+            case 'company_admin':
+                return "/company-admin-dashboard";
+            case 'company_member':
+                return "/company-member-dashboard";
+            case 'admin':
+                return "/admin-dashboard/edit-news";
+        }
+        return '';
     }
 }

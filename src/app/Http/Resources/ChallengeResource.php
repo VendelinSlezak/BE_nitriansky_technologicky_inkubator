@@ -17,7 +17,7 @@ class ChallengeResource extends JsonResource
         return [
             'id' => $this->id,
             'program' => $this->program,
-            'name' => $this->name,
+            'title' => $this->name,
 
 
             $this->mergeWhen($request->routeIs('challenges.*'), [
@@ -27,7 +27,9 @@ class ChallengeResource extends JsonResource
             ]),
             $this->mergeWhen($request->routeIs('challenges.show'), [
                 'skillsDescription' => $this->whenNotNull($this->program_a_categories?->description_of_skills),
-                'proposal_file_id' => $this->proposal_file->url,
+                'proposal_file_url' => $this->proposal_file->url,
+                'proposal_file_name' => $this->proposal_file->original_name,
+                'proposal_file_size' => $this->proposal_file->size,
             ]),
 
             'admin_info' => $this->mergeWhen($request->user()?->isAdmin(), [

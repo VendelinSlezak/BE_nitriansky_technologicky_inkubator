@@ -18,8 +18,8 @@ return new class extends Migration
             $table->longText('password');
             $table->string('role', 50);
             $table->string('email_verified_at')->nullable();
-            $table->string('link_for_password_reset')->nullable();
-            $table->dateTime('expiration_of_link_for_password_reset')->nullable();
+            $table->string('token_for_password_reset', 64)->nullable();
+            $table->dateTime('expiration_of_token_for_password_reset')->nullable();
             $table->timestamps();
         });
     }

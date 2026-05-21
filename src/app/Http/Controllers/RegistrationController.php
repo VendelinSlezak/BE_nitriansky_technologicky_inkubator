@@ -68,7 +68,7 @@ class RegistrationController extends Controller
         }
     }
 
-    public function registerCompany(Request $request) {
+    public function registerCompany(Request $request, FileService $fileService) {
         $validated = $request->validate([
             'company_name' => 'required',
             'company_address' => 'required',
@@ -86,15 +86,15 @@ class RegistrationController extends Controller
 
         try {
             $file = $fileService->uploadAndCreateRecord(
-                $request->file('cv'), 
-                'company_logos', 
+                $request->file('logo'), 
+                'logos', 
                 'public',
                 function (File $fileRecord) use ($validated) {
                     $user = User::create([
                         'name' => $validated['company_name'],
                         'email' => $validated['email'],
                         'password' => $validated['password'],
-                        'role' => 'company',
+                        'role' => 'company_admin',
                     ]);
 
                     $company = Company::create([
@@ -111,7 +111,7 @@ class RegistrationController extends Controller
                         'logo_id' => $fileRecord->id,
                     ]);
 
-                    event(new StudentRegistered($user, $student));
+                    event(new CompanyRegistered($user, $company));
                 }
             );
 
