@@ -34,7 +34,7 @@ EOT
                 'title' => 'NTI víta nových partnerov z IT sektora',
                 'perex' => 'Tri nové technologické firmy sa pridali k NTI ako partneri. Pripravujeme zaujímavé projekty v oblasti AI a cloud computingu.',
                 'published_at' => $date,
-                'user_id' => 2,
+                'user_id' => 9,
                 'image_id' => 5,
                 'image_description' => 'Stretnutie s novými partnermi v konferenčnej miestnosti.',
                 'content' => <<<EOT
@@ -49,7 +49,7 @@ EOT
                 'title' => 'Absolvent NTI získal investíciu pre svoj startup',
                 'perex' => 'Bývalý účastník Programu A úspešne získal seed investíciu vo výške 150 000 € pre svoj AI startup.',
                 'published_at' => $date,
-                'user_id' => 3,
+                'user_id' => 9,
                 'image_id' => 5,
                 'image_description' => 'Zakladateľ startupu pri podpisovaní investičnej zmluvy.',
                 'content' => <<<EOT
@@ -64,7 +64,7 @@ EOT
                 'title' => 'NTI rozširuje portfólio mentorov',
                 'perex' => 'Naša sieť odborníkov sa rozrastá o ďalšie mená z oblasti marketingu a práva pre technologické firmy.',
                 'published_at' => $date,
-                'user_id' => 3,
+                'user_id' => 9,
                 'image_id' => 5,
                 'image_description' => 'Noví mentori počas úvodného školenia.',
                 'content' => <<<EOT
@@ -79,7 +79,7 @@ EOT
                 'title' => 'Úspešný projekt od tímu CodeMasters pre firmu TechCorp',
                 'perex' => 'Študentský tím CodeMasters úspešne dokončil komplexnú e-commerce platformu pre partnerskú firmu TechCorp Slovakia.',
                 'published_at' => $date,
-                'user_id' => 2,
+                'user_id' => 9,
                 'image_id' => 5,
                 'image_description' => 'Tím CodeMasters predvádza demo svojej aplikácie.',
                 'content' => <<<EOT

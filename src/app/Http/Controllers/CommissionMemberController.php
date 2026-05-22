@@ -18,7 +18,7 @@ class CommissionMemberController extends Controller
     }
     public function commissionMemberChallengesInfo(Request $request) {
         $challenges = auth()->user()->commision_member_challenges()
-            ->where('challenges.status', 'in_evaluation')
+            ->whereIn('challenges.status', ['in_evaluation', 'accepted_by_commission', 'rejected_by_commission'])
             ->get()
             ->map(fn($challenge) => [
                 'id' => $challenge->id,

@@ -20,7 +20,7 @@ class ChallengeController extends Controller
      */
     public function index()
     {
-        $challenges = Challenge::with('program_a_categories')->get();
+        $challenges = Challenge::with('program_a_categories')->where('status', 'open')->get();
         return ChallengeResource::collection($challenges);
     }
 
@@ -91,6 +91,7 @@ class ChallengeController extends Controller
     public function getThreeRandomChallenges() {
         $challenges = Challenge::select('id', 'program', 'name', 'description', 'reward', 'program_a_category_id')
             ->with('program_a_categories')
+            ->where('status', 'open')
             ->inRandomOrder()
             ->limit(3)
             ->get()
@@ -225,16 +226,39 @@ class ChallengeController extends Controller
         else {
             $response['reward'] = $challenge->reward;
         }
-        $response['proposal_file'] = $challenge->proposal_file->url;
+        $response['proposal_file'] = [
+            'url' => $challenge->proposal_file->url,
+            'name' => $challenge->proposal_file->original_name,
+        ];
+        $response['implementation_file'] = [
+            'url' => $challenge->attached_team->proposal_of_implementation->url,
+            'name' => $challenge->attached_team->proposal_of_implementation->original_name,
+        ];
         $response['name_of_team'] = $challenge->attached_team->name;
         $response['team_members'] = $challenge->attached_team->students->map(function ($teamMember) {
             return [
+                'id' => $teamMember->user->id,
                 'name' => $teamMember->user->name,
                 'email' => $teamMember->user->email,
                 'status' => $teamMember->pivot->status,
             ];
         });
         $response['milestones'] = $challenge->milestones;
+        if($challenge->status === 'accepted_by_commission') {
+            $response['decision'] = [
+                'status' => "accepted",
+                'commission_comment' => $challenge->commission_comment,
+                'mentor_id' => $challenge->mentor_id,
+                'mentor_email' => $challenge->mentors->user->email
+            ];
+        }
+        if($challenge->status === 'rejected_by_commission') {
+            $response['decision'] = [
+                'status' => "rejected",
+                'commission_comment' => $challenge->commission_comment,
+                'mentor_id' => null,
+            ];
+        }
 
         return response()->json($response, Response::HTTP_OK);
     }
@@ -279,6 +303,7 @@ class ChallengeController extends Controller
         else {
             $challenge->update([
                 'status' => 'rejected_by_commission',
+                'mentor_id' => null,
             ]);
         }
         $challenge->update([
@@ -405,5 +430,4 @@ class ChallengeController extends Controller
         }
         return response('Výzva bola zmazaná', Response::HTTP_OK);
     }
-
 }

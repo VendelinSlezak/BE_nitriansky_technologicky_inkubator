@@ -30,6 +30,7 @@ class FaqQuestionController extends Controller
 
         return response()->json([
             'message' => 'FAQ question created successfully',
+            'id' => $faqQuestion->id
         ], Response::HTTP_CREATED);
     }
 

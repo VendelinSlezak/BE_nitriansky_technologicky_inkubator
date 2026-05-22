@@ -42,7 +42,7 @@ class TeamSeeder extends Seeder
                 'cover_letter_id' => 1,
             ],
             [
-                'challenge_id' => 4,
+                'challenge_id' => 6,
                 'name' => 'Destination host unreachable team',
                 'active_from' => $now,
                 'active_to' => $oneWeekLater,

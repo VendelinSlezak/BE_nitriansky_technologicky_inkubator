@@ -21,13 +21,15 @@ class ChallengePolicy
      */
     public function view(User $user, Challenge $challenge): bool
     {
-        if($user->isMentor() && $challenge->mentor_id != $user->mentor->id) {
-            return false;
+        if ($user->isMentor() && $challenge->mentor_id == $user->mentor->id) {
+            return true;
         }
-        if($user->isCommitteeMember() && $challenge->commission_members->where('id', $user->id)->exists()) {
-            return false;
+        
+        if ($user->isCommitteeMember() && $challenge->commission_members()->where('users.id', $user->id)->exists()) {
+            return true;
         }
-        return true;
+        
+        return false;
     }
 
     /**
@@ -55,9 +57,10 @@ class ChallengePolicy
 
     public function updateCommissionDecision(User $user, Challenge $challenge) : bool {
         if( $user->isAdmin()
-            || (
+            ||
+            (
                 $user->isCommitteeMember()
-                && $challenge->commission_members
+                && $challenge->commission_members()
                 ->where('id', $user->id)
                 ->where('status', 'recorder')
                 ->exists()

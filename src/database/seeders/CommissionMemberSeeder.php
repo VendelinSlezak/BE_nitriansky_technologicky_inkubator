@@ -34,6 +34,11 @@ class CommissionMemberSeeder extends Seeder
                 'user_id' => 8,
                 'status' => 'recorder',
             ],
+            [
+                'challenge_id' => 6,
+                'user_id' => 8,
+                'status' => 'recorder',
+            ],
         ]);
     }
 }

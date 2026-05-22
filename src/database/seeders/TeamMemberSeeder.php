@@ -19,7 +19,7 @@ class TeamMemberSeeder extends Seeder
         DB::table('team_member')->insert([
             [
                 'team_id' => 1,
-                'student_id' => 2,
+                'student_id' => 1,
                 'status' => 'invited',
                 'active_from' => null,
                 'active_to' => null,
@@ -27,7 +27,23 @@ class TeamMemberSeeder extends Seeder
             ],
             [
                 'team_id' => 1,
-                'student_id' => 3,
+                'student_id' => 2,
+                'status' => 'teamleader',
+                'active_from' => $now,
+                'active_to' => null,
+                'statuory_declaration_id' => 1,
+            ],
+            [
+                'team_id' => 2,
+                'student_id' => 4,
+                'status' => 'teamleader',
+                'active_from' => $now,
+                'active_to' => null,
+                'statuory_declaration_id' => 1,
+            ],
+            [
+                'team_id' => 4,
+                'student_id' => 5,
                 'status' => 'teamleader',
                 'active_from' => $now,
                 'active_to' => null,
