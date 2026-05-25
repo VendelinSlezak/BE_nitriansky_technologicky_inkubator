@@ -26,28 +26,28 @@ class StudentSeeder extends Seeder
                 'university' => 'UKF',
                 'is_accepted_by_admin' => true,
                 'team_status' => 'teamleader',
-                'curriculum_vitae_id' => 1
+                'curriculum_vitae_id' => 2
             ],
             [
                 'user_id' => 3,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => false,
                 'team_status' => 'not_in_team',
-                'curriculum_vitae_id' => 1
+                'curriculum_vitae_id' => 3
             ],
             [
                 'user_id' => 4,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => true,
                 'team_status' => 'invited',
-                'curriculum_vitae_id' => 1
+                'curriculum_vitae_id' => 4
             ],
             [
                 'user_id' => 5,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => true,
                 'team_status' => 'team_member',
-                'curriculum_vitae_id' => 1
+                'curriculum_vitae_id' => 5
             ]
         ]);
     }
