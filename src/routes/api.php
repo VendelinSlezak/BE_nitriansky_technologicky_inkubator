@@ -63,7 +63,7 @@ Route::prefix('auth')->group(function () {
 
             Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');
             Route::post('/program-a/create-category', [ProgramAController::class, 'store']);
-            Route::patch('/program-a/category/{id}', [ProgramAController::class, 'update']);
+            Route::post('/program-a/category/{id}', [ProgramAController::class, 'update']);
             Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
 
             Route::delete('/team/{id}', [TeamController::class, 'destroy']);
