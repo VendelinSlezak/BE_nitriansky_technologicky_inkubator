@@ -6,6 +6,7 @@ use App\Http\Controllers\CompanyController;
 use App\Http\Controllers\MentorController;
 use App\Http\Controllers\ProgramAController;
 use App\Http\Controllers\TeamController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -45,6 +46,8 @@ Route::prefix('auth')->group(function () {
         });
 
         Route::middleware('admin')->group(function () {
+            Route::post('/user/{user}', [UserController::class, 'updateUserAccount']);
+
             Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
@@ -52,6 +55,7 @@ Route::prefix('auth')->group(function () {
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
             Route::post('/challenge/{challenge}/accept', [ChallengeController::class, 'acceptChallenge']);
             Route::post('/challenge/{challenge}/close', [ChallengeController::class, 'closeChallenge']);
+            Route::get('challenges/registration-requests', [ChallengeController::class, 'getRegistrationRequests'])->name('challenges.registration-requests');
             Route::post('/create-challenge', [ChallengeController::class, 'createChallenge']);
             Route::post('/challenge/{challenge}/reject', [ChallengeController::class, 'destroyChallenge']);
             Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);

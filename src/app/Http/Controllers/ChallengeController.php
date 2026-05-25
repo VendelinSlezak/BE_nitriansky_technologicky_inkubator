@@ -430,4 +430,10 @@ class ChallengeController extends Controller
         }
         return response('Výzva bola zmazaná', Response::HTTP_OK);
     }
+
+    public function getRegistrationRequests()
+    {
+        $challenges = Challenge::where('status', 'in_evaluation')->with(['users', 'files'])->get();
+        return response()->json(['challenges' => ChallengeResource::collection($challenges)], Response::HTTP_OK);
+    }
 }
