@@ -52,6 +52,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
 
+            Route::post('challenge/{id}/start-realisation', [ChallengeController::class, 'startRealisation']);
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
             Route::post('/challenge/{challenge}/accept', [ChallengeController::class, 'acceptChallenge']);
             Route::post('/challenge/{challenge}/close', [ChallengeController::class, 'closeChallenge']);

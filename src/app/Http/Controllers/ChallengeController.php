@@ -436,4 +436,35 @@ class ChallengeController extends Controller
         $challenges = Challenge::where('status', 'in_evaluation')->with(['users', 'files'])->get();
         return response()->json(['challenges' => ChallengeResource::collection($challenges)], Response::HTTP_OK);
     }
+
+    public function startRealisation(Request $request)
+    {
+        $validated = $request->validate([
+            'mentor_id' => 'required|exists:users,id',
+            'milestones' => 'required|array|min:1',
+            'milestones.*.date_of_completion' => 'required|date',
+            'milestones.*.name' => 'required|string|max:255',
+            'milestones.*.description' => 'required|string'
+        ]);
+
+        $challenge = Challenge::findOrFail($request->id);
+        if ($challenge) {
+            $milestone = Milestone::create([
+                'challenge_id' => $request->id,
+                'title' => $validated['milestones'][0]['name'],
+                'description' => $validated['milestones'][0]['description'],
+                'date_of_reasisation' => $validated['milestones'][0]['date_of_completion'],
+                'comment' => '',
+                'is_finished' => false
+            ]);
+
+            $challenge->update([
+                'mentor_id' => $validated['mentor_id'],
+                'status' => 'in_realisation',
+            ]);
+
+            return response()->json(['Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
+        }
+
+    }
 }
