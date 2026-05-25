@@ -71,8 +71,8 @@ class User extends Authenticatable {
         return $this->hasOne(Student::class);
     }
 
-    public function company(): HasOne {
-        return $this->hasOne(Company::class);
+    public function company(): BelongsToMany {
+        return $this->belongsToMany(Company::class, 'company_employees');
     }
 
     public function challenges(): HasMany {

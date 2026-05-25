@@ -100,6 +100,7 @@ class CompanyController extends Controller
 
         return response()->json([
             'message' => 'Company member created successfully',
+            'id' => $member->id
         ], Response::HTTP_CREATED);
     }
 
@@ -120,10 +121,11 @@ class CompanyController extends Controller
                 ->get();
         }
         else if($user->role === 'company_member') {
-            $company = auth()->user()->company;
+            $company = $user->company->first();
             $company_admin = $company->user;
             $challenges = Challenge::where('user_id', $company_admin->id)
                 ->whereNot('status', 'proposed')
+                ->whereNot('status', 'finished')
                 ->where('product_owner_id', $user->id)
                 ->get();
         }
@@ -134,10 +136,15 @@ class CompanyController extends Controller
                 'status' => $challenge->status,
                 'name_of_project' => $challenge->name,
                 'name_of_product_owner' => $challenge->product_owner->name,
-                'documentation' => $challenge->proposal_file->url,
-                'project_description' => $challenge->description,
+                'fileName' => $challenge->proposal_file->original_name,
+                'fileUrl' => $challenge->proposal_file->url,
+                'description' => $challenge->description,
                 'reward' => $challenge->reward,
             ];
+
+            if($challenge->status === 'in_evaluation' || $challenge->status === 'accepted_by_commission' || $challenge->status === 'rejected_by_commission') {
+                $data['status'] = 'open';
+            }
 
             if($challenge->status === 'in_progress' || $challenge->status=== 'finished') {
                 $data['name_of_team'] = $challenge->attached_team->name;
@@ -156,8 +163,6 @@ class CompanyController extends Controller
 
             return $data;
         });
-
-        
 
         return response()->json($response, Response::HTTP_OK);
     }
