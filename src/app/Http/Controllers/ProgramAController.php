@@ -25,10 +25,15 @@ class ProgramAController extends Controller
      */
     public function store(Request $request)
     {
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'skills_description' => 'required|string',
+        ]);
         $category = ProgramACategory::create([
-            'title' => $request->title,
-            'description_of_skills' => $request->skillsDescription,
-            'statutory_declaration_id' => $request->statutory_declaration_id,
+            'title' => $validated['title'],
+            'description_of_skills' => $validated['skills_description'],
+            'statutory_declaration_id' => 1, //TODO
+            'status' => "visible"
         ]);
 
         return response()->json(['id' => $category->id],Response::HTTP_OK);
@@ -47,15 +52,20 @@ class ProgramAController extends Controller
      */
     public function update(Request $request, string $id)
     {
+        $validated = $request->validate([
+            'title' => 'required|string',
+            'skills_description' => 'required|string',
+            'status' => 'required|string|in:visible,invisible',
+        ]);
         $category = ProgramACategory::find($id);
 
         if (!$category) {
             return response()->json(['error' => 'Category Not Found'], Response::HTTP_NOT_FOUND);
         }
         $category->update([
-            'title' => $request->title,
-            'description_of_skills' => $request->skills_description,
-            'status' => $request->status,
+            'title' => $validated['title'],
+            'description_of_skills' => $validated['skills_description'],
+            'status' => $validated['status'],
         ]);
 
         return response()->json($category,Response::HTTP_OK);

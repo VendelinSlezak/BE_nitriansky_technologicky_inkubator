@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('statutory_declaration_id')->constrained('files')->onDelete('cascade');
             $table->enum('status', ['visible', 'invisible'])->default('visible');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
