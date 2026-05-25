@@ -35,7 +35,6 @@ class Company extends Model
     ];
 
     protected $hidden = [
-        'user_id',
         'company_address',
         'ico',
         'dic',
@@ -47,9 +46,9 @@ class Company extends Model
         'deleted_at',
     ];
 
-    public function user()
+    public function user() : BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function logo()

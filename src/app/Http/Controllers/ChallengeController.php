@@ -164,7 +164,7 @@ class ChallengeController extends Controller
             'name_of_challenge' => 'required|string',
             'description_of_challenge' => 'required|string',
             'reward' => 'required|decimal:0,2|min:0|max:100000',
-            'proposal_implemenation_file' => 'required|file|max:8192',
+            'documentation_file' => 'required|file|max:8192',
             'product_owner_id' => 'required|exists:users,id',
         ]);
         $company = auth()->user()->company;
@@ -176,8 +176,8 @@ class ChallengeController extends Controller
 
         try {
             $fileService->uploadAndCreateRecord(
-                $request->file('proposal_implemenation_file'),
-                'proposal_implementation',
+                $request->file('documentation_file'),
+                'documentation',
                 'private',
                 function (File $fileRecord) use ($validated) {
                     $challenge = Challenge::create([

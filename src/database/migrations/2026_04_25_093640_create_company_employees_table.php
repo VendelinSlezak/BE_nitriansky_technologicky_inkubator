@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->unique(['company_id', 'user_id']);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
