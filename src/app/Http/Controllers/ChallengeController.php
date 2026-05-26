@@ -7,6 +7,7 @@ use App\Models\Challenge;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\FileService;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 use App\Models\File;
 use App\Events\ProgramAChallengeProposed;
@@ -441,7 +442,7 @@ class ChallengeController extends Controller
         return response()->json(['challenges' => ChallengeResource::collection($challenges)], Response::HTTP_OK);
     }
 
-    public function startRealisation(Request $request)
+    public function startRealisation(Request $request, $id)
     {
         $validated = $request->validate([
             'mentor_id' => 'required|exists:users,id',
@@ -451,10 +452,10 @@ class ChallengeController extends Controller
             'milestones.*.description' => 'required|string'
         ]);
 
-        $challenge = Challenge::findOrFail($request->id);
+        $challenge = Challenge::findOrFail($id);
         if ($challenge) {
             $milestone = Milestone::create([
-                'challenge_id' => $request->id,
+                'challenge_id' => $id,
                 'title' => $validated['milestones'][0]['name'],
                 'description' => $validated['milestones'][0]['description'],
                 'date_of_reasisation' => $validated['milestones'][0]['date_of_completion'],
@@ -470,5 +471,34 @@ class ChallengeController extends Controller
             return response()->json(['Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
         }
 
+    }
+
+    public function sendToCommission(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'team_id' => 'required|exists:teams,id',
+            'commission_members' => 'required|array|min:1',
+            'commission_members.*.id' => 'required|exists:users,id',
+            'commission_members.*.status' => 'required|in:member,recorder'
+        ]);
+
+        $challenge = Challenge::findOrFail($id);
+
+        DB::transaction(function () use ($challenge, $validated) {
+            $challenge->update([
+                'status' => 'in_evaluation'
+            ]);
+
+            $membersData = [];
+            foreach ($validated['commission_members'] as $member) {
+                $membersData[$member['id']] = ['status' => $member['status']];
+            }
+
+            $challenge->commission_members()->syncWithoutDetaching($membersData);
+            $challenge->attached_team()->update([
+                'active_from' => now()
+            ]);
+        });
+        return response('Výzva bola úspešne aktualizovaná', Response::HTTP_OK);
     }
 }

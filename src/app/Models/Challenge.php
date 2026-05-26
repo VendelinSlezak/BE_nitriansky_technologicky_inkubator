@@ -67,13 +67,13 @@ class Challenge extends Model
     }
 
     public function attached_team() {
-        return $this->hasOne(Team::class)
-            ->whereNotNull('active_from')
-            ->latestOfMany();
+        return $this->hasOne(Team::class);
     }
 
     public function commission_members() : BelongsToMany {
-        return $this->belongsToMany(User::class, 'commission_members');
+        return $this->belongsToMany(User::class, 'commission_members')
+                    ->withPivot('status')
+                    ->withTimestamps();
     }
 
     public function product_owner() : BelongsTo {
