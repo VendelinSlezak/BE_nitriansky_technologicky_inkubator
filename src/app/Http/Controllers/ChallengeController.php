@@ -27,9 +27,11 @@ class ChallengeController extends Controller
     public function getProgramAChallenges() {
         $challenges = Challenge::with('program_a_categories')
             ->where('program', 'A')
+            ->where('status', 'open')
             ->get()
             ->map(function ($company) {
                 return [
+                    'program' => 'A',
                     'id' => $company->id,
                     'name' => $company->name,
                     'description' => $company->description,
@@ -42,9 +44,11 @@ class ChallengeController extends Controller
     public function getProgramBChallenges() {
         $challenges = Challenge::with('program_a_categories')
             ->where('program', 'B')
+            ->where('status', 'open')
             ->get()
             ->map(function ($company) {
                 return [
+                    'program' => 'B',
                     'id' => $company->id,
                     'name' => $company->name,
                     'description' => $company->description,
@@ -122,7 +126,7 @@ class ChallengeController extends Controller
     public function createProgramAChallenge(Request $request, FileService $fileService) {
         $validated = $request->validate([
             'name_of_challenge' => 'required|string',
-            'category_of_challenge_id' => 'required|string',
+            'category_of_challenge_id' => 'required|string|exists:program_a_categories,id',
             'description_of_challenge' => 'required|string',
             'proposal_implemenation_file' => 'required|file|max:8192',
         ]);

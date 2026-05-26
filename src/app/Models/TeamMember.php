@@ -11,10 +11,14 @@ class TeamMember extends Model
     protected $fillable = ['team_id', 'student_id', 'status', 'active_from', 'active_to', 'statuory_declaration_id'];
 
     public function team() {
-        return $this->belongsTo(Team::class);
+        return $this->belongsTo(Team::class, 'team_id');
     }
 
     public function student() {
-        return $this->belongsTo(Student::class);
+        return $this->belongsTo(Student::class, 'student_id');
+    }
+
+    public function statuory_declaration() {
+        return $this->belongsTo(File::class, 'statuory_declaration_id');
     }
 }
