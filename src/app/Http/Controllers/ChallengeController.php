@@ -464,7 +464,7 @@ class ChallengeController extends Controller
                 'status' => 'in_realisation',
             ]);
 
-            return response()->json(['Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
+            return response()->json(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
         }
 
     }
@@ -495,6 +495,6 @@ class ChallengeController extends Controller
                 'active_from' => now()
             ]);
         });
-        return response('Výzva bola úspešne aktualizovaná', Response::HTTP_OK);
+        return response(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
     }
 }

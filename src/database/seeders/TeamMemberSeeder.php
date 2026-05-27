@@ -16,7 +16,7 @@ class TeamMemberSeeder extends Seeder
         $now = now();
         $oneWeekLater = now()->addWeek();
 
-        DB::table('team_member')->insert([
+        DB::table('team_members')->insert([
             [
                 'team_id' => 1,
                 'student_id' => 1,

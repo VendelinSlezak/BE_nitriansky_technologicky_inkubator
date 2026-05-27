@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Team;
+use App\Models\TeamMember;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use App\Services\FileService;
 use App\Models\Challenge;
 use App\Models\User;
 use App\Models\Student;
+use Illuminate\Support\Facades\DB;
 use Throwable;
 use App\Models\File;
 
@@ -50,12 +52,12 @@ class TeamController extends Controller
 
         try {
             $fileService->uploadAndCreateRecord(
-                $request->file('proposal_of_implementation'), 
+                $request->file('proposal_of_implementation'),
                 'proposals_of_implementation',
                 'private',
                 function (File $POIfileRecord) use ($fileService, $request, $validated) {
                     $fileService->uploadAndCreateRecord(
-                        $request->file('cover_letter'), 
+                        $request->file('cover_letter'),
                         'cover_letters',
                         'private',
                         function (File $CLfileRecord) use ($POIfileRecord, $validated) {
@@ -141,5 +143,49 @@ class TeamController extends Controller
         }
         $team->delete();
         return response()->json(['message' => 'Team deleted successfully'], Response::HTTP_OK);
+    }
+
+    public function createTeam(Request $request, FileService $fileService)
+    {
+        $validated = $request->validate([
+            'challenge_id' => 'required|exists:challenges,id',
+            'name_of_team' => 'required|string',
+            'members' => 'required|array|min:1',
+            'members.*.id' => 'required|exists:users,id',
+            'members.*.status' => 'required|in:member,teamleader',
+            'proposal_of_implementation' => 'required|file',
+            'cover_letter' => 'required|file',
+        ]);
+
+        DB::transaction(function () use ($validated, $request, $fileService) {
+            $proposal_of_implementation = $fileService->uploadAndCreateRecord(
+                file: $request->file('proposal_of_implementation'),
+                subFolder: 'challenges/documents',
+                disk: 'public'
+            );
+
+            $cover_letter = $fileService->uploadAndCreateRecord(
+                file: $request->file('cover_letter'),
+                subFolder: 'challenges/documents',
+                disk: 'public'
+            );
+
+            $team = Team::create([
+                'challenge_id' => $validated['challenge_id'],
+                'name' => $validated['name_of_team'],
+                'active_from' => null,
+                'active_to' => null,
+                'proposal_of_implementation_id' => $proposal_of_implementation->id,
+                'cover_letter_id' => $cover_letter->id,
+            ]);
+            $membersData = [];
+            foreach ($validated['members'] as $member) {
+                $membersData[$member['id']] = ['status' => $member['status']];
+            }
+
+            $team->teamMembers()->attach($membersData);
+        });
+        return response()->json(['message' => 'Tím bol úspešne vytvorený'], Response::HTTP_OK);
+
     }
 }
