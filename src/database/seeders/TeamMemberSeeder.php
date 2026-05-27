@@ -14,16 +14,17 @@ class TeamMemberSeeder extends Seeder
     public function run(): void
     {
         $now = now();
-        $oneWeekLater = now()->addWeek();
 
         DB::table('team_members')->insert([
             [
                 'team_id' => 1,
-                'student_id' => 1,
+                'student_id' => 3,
                 'status' => 'invited',
                 'active_from' => null,
                 'active_to' => null,
                 'statuory_declaration_id' => null,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'team_id' => 1,
@@ -32,6 +33,8 @@ class TeamMemberSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => null,
                 'statuory_declaration_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'team_id' => 2,
@@ -40,14 +43,18 @@ class TeamMemberSeeder extends Seeder
                 'active_from' => $now,
                 'active_to' => null,
                 'statuory_declaration_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
             [
                 'team_id' => 4,
-                'student_id' => 5,
+                'student_id' => 1,
                 'status' => 'teamleader',
                 'active_from' => $now,
                 'active_to' => null,
                 'statuory_declaration_id' => 1,
+                'created_at' => $now,
+                'updated_at' => $now,
             ],
         ]);
     }

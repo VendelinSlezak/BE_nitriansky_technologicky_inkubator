@@ -12,7 +12,7 @@ class Team extends Model
 {
     protected $table = 'teams';
     protected $id = 'id';
-    protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id', 'proposal_of_implementation_id', 'cover_letter_id'];
+    protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id', 'proposal_of_implementation_id', 'cover_letter_id', 'status'];
 
     public function challenge() : BelongsTo {
         return $this->belongsTo(Challenge::class, 'challenge_id');

@@ -32,17 +32,22 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('student')->group(function () {
             Route::get('/student', [StudentController::class, 'dashboard']);
-            Route::post('/program-a/create', [ChallengeController::class, 'createProgramAChallenge']);
+            Route::post('/program-a/create-challenge', [ChallengeController::class, 'createProgramAChallenge']);
             Route::post('/student/accept-invitation', [StudentController::class, 'acceptTeamInvitation']);
             Route::post('/student/reject-invitation', [StudentController::class, 'rejectTeamInvitation']);
             Route::post('/student/create-team', [TeamController::class, 'store']);
             Route::get('/program-a/categories', [StudentController::class, 'getProgramACategories']);
+
+            Route::post('/team/{team}/invite-member', [TeamController::class, 'inviteMember']);
+            Route::delete('/team/{team}/remove-member/{student}', [TeamController::class, 'deleteMember']);
+            Route::post('/team/{team}/send-for-approval', [TeamController::class, 'completeTeam']);
         });
 
         Route::middleware('admin_or_student')->group(function () {
             Route::get('/program-a', [ChallengeController::class, 'getProgramAChallenges']);
             Route::get('/program-b', [ChallengeController::class, 'getProgramBChallenges']);
-            Route::get('/student/{student}/can-be-invited', [StudentController::class, 'canBeInvited']);
+            Route::post('/student/can-be-invited', [StudentController::class, 'canBeInvited']);
+            Route::delete('/team/{team}', [TeamController::class, 'destroy']);
         });
 
         Route::middleware('admin')->group(function () {
@@ -67,7 +72,6 @@ Route::prefix('auth')->group(function () {
             Route::post('/program-a/category/{id}', [ProgramAController::class, 'update']);
             Route::delete('/program-a/category/{id}', [ProgramAController::class, 'destroy']);
 
-            Route::delete('/team/{id}', [TeamController::class, 'destroy']);
             Route::delete('/student/{id}', [StudentController::class, 'destroy']);
             Route::post('/create-team', [TeamController::class, 'createTeam']);
 

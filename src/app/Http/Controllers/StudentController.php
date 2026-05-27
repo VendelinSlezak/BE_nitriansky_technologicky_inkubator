@@ -11,6 +11,7 @@ use Illuminate\Http\Response;
 use App\Services\FileService;
 use Throwable;
 use App\Models\File;
+use App\Models\User;
 
 class StudentController extends Controller
 {
@@ -24,6 +25,7 @@ class StudentController extends Controller
             ->get()
             ->map(function ($team) {
                 return [
+                    'id' => $team->challenge->id,
                     'name' => $team->challenge->name,
                     'date_of_completion' => $team->challenge->date_of_completion,
                     'final_assessment' => $team->challenge->final_assessment,
@@ -37,6 +39,28 @@ class StudentController extends Controller
             $response['project_program'] = $challenge->program;
             $response['name_of_project'] = $challenge->name;
             $response['description_of_project'] = $challenge->description;
+            $response['team_id'] = $active_team->id;
+            $response['team_members'] = $active_team->students->map(function ($teamMember) {
+                if($teamMember->pivot->status == 'teamleader') {
+                    $role = 'teamleader';
+                    $status = 'active';
+                }
+                else if($teamMember->pivot->status == 'team_member') {
+                    $role = 'member';
+                    $status = 'active';
+                }
+                else {
+                    $role = 'member';
+                    $status = 'invited';
+                }
+                return [
+                    'student_id' => $teamMember->id,
+                    'name' => $teamMember->user->name,
+                    'email' => $teamMember->user->email,
+                    'role' => $role,
+                    'status' => $status,
+                ];
+            });
 
             if($active_team->pivot->status == 'invited') {
                 $response['status'] = 'invited';
@@ -45,17 +69,23 @@ class StudentController extends Controller
                     $response['category_name'] = $program_a_category->title;
                     $response['description_of_skills'] = $program_a_category->description_of_skills;
                 }
-                // $response['link_to_statutory_declaration'] = $challenge->pivot->program_a_categories->statutory_declaration->url; // TODO: lepšie vymyslieť odkaz na statutory declaration
             }
-            else {
-                $response['status'] = 'member_of_team';
-                if($active_team->active_from == null) {
-                    $response['status_of_team'] = 'waiting';
-                }
-                else {
-                    $response['status_of_team'] = 'approved';
-                    $response['technical_specification'] = $challenge->proposal_file->url;
-                    $response['proposal_of_implementation'] = $active_team->proposal_of_implementation->url;
+            else if($active_team->pivot->status == 'teamleader' && $active_team->status == 'draft') {
+                $response['status'] = 'team_draft';
+                $response['team_id'] = $active_team->id;
+            }
+            else { // team_member
+                $response['status'] = 'team_waiting_for_approval';
+                if($active_team->status == 'active') {
+                    $response['status'] = 'approved_team';
+                    $response['technical_specification_file'] = [
+                        'url' => $active_team->technical_specification->url,
+                        'name' => $active_team->technical_specification->original_name
+                    ];
+                    $response['proposal_of_implementation_file'] = [
+                        'url' => $active_team->proposal_of_implementation->url,
+                        'name' => $active_team->proposal_of_implementation->original_name
+                    ];
                     $response['milestones'] = $challenge->milestones;
                 }
             }
@@ -99,9 +129,12 @@ class StudentController extends Controller
                 function (File $fileRecord) use ($request, $team) {
                     $student = $request->user()->student;
                     $student->teams()->updateExistingPivot($team->id, [
-                        'status' => 'member_of_team',
+                        'status' => 'team_member',
                         'active_from' => now(),
                         'statuory_declaration_id' => $fileRecord->id,
+                    ]);
+                    $student->update([
+                        'team_status' => 'team_member',
                     ]);
                 }
             );
@@ -134,7 +167,17 @@ class StudentController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function canBeInvited(Student $student) {
+    public function canBeInvited(Request $request) {
+        $validated = $request->validate([
+            'email' => ['required', 'email', 'exists:users,email'],
+        ]);
+        $user = User::where('email', $validated['email'])->first();
+        if($user->id == auth()->user()->id) {
+            return response()->json([
+                'status' => false
+            ], Response::HTTP_OK);
+        }
+        $student = Student::where('user_id', $user->id)->first();
         return response()->json([
             'status' => $student->can_be_invited()
         ], Response::HTTP_OK);
