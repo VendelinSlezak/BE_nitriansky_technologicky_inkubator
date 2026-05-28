@@ -74,6 +74,7 @@ Route::prefix('auth')->group(function () {
 
             Route::delete('/student/{id}', [StudentController::class, 'destroy']);
             Route::post('/create-team', [TeamController::class, 'createTeam']);
+            Route::post('/team/{team}', [TeamController::class, 'updateTeam']);
 
             Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
             Route::get('/students/registration-requests', [StudentController::class, 'getRegistrationRequests']);

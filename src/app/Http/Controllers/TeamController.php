@@ -178,7 +178,7 @@ class TeamController extends Controller
             'challenge_id' => 'required|exists:challenges,id',
             'name_of_team' => 'required|string',
             'members' => 'required|array|min:1',
-            'members.*.id' => 'required|exists:users,id',
+            'members.*.id' => 'required|exists:students,id',
             'members.*.status' => 'required|in:member,teamleader',
             'proposal_of_implementation' => 'required|file',
             'cover_letter' => 'required|file',
@@ -219,7 +219,7 @@ class TeamController extends Controller
                     }
                 }
 
-                // Zachované teamMembers() s metódou attach()
+
                 $team->teamMembers()->attach($membersData);
             });
 
@@ -232,6 +232,91 @@ class TeamController extends Controller
         }
     }
 
+    public function updateTeam(Team $team, Request $request, FileService $fileService)
+    {
+        $validated = $request->validate([
+            'challenge_id' => 'nullable|exists:challenges,id',
+            'name_of_team' => 'nullable|string',
+            'members' => 'nullable|array|min:1',
+            'members.*.id' => 'required_with:members|exists:students,id',
+            'members.*.status' => 'required_with:members|in:member,teamleader',
+            'proposal_of_implementation' => 'nullable|file',
+            'cover_letter' => 'nullable|file',
+        ]);
+
+        $filledData = array_filter($validated, function ($value) {
+            return !is_null($value);
+        });
+
+        $teamData = Arr::only($filledData, ['challenge_id', 'name_of_team']);
+
+        if (array_key_exists('name_of_team', $teamData)) {
+            $teamData['name'] = $teamData['name_of_team'];
+            unset($teamData['name_of_team']);
+        }
+
+        $oldProposalId = null;
+        $oldCoverLetterId = null;
+
+        if ($request->hasFile('proposal_of_implementation')) {
+            $oldProposalId = $team->proposal_of_implementation_id;
+
+            $proposal = $fileService->uploadAndCreateRecord(
+                file: $request->file('proposal_of_implementation'),
+                subFolder: 'challenges/documents',
+                disk: 'public'
+            );
+
+            $teamData['proposal_of_implementation_id'] = $proposal->id;
+        }
+
+        if ($request->hasFile('cover_letter')) {
+            $oldCoverLetterId = $team->cover_letter_id;
+
+            $coverLetter = $fileService->uploadAndCreateRecord(
+                file: $request->file('cover_letter'),
+                subFolder: 'challenges/documents',
+                disk: 'public'
+            );
+
+            $teamData['cover_letter_id'] = $coverLetter->id;
+        }
+
+        if (!empty($teamData)) {
+            $team->update($teamData);
+        }
+
+        if ($oldProposalId || $oldCoverLetterId) {
+            try {
+                DB::transaction(function () use ($oldProposalId, $oldCoverLetterId) {
+                    if ($oldProposalId) {
+                        File::destroy($oldProposalId);
+                    }
+
+                    if ($oldCoverLetterId) {
+                        File::destroy($oldCoverLetterId);
+                    }
+                });
+            } catch (Throwable $e) {
+                return response()->json([
+                    'message' => 'Something went wrong while deleting old files: ' . $e->getMessage()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        if (array_key_exists('members', $filledData)) {
+            $syncData = [];
+
+            if (is_array($filledData['members'])) {
+                foreach ($filledData['members'] as $member) {
+                    $syncData[$member['id']] = [
+                        'status' => $member['status'],
+                    ];
+                }
+            }
+            $team->teamMembers()->sync($syncData);
+        }
+    }
     /**
      * Pozvanie dodatočného člena do tímu.
      */
