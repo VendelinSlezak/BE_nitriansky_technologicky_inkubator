@@ -15,8 +15,17 @@ class TeamResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
+            'team_id' => $this->id,
             'challenge_id' => $this->challenge_id,
-            'name' => $this->name
+            'name' => $this->name,
+            'members' => $this->teamMembers->map(function ($student) {
+                return [
+                    'id' => $student->id,
+                    'status' => $student->pivot->status,
+                ];
+            }),
+            'proposal_of_implementation_id' => $this->proposal_of_implementation_id,
+            'cover_letter_id' => $this->cover_letter_id
         ];
     }
 }

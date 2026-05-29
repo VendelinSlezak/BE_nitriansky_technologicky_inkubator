@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\TeamResource;
 use App\Models\Team;
 use App\Models\Student;
 use App\Models\Challenge;
@@ -127,9 +128,11 @@ class TeamController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Team $team)
     {
-        return response()->json(Team::with('teamMembers')->findOrFail($id));
+        $team->load('teamMembers');
+
+        return response()->json(new TeamResource($team));
     }
 
     /**
@@ -316,6 +319,7 @@ class TeamController extends Controller
             }
             $team->teamMembers()->sync($syncData);
         }
+        return response()->json(['message' => 'Team updated successfully'], Response::HTTP_OK);
     }
     /**
      * Pozvanie dodatočného člena do tímu.
