@@ -28,7 +28,8 @@ class ChallengeResource extends JsonResource
 
             $this->mergeWhen($request->routeIs('challenges.registration-requests'),[
                 'name_of_author' => $this->users->name,
-                'technical_specification' => $this->files->id,
+                'technical_specification_url' => $this->files->url,
+                'technical_specification_name' => $this->files->original_name,
                 'when' => $this->created_at->format('d.m.Y H:i')
             ]),
 
@@ -39,7 +40,7 @@ class ChallengeResource extends JsonResource
                 'proposal_file_size' => $this->proposal_file->size,
             ]),
 
-            'admin_info' => $this->mergeWhen($request->user()?->isAdmin() && !$request->routeIs('challenges.registration-requests'), [
+            $this->mergeWhen($request->user()?->isAdmin() && !$request->routeIs('challenges.registration-requests'), [
                 'status' => $this->status,
                 'teams' => $this->when($this->status === 'open', function() {
                     return $this->relationLoaded('teams')
