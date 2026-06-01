@@ -17,7 +17,7 @@ class StudentSeeder extends Seeder
             [
                 'user_id' => 2,
                 'university' => 'UKF',
-                'is_accepted_by_admin' => true,
+                'is_accepted_by_admin' => false,
                 'team_status' => 'not_in_team',
                 'curriculum_vitae_id' => 2
             ],
@@ -25,7 +25,6 @@ class StudentSeeder extends Seeder
                 'user_id' => 3,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => true,
-                // 'team_status' => 'teamleader',
                 'team_status' => 'not_in_team',
                 'curriculum_vitae_id' => 3
             ],
@@ -33,7 +32,6 @@ class StudentSeeder extends Seeder
                 'user_id' => 4,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => true,
-                // 'team_status' => 'team_member',
                 'team_status' => 'not_in_team',
                 'curriculum_vitae_id' => 4
             ],
@@ -41,7 +39,6 @@ class StudentSeeder extends Seeder
                 'user_id' => 5,
                 'university' => 'SPU',
                 'is_accepted_by_admin' => true,
-                // 'team_status' => 'inivited',
                 'team_status' => 'not_in_team',
                 'curriculum_vitae_id' => 5
             ]

@@ -51,6 +51,7 @@ Route::prefix('auth')->group(function () {
         });
 
         Route::middleware('admin')->group(function () {
+            Route::get('/users', [UserController::class, 'index']);
             Route::post('/user/{user}', [UserController::class, 'updateUserAccount']);
 
             Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
@@ -77,14 +78,13 @@ Route::prefix('auth')->group(function () {
             Route::post('/team/{team}', [TeamController::class, 'updateTeam']);
             Route::get('/team/{team}', [TeamController::class, 'show']);
 
-            Route::get('/students', [StudentController::class, 'adminStudentsInfo']);
             Route::get('/students/registration-requests', [StudentController::class, 'getRegistrationRequests']);
-            Route::post('/student/{student}/accept-registration-request', [StudentController::class, 'approveRegistration']);
-            Route::post('/student/{student}/reject-registration-request', [StudentController::class, 'rejectRegistration']);
+            Route::post('/student/{student}/approve-registration', [StudentController::class, 'approveRegistration']);
+            Route::post('/student/{student}/reject-registration', [StudentController::class, 'rejectRegistration']);
 
             Route::get('/companies/registration-requests', [CompanyController::class, 'getRegistrationRequests']);
-            Route::post('/company/{company}/accept-registration-request', [CompanyController::class, 'approveRegistration']);
-            Route::post('/company/{company}/reject-registration-request', [CompanyController::class, 'rejectRegistration']);
+            Route::post('/company/{company}/approve-registration', [CompanyController::class, 'approveRegistration']);
+            Route::post('/company/{company}/reject-registration', [CompanyController::class, 'rejectRegistration']);
         });
 
         Route::middleware('admin_or_commission_member')->group(function () {

@@ -198,10 +198,12 @@ class StudentController extends Controller
             ->map(function ($student) {
                 return [
                     'id' => $student->id,
+                    'type' => 'student',
                     'name' => $student->user->name,
                     'email' => $student->user->email,
                     'university' => $student->university,
-                    'curriculum_vitae' => $student->curriculumVitae->url,
+                    'curriculum_vitae_url' => $student->curriculumVitae->url,
+                    'curriculum_vitae_name' => $student->curriculumVitae->original_name
                 ];
             });
         

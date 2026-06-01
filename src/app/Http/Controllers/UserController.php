@@ -14,6 +14,39 @@ use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
+    public function index() {
+        return User::with(['student', 'company'])->get()->filter(function ($user) {
+            if ($user->role == 'student') {
+                return $user->student && $user->student->is_accepted_by_admin;
+            }
+            
+            if ($user->role == 'company_admin') {
+                return $user->company && $user->company->is_approved_by_admin;
+            }
+
+            return true;
+        })->map(function ($user) {
+            $data = [
+                'id' => $user->id,
+                'name' => $user->name,
+                'email' => $user->email,
+            ];
+
+            $data['role'] = match ($user->role) {
+                'student'          => 'študent',
+                'company_admin'    => 'firma',
+                'mentor'           => 'mentor',
+                'committee_member' => 'člen komisie',
+                'admin'            => 'admin',
+                'company_member'   => 'člen firmy',
+                'web_editor'       => 'web editor',
+                default            => $user->role,
+            };
+
+            return $data;
+        })->values();
+    }
+
     public function updateUserAccount(Request $request, User $user, FileService $fileService) {
         $validated = $request->validate([
             'name' => 'nullable|string',

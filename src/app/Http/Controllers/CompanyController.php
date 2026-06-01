@@ -173,12 +173,13 @@ class CompanyController extends Controller
             ->map(function ($company) {
                 return [
                     'id' => $company->id,
+                    'type' => 'company',
                     'name_of_company' => $company->user->name,
                     'ico' => $company->ico,
                     'dic' => $company->dic,
                     'name_of_contact_person' => $company->name_of_contact_person,
                     'email' => $company->user->email,
-                    'logo' => $company->logo->url,
+                    'logo_url' => $company->logo->url,
                 ];
             });
         
