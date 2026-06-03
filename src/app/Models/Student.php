@@ -39,7 +39,7 @@ class Student extends Authenticatable {
     }
 
     public function teams() : BelongsToMany {
-        return $this->belongsToMany(Team::class, 'team_member')
+        return $this->belongsToMany(Team::class, 'team_members')
             ->withPivot('status', 'active_from', 'active_to', 'statuory_declaration_id')
             ->withTimestamps();
     }
@@ -53,7 +53,7 @@ class Student extends Authenticatable {
     }
 
     public function active_team() {
-        return $this->belongsToMany(Team::class, 'team_member')
+        return $this->belongsToMany(Team::class, 'team_members')
             ->withPivot([
                 'status', 
                 'active_from', 
@@ -62,16 +62,16 @@ class Student extends Authenticatable {
             ])
             ->withTimestamps()
             ->where(function ($query) {
-                $query->where('team_member.active_to', '>=', now())
-                    ->orWhereNull('team_member.active_to');
+                $query->where('team_members.active_to', '>=', now())
+                    ->orWhereNull('team_members.active_to');
             })
             ->limit(1);
     }
 
     public function can_be_invited() : bool {
         $hasTeam = $this->teams()->where(function ($query) {
-            $query->whereNull('team_member.active_to')
-                ->orWhere('team_member.active_to', '>=', now());
+            $query->whereNull('team_members.active_to')
+                ->orWhere('team_members.active_to', '>=', now());
         })->exists();
 
         return !$hasTeam;

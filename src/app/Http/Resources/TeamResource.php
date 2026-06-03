@@ -37,7 +37,7 @@ class TeamResource extends JsonResource
                 return [
                     // Ideme cez: Student -> User -> Name
                     'teamleader_name' => $teamleader?->user?->name,
-                    'is_active' => $this->active_to > now()->toDateTimeString(),
+                    'is_active' => is_null($this->active_to) || $this->active_to > now()->toDateTimeString(),
                 ];
             })
         ];

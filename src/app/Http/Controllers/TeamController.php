@@ -194,36 +194,45 @@ class TeamController extends Controller
                 $proposal_of_implementation = $fileService->uploadAndCreateRecord(
                     file: $request->file('proposal_of_implementation'),
                     subFolder: 'challenges/documents',
-                    disk: 'public'
+                    disk: 'private'
                 );
 
                 $cover_letter = $fileService->uploadAndCreateRecord(
                     file: $request->file('cover_letter'),
                     subFolder: 'challenges/documents',
-                    disk: 'public'
+                    disk: 'private'
                 );
 
                 $team = Team::create([
                     'challenge_id' => $validated['challenge_id'],
                     'name' => $validated['name_of_team'],
-                    'active_from' => null,
+                    'active_from' => now(),
                     'active_to' => null,
                     'proposal_of_implementation_id' => $proposal_of_implementation->id,
                     'cover_letter_id' => $cover_letter->id,
-                    'status' => 'inactive'
+                    'status' => 'active'
                 ]);
 
-                $userIds = collect($validated['members'])->pluck('id')->toArray();
-                $studentsMap = Student::whereIn('user_id', $userIds)->get()->keyBy('user_id');
+                $studentIds = collect($validated['members'])->pluck('id')->toArray();
+                $studentsMap = Student::whereIn('id', $studentIds)->get()->keyBy('id');
 
                 $membersData = [];
                 foreach ($validated['members'] as $member) {
                     $student = $studentsMap->get($member['id']);
+                    
                     if ($student) {
-                        $membersData[$student->id] = ['status' => $member['status']];
+                        $dbStatus = $member['status'] === 'member' ? 'team_member' : 'teamleader';
+
+                        $membersData[$student->id] = [
+                            'status' => $dbStatus,
+                            'active_from' => now(),
+                        ];
+                        
+                        $student->update([
+                            'team_status' => $dbStatus
+                        ]);
                     }
                 }
-
 
                 $team->teamMembers()->attach($membersData);
             });

@@ -26,7 +26,7 @@ class Team extends Model
     }
 
     public function students() : BelongsToMany {
-        return $this->belongsToMany(Student::class, 'team_member')
+        return $this->belongsToMany(Student::class, 'team_members')
             ->withPivot('status', 'active_from', 'active_to', 'statuory_declaration_id')
             ->withTimestamps();
     }

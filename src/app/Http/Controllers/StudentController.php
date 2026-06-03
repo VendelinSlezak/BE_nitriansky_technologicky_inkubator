@@ -79,8 +79,8 @@ class StudentController extends Controller
                 if($active_team->status == 'active') {
                     $response['status'] = 'approved_team';
                     $response['technical_specification_file'] = [
-                        'url' => $active_team->technical_specification->url,
-                        'name' => $active_team->technical_specification->original_name
+                        'url' => $active_team->challenge->proposal_file->url,
+                        'name' => $active_team->challenge->proposal_file->original_name
                     ];
                     $response['proposal_of_implementation_file'] = [
                         'url' => $active_team->proposal_of_implementation->url,
@@ -178,8 +178,14 @@ class StudentController extends Controller
             ], Response::HTTP_OK);
         }
         $student = Student::where('user_id', $user->id)->first();
+        if(!$student) {
+            return response()->json([
+                'status' => false
+            ], Response::HTTP_OK);
+        }
         return response()->json([
-            'status' => $student->can_be_invited()
+            'status' => $student->can_be_invited(),
+            'id' => $student->id
         ], Response::HTTP_OK);
     }
 
