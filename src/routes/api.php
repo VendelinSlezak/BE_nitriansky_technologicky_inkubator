@@ -77,6 +77,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/create-team', [TeamController::class, 'createTeam']);
             Route::post('/team/{team}', [TeamController::class, 'updateTeam']);
             Route::get('/team/{team}', [TeamController::class, 'show']);
+            Route::get('/teams', [TeamController::class, 'index'])->name('admin.teams');
 
             Route::get('/students/registration-requests', [StudentController::class, 'getRegistrationRequests']);
             Route::post('/student/{student}/approve-registration', [StudentController::class, 'approveRegistration']);

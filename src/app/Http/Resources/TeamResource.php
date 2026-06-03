@@ -16,16 +16,30 @@ class TeamResource extends JsonResource
     {
         return [
             'team_id' => $this->id,
-            'challenge_id' => $this->challenge_id,
             'name' => $this->name,
-            'members' => $this->teamMembers->map(function ($student) {
+            $this->mergeWhen(!$request->routeIs('admin.teams'), function () {
                 return [
-                    'id' => $student->id,
-                    'status' => $student->pivot->status,
+                    'challenge_id' => $this->challenge_id,
+                    'members' => $this->teamMembers->map(function ($student) {
+                        return [
+                            'id' => $student->id,
+                            'status' => $student->pivot->status,
+                        ];
+                    }),
+                    'proposal_of_implementation_id' => $this->proposal_of_implementation_id,
+                    'cover_letter_id' => $this->cover_letter_id
+                    ];
+                }),
+            $this->mergeWhen($request->routeIs('admin.teams'), function () {
+                // Nájdeme teamleadra (objekt Student)
+                $teamleader = $this->teamMembers->firstWhere('pivot.status', 'teamleader');
+
+                return [
+                    // Ideme cez: Student -> User -> Name
+                    'teamleader_name' => $teamleader?->user?->name,
+                    'is_active' => $this->active_to > now()->toDateTimeString(),
                 ];
-            }),
-            'proposal_of_implementation_id' => $this->proposal_of_implementation_id,
-            'cover_letter_id' => $this->cover_letter_id
+            })
         ];
     }
 }
