@@ -47,6 +47,32 @@ class UserController extends Controller
         })->values();
     }
 
+    public function getUserAccount(Request $request, User $user) {
+        $data = [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'role' => $user->role
+        ];
+        if($user->role == 'student') {
+            $data['university'] = $user->student->university;
+        }
+        if($user->role == 'company_admin') {
+            $data['ico'] = $user->company->ico;
+            $data['dic'] = $user->company->dic;
+            $data['contactPerson'] = $user->company->name_of_contact_person;
+            $data['address'] = $user->company->address;
+            $data['category'] = $user->company->category;
+            $data['companyDescription'] = $user->company->description;
+        }
+        if($user->role == 'mentor') {
+            $data['description'] = $user->mentor->description;
+            $data['expertise'] = $user->mentor->expertise;
+            $data['experience'] = $user->mentor->experience;
+        }
+        return $data;
+    }
+
     public function updateUserAccount(Request $request, User $user, FileService $fileService) {
         $validated = $request->validate([
             'name' => 'nullable|string',
@@ -129,7 +155,7 @@ class UserController extends Controller
         }
 
         // --- 3. AKTUALIZÁCIA FIRMY (Company) ---
-        elseif ($user->role === 'company_member') {
+        elseif ($user->role === 'company_admin') {
             $company = $user->company;
             $companyData = [];
             $fileToDelete = null; // Tu si len zapamätáme staré logo na zmazanie

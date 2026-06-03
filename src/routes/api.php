@@ -52,6 +52,7 @@ Route::prefix('auth')->group(function () {
 
         Route::middleware('admin')->group(function () {
             Route::get('/users', [UserController::class, 'index']);
+            Route::get('/user/{user}', [UserController::class, 'getUserAccount']);
             Route::post('/user/{user}', [UserController::class, 'updateUserAccount']);
 
             Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
