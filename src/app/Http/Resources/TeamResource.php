@@ -31,11 +31,9 @@ class TeamResource extends JsonResource
                     ];
                 }),
             $this->mergeWhen($request->routeIs('admin.teams'), function () {
-                // Nájdeme teamleadra (objekt Student)
                 $teamleader = $this->teamMembers->firstWhere('pivot.status', 'teamleader');
 
                 return [
-                    // Ideme cez: Student -> User -> Name
                     'teamleader_name' => $teamleader?->user?->name,
                     'is_active' => is_null($this->active_to) || $this->active_to > now()->toDateTimeString(),
                 ];

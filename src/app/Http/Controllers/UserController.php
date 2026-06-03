@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Company;
 use App\Models\File;
+use App\Models\Mentor;
 use App\Models\Student;
 use App\Models\User;
 use App\Services\FileService;
 use Illuminate\Http\Response;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
@@ -19,7 +21,7 @@ class UserController extends Controller
             if ($user->role == 'student') {
                 return $user->student && $user->student->is_accepted_by_admin;
             }
-            
+
             if ($user->role == 'company_admin') {
                 return $user->company && $user->company->is_approved_by_admin;
             }
@@ -218,5 +220,121 @@ class UserController extends Controller
                 return response('Mentor účet bol úspešne aktualizovaný', Response::HTTP_OK);
             }
         }
+    }
+
+    public function createAccount(Request $request, FileService $fileService)
+    {
+        $validated = $request->validate([
+            'type' => 'required|in:student,company,editor,mentor,committee_member',
+            'name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required|string|confirmed',
+
+
+            'university' => 'required_if:type,student|string',
+            'curriculum_vitae' => 'required_if:type,student|file|mimes:pdf,docx,doc|max:5120',
+
+            'company_name' => 'required_if:type,company|string',
+            'company_address' => 'required_if:type,company|string',
+            'description' => 'required_if:type,company,mentor|string',
+            'ico' => 'required_if:type,company|string',
+            'dic' => 'required_if:type,company|string',
+            'category' => 'required_if:type,company|string',
+            'name_of_contact_person' => 'required_if:type,company|string',
+            //'is_approved_by_admin' => 'required_if:type,company|boolean',
+            'show_logo_image' => 'required_if:type,company|string',
+            'logo' => 'required_if:type,company|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+            'expertise' => 'required_if:type,mentor|string',
+            'experience' => 'required_if:type,mentor|string',
+        ]);
+
+        switch ($validated['type']) {
+            case 'student':
+                DB::transaction(function () use ($validated, $fileService, $request) {
+                    $user = User::create([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'],
+                        'password' => Hash::make($validated['password']),
+                        'role' => $validated['type'],
+                    ]);
+
+                    $cv = $fileService->uploadAndCreateRecord(
+                        file: $request->file('curriculum_vitae'),
+                        subFolder: 'documents',
+                        disk: 'private'
+                    );
+
+                    Student::create([
+                        'user_id' => $user->id,
+                        'university' => $validated['university'],
+                        'curriculum_vitae_id' => $cv->id,
+                        'is_accepted_by_admin' => true,
+                        'team_status' => 'not_in_team',
+                    ]);
+                });
+                break;
+
+            case 'company':
+                DB::transaction(function () use ($validated, $fileService, $request) {
+                    $user = User::create([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'],
+                        'password' => Hash::make($validated['password']),
+                        'role' => $validated['type'],
+                    ]);
+
+
+                    $logo = $fileService->uploadAndCreateRecord(
+                        file: $request->file('logo'),
+                        subFolder: 'logos',
+                        disk: 'private'
+                    );
+
+                    Company::create([
+                        'company_name' => $validated['company_name'],
+                        'company_address' => $validated['company_address'],
+                        'description' => $validated['description'],
+                        'ico' => $validated['ico'],
+                        'dic' => $validated['dic'],
+                        'category' => $validated['category'],
+                        'name_of_contact_person' => $validated['name_of_contact_person'],
+                        'is_approved_by_admin' => true,
+                        'show_logo_image' => filter_var($validated['show_logo_image'], FILTER_VALIDATE_BOOLEAN),                        'user_id' => $user->id,
+                        'logo_id' => $logo->id,
+                    ]);
+                });
+                break;
+
+            case 'mentor':
+                DB::transaction(function () use ($validated) {
+                    $user = User::create([
+                        'name' => $validated['name'],
+                        'email' => $validated['email'],
+                        'password' => Hash::make($validated['password']),
+                        'role' => $validated['type'],
+                    ]);
+
+                    Mentor::create([
+                        'description' => $validated['description'],
+                        'expertise' => $validated['expertise'],
+                        'experience' => $validated['experience'],
+                        'user_id' => $user->id,
+                    ]);
+                });
+                break;
+
+            case 'editor':
+            case 'committee_member':
+                User::create([
+                    'name' => $validated['name'],
+                    'email' => $validated['email'],
+                    'password' => Hash::make($validated['password']),
+                    'role' => $validated['type'],
+                ]);
+                break;
+        }
+
+        return response()->json(['message' => 'Účet úspešne vytvorený.'], Response::HTTP_CREATED);
     }
 }

@@ -87,6 +87,8 @@ Route::prefix('auth')->group(function () {
             Route::get('/companies/registration-requests', [CompanyController::class, 'getRegistrationRequests']);
             Route::post('/company/{company}/approve-registration', [CompanyController::class, 'approveRegistration']);
             Route::post('/company/{company}/reject-registration', [CompanyController::class, 'rejectRegistration']);
+
+            Route::post('/create-account', [UserController::class, 'createAccount']);
         });
 
         Route::middleware('admin_or_commission_member')->group(function () {
