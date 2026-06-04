@@ -38,4 +38,8 @@ class Team extends Model
     public function proposal_of_implementation() {
         return $this->belongsTo(File::class, 'proposal_of_implementation_id');
     }
+
+    public function cover_letter() {
+        return $this->belongsTo(File::class, 'cover_letter_id');
+    }
 }

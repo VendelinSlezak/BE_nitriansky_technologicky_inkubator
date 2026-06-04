@@ -54,6 +54,7 @@ Route::prefix('auth')->group(function () {
             Route::get('/users', [UserController::class, 'index']);
             Route::get('/user/{user}', [UserController::class, 'getUserAccount']);
             Route::post('/user/{user}', [UserController::class, 'updateUserAccount']);
+            Route::delete('/user/{user}', [UserController::class, 'deleteUserAccount']);
 
             Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);

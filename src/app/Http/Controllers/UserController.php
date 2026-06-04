@@ -225,25 +225,23 @@ class UserController extends Controller
     public function createAccount(Request $request, FileService $fileService)
     {
         $validated = $request->validate([
-            'type' => 'required|in:student,company,editor,mentor,committee_member',
+            'type' => 'required|in:student,company_admin,web_editor,mentor,committee_member',
             'name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|string|confirmed',
-
+            'password' => 'required|string',
 
             'university' => 'required_if:type,student|string',
             'curriculum_vitae' => 'required_if:type,student|file|mimes:pdf,docx,doc|max:5120',
 
-            'company_name' => 'required_if:type,company|string',
-            'company_address' => 'required_if:type,company|string',
-            'description' => 'required_if:type,company,mentor|string',
-            'ico' => 'required_if:type,company|string',
-            'dic' => 'required_if:type,company|string',
-            'category' => 'required_if:type,company|string',
-            'name_of_contact_person' => 'required_if:type,company|string',
-            //'is_approved_by_admin' => 'required_if:type,company|boolean',
-            'show_logo_image' => 'required_if:type,company|string',
-            'logo' => 'required_if:type,company|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'description' => 'required_if:type,company_admin,mentor|string',
+
+            'company_name' => 'required_if:type,company_admin|string',
+            'company_address' => 'required_if:type,company_admin|string',
+            'ico' => 'required_if:type,company_admin|string',
+            'dic' => 'required_if:type,company_admin|string',
+            'category' => 'required_if:type,company_admin|string',
+            'name_of_contact_person' => 'required_if:type,company_admin|string',
+            'logo' => 'required_if:type,company_admin|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
 
             'expertise' => 'required_if:type,mentor|string',
             'experience' => 'required_if:type,mentor|string',
@@ -300,7 +298,7 @@ class UserController extends Controller
                         'category' => $validated['category'],
                         'name_of_contact_person' => $validated['name_of_contact_person'],
                         'is_approved_by_admin' => true,
-                        'show_logo_image' => filter_var($validated['show_logo_image'], FILTER_VALIDATE_BOOLEAN),                        'user_id' => $user->id,
+                        'user_id' => $user->id,
                         'logo_id' => $logo->id,
                     ]);
                 });
@@ -324,7 +322,7 @@ class UserController extends Controller
                 });
                 break;
 
-            case 'editor':
+            case 'web_editor':
             case 'committee_member':
                 User::create([
                     'name' => $validated['name'],
@@ -336,5 +334,28 @@ class UserController extends Controller
         }
 
         return response()->json(['message' => 'Účet úspešne vytvorený.'], Response::HTTP_CREATED);
+    }
+
+    public function deleteUserAccount(User $user, FileService $fileService) {
+        if($user->role == 'student') {
+            $student = $user->student;
+            $fileService->deleteFile($student->curriculumVitae);
+            $student->delete();
+        }
+        else if($user->role == 'company_admin') {
+            $company = $user->company;
+            $fileService->deleteFile($company->logo);
+            $company->delete();
+        }
+        else if($user->role == 'company_member') {
+            $company = $user->company;
+            $company->company_employees()->detach($user->id);
+        }
+        else if($user->role == 'mentor') {
+            $mentor = $user->mentor;
+            $mentor->delete();
+        }
+        $user->delete();
+        return response()->json(['message' => 'Účet zmazaný.'], Response::HTTP_OK);
     }
 }

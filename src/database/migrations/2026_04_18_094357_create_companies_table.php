@@ -21,7 +21,6 @@ return new class extends Migration
             $table->mediumText('category');
             $table->string('name_of_contact_person', 60);
             $table->boolean('is_approved_by_admin');
-            $table->boolean('show_logo_image');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('logo_id')->constrained('files')->onDelete('cascade');
             $table->softDeletes();

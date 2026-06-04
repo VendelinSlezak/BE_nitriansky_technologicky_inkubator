@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('token_for_password_reset', 64)->nullable();
             $table->dateTime('expiration_of_token_for_password_reset')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

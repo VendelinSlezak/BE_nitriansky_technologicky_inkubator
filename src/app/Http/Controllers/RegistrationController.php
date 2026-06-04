@@ -107,7 +107,6 @@ class RegistrationController extends Controller
                         'dic' => $validated['dic'],
                         'name_of_contact_person' => $validated['name_of_contact_person'],
                         'is_approved_by_admin' => false,
-                        'show_logo_image' => true,
                         'logo_id' => $fileRecord->id,
                     ]);
 

@@ -30,7 +30,6 @@ class Company extends Model
         'category',
         'name_of_contact_person',
         'is_approved_by_admin',
-        'show_logo_image',
         'logo_id'
     ];
 
@@ -40,7 +39,6 @@ class Company extends Model
         'dic',
         'name_of_contact_person',
         'is_approved_by_admin',
-        'show_logo_image',
         'created_at',
         'updated_at',
         'deleted_at',

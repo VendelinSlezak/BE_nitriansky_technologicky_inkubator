@@ -23,11 +23,14 @@ class TeamResource extends JsonResource
                     'members' => $this->teamMembers->map(function ($student) {
                         return [
                             'id' => $student->id,
+                            'email' => $student->user->email,
                             'status' => $student->pivot->status,
                         ];
                     }),
-                    'proposal_of_implementation_id' => $this->proposal_of_implementation_id,
-                    'cover_letter_id' => $this->cover_letter_id
+                    'proposal_of_implementation_url' => $this->proposal_of_implementation->url,
+                    'proposal_of_implementation_name' => $this->proposal_of_implementation->original_name,
+                    'cover_letter_url' => $this->cover_letter->url,
+                    'cover_letter_name' => $this->cover_letter->original_name,
                     ];
                 }),
             $this->mergeWhen($request->routeIs('admin.teams'), function () {
