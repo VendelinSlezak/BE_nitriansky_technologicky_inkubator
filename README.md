@@ -16,6 +16,14 @@ This repository contains the **backend** for the **Nitra Technology Incubator fu
 > [!NOTE]  
 > Project is in development and therefore this Readme.md contains only necessary info. Readme will be continuously expanded.
 
+## How to run
+
+```
+docker compose up
+```
+
+and backend will be on localhost:8080
+
 ### Authors
 Vendelín Slezák
 Pavol Marko
