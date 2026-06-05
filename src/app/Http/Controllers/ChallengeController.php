@@ -501,4 +501,9 @@ class ChallengeController extends Controller
         });
         return response(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
     }
+
+    public function getChallenge(Challenge $challenge)
+    {
+        return response()->json(['challenge' => new ChallengeResource($challenge)], Response::HTTP_OK);
+    }
 }

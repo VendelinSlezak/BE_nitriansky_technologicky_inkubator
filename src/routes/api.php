@@ -68,6 +68,7 @@ Route::prefix('auth')->group(function () {
             Route::get('challenges/registration-requests', [ChallengeController::class, 'getRegistrationRequests'])->name('challenges.registration-requests');
             Route::post('/create-challenge', [ChallengeController::class, 'createChallenge']);
             Route::post('/challenge/{challenge}/reject', [ChallengeController::class, 'destroyChallenge']);
+            Route::get('/challenge-details/{challenge}', [ChallengeController::class, 'getChallenge'])->name('challenge-get');
             Route::get('/accounts/committee-members', [CommissionMemberController::class, 'index']);
 
             Route::get('/program-a/all-categories', [ProgramAController::class, 'index'])->name('admin.index');
