@@ -17,51 +17,7 @@ class TeamSeeder extends Seeder
         $oneWeekLater = now()->addWeek(); // Vytvorí novú inštanciu s dátumom o 7 dní
 
         DB::table('teams')->insert([
-            [
-                'challenge_id' => 1,
-                'status' => 'draft',
-                'name' => 'HTTP Error 404 team',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-                'proposal_of_implementation_id' => 1,
-                'cover_letter_id' => 1,
-            ],
-            [
-                'challenge_id' => 2,
-                'status' => 'active',
-                'name' => 'HTTP Error 500 team',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-                'proposal_of_implementation_id' => 1,
-                'cover_letter_id' => 1,
-            ],
-            [
-                'challenge_id' => 3,
-                'status' => 'active',
-                'name' => 'Request timed out team',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-                'proposal_of_implementation_id' => 1,
-                'cover_letter_id' => 1,
-            ],
-            [
-                'challenge_id' => 6,
-                'status' => 'active',
-                'name' => 'Destination host unreachable team',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-                'proposal_of_implementation_id' => 1,
-                'cover_letter_id' => 1,
-            ],
-            [
-                'challenge_id' => 5,
-                'status' => 'active',
-                'name' => 'HTTP Error 400 team',
-                'active_from' => $now,
-                'active_to' => $oneWeekLater,
-                'proposal_of_implementation_id' => 1,
-                'cover_letter_id' => 1,
-            ]
+
         ]);
     }
 }

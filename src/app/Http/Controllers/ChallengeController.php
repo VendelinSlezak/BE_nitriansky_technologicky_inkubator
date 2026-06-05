@@ -13,6 +13,7 @@ use App\Models\File;
 use App\Events\ProgramAChallengeProposed;
 use App\Events\ProgramBChallengeProposed;
 use App\Models\Milestone;
+use App\Models\User;
 
 class ChallengeController extends Controller
 {
@@ -320,14 +321,18 @@ class ChallengeController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function updateMilestone(Request $request, Challenge $challenge, Milestone $milestone)
+    public function updateMilestone(Request $request, Milestone $milestone)
     {
         $validated = $request->validate([
             'date_of_completion' => 'required|date',
             'name' => 'required|string',
             'description' => 'required|string',
-            'comment' => 'required|string',
+            'comment' => 'nullable|string',
         ]);
+
+        if($validated['comment'] == null) {
+            $validated['comment'] = '';
+        }
 
         $milestone->update([
             'title' => $validated['name'],
@@ -420,7 +425,13 @@ class ChallengeController extends Controller
 
         $challenge->update([
             'status' => 'finished',
-            'final_assessment' => $validated['evaluation_of_challenge']
+            'final_assessment' => $validated['evaluation_of_challenge'],
+            'date_of_completion' => now()
+        ]);
+
+        $challenge->attached_team->update([
+            'status' => 'finished',
+            'active_to' => now()
         ]);
 
         return response('Výzva bola úspešne ukončená', Response::HTTP_OK);
@@ -465,7 +476,11 @@ class ChallengeController extends Controller
 
             $challenge->update([
                 'mentor_id' => $validated['mentor_id'],
-                'status' => 'in_realisation',
+                'status' => 'in_progress',
+            ]);
+
+            $challenge->attached_team->update([
+                'status' => 'active',
             ]);
 
             return response()->json(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
@@ -478,7 +493,7 @@ class ChallengeController extends Controller
         $validated = $request->validate([
             'team_id' => 'required|exists:teams,id',
             'commission_members' => 'required|array|min:1',
-            'commission_members.*.id' => 'required|exists:users,id',
+            'commission_members.*.email' => 'required|exists:users,email',
             'commission_members.*.status' => 'required|in:member,recorder'
         ]);
 
@@ -491,7 +506,8 @@ class ChallengeController extends Controller
 
             $membersData = [];
             foreach ($validated['commission_members'] as $member) {
-                $membersData[$member['id']] = ['status' => $member['status']];
+                $member_id = User::where('email', $member['email'])->first()->id;
+                $membersData[$member_id] = ['status' => $member['status']];
             }
 
             $challenge->commission_members()->syncWithoutDetaching($membersData);

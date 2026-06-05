@@ -56,7 +56,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/user/{user}', [UserController::class, 'updateUserAccount']);
             Route::delete('/user/{user}', [UserController::class, 'deleteUserAccount']);
 
-            Route::patch('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
+            Route::post('/milestone/{milestone}', [ChallengeController::class, 'updateMilestone']);
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
 

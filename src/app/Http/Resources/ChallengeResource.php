@@ -43,11 +43,14 @@ class ChallengeResource extends JsonResource
 
             $this->mergeWhen($request->user()?->isAdmin() && !$request->routeIs('challenges.registration-requests'), [
                 'status' => $this->status,
-                'teams' => $this->when($this->status === 'open', function() {
+                'teams' => $this->when(
+                    $this->status === 'open',
+                    function() {
                     return $this->relationLoaded('teams')
                         ? $this->teams->count()
                         : $this->teams()->count();
-                }),
+                    },
+                    1),
             ]),
 
             $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'open', [
@@ -61,24 +64,26 @@ class ChallengeResource extends JsonResource
                 })->toArray()
             ]),
 
-            $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'in_evaluation', [
+            $this->mergeWhen($request->routeIs('challenge-get') && ($this->status == 'in_evaluation' || $this->status == 'accepted_by_commission' || $this->status == 'rejected_by_commission'), [
                 'commission_decision' => $this->commission_comment,
                 'mentor_email' => $this->mentors?->user?->email,
+                'milestones' => [],
             ]),
 
-            $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'in_realisation', [
+            $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'in_progress', [
                 'milestones' => $this->milestones->map(function($milestone) {
                     return [
                         'id' => $milestone->id,
                         'date_of_completion' => $milestone->date_of_reasisation,
-                        'name' => $milestone->title,
+                        'title' => $milestone->title,
                         'description' => $milestone->description,
                         'comment_from_mentor' => $milestone->comment,
                     ];
-                })->toArray()
+                })->toArray(),
+                'evaluation_comment' => [],
             ]),
 
-            $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'done', [
+            $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'finished', [
                 'evaluation_comment' => $this->final_assessment
             ])
         ];

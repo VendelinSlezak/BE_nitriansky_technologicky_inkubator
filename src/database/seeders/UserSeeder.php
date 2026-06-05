@@ -19,7 +19,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 1,
                 'name' => 'Admin',
-                'email' => 'nti@bleskos.com',
+                'email' => 'nti@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'admin',
                 'email_verified_at' => $now,
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 2,
                 'name' => 'Student1',
-                'email' => 'nti1@bleskos.com',
+                'email' => 's1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'student',
                 'email_verified_at' => $now,
@@ -43,7 +43,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 3,
                 'name' => 'Student2',
-                'email' => 'nti2@bleskos.com',
+                'email' => 's2@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'student',
                 'email_verified_at' => $now,
@@ -55,7 +55,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 4,
                 'name' => 'Student3',
-                'email' => 'nti3@bleskos.com',
+                'email' => 's3@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'student',
                 'email_verified_at' => $now,
@@ -66,10 +66,10 @@ class UserSeeder extends Seeder
             ],
             [
                 'id' => 5,
-                'name' => 'Student4',
-                'email' => 'nti4@bleskos.com',
+                'name' => 'CommissionMember2',
+                'email' => 'cm2@nti.com',
                 'password' => Hash::make('aaa'),
-                'role' => 'student',
+                'role' => 'committee_member',
                 'email_verified_at' => $now,
                 'token_for_password_reset' => null,
                 'expiration_of_token_for_password_reset' => null,
@@ -79,7 +79,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 6,
                 'name' => 'Mentor1',
-                'email' => 'mentor1@bleskos.com',
+                'email' => 'mentor1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'mentor',
                 'email_verified_at' => $now,
@@ -91,7 +91,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 7,
                 'name' => 'Mentor2',
-                'email' => 'mentor2@bleskos.com',
+                'email' => 'mentor2@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'mentor',
                 'email_verified_at' => $now,
@@ -103,7 +103,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 8,
                 'name' => 'CommissionMember1',
-                'email' => 'cm1@bleskos.com',
+                'email' => 'cm1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'committee_member',
                 'email_verified_at' => $now,
@@ -115,7 +115,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 9,
                 'name' => 'WebEditor1',
-                'email' => 'we1@bleskos.com',
+                'email' => 'we1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'web_editor',
                 'email_verified_at' => $now,
@@ -127,7 +127,7 @@ class UserSeeder extends Seeder
             [
                 'id' => 10,
                 'name' => 'Company1',
-                'email' => 'company1@bleskos.com',
+                'email' => 'company1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'company_admin',
                 'email_verified_at' => $now,
@@ -139,21 +139,9 @@ class UserSeeder extends Seeder
             [
                 'id' => 11,
                 'name' => 'CompanyMember1',
-                'email' => 'po1@bleskos.com',
+                'email' => 'po1@nti.com',
                 'password' => Hash::make('aaa'),
                 'role' => 'company_member',
-                'email_verified_at' => $now,
-                'token_for_password_reset' => null,
-                'expiration_of_token_for_password_reset' => null,
-                'created_at' => $now,
-                'updated_at' => $now
-            ],
-            [
-                'id' => 12,
-                'name' => 'Company2',
-                'email' => 'company2@bleskos.com',
-                'password' => Hash::make('aaa'),
-                'role' => 'company_admin',
                 'email_verified_at' => $now,
                 'token_for_password_reset' => null,
                 'expiration_of_token_for_password_reset' => null,

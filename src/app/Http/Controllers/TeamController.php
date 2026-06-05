@@ -34,7 +34,7 @@ class TeamController extends Controller
     public function store(Request $request, FileService $fileService)
     {
         if (auth()->user()->student->can_be_invited() === false) {
-            return response()->json(['error' => 'You are not allowed to create a team'], Response::HTTP_UNAUTHORIZED);
+            return response()->json(['error' => 'You are not allowed to create a team'], Response::HTTP_FORBIDDEN);
         }
 
         $validated = $request->validate([
@@ -47,11 +47,11 @@ class TeamController extends Controller
         ]);
 
         $challenge = Challenge::findOrFail($validated['challenge_id']);
-        $hasExactlyOneActiveTeam = $challenge->teams()
+        $hasActiveTeam = $challenge->teams()
                 ->whereNotNull('active_from')
-                ->count() === 1;
+                ->count() > 0;
 
-        if (!$hasExactlyOneActiveTeam) {
+        if ($hasActiveTeam) {
             return response()->json(['error' => 'There is already an active team for this challenge'], Response::HTTP_CONFLICT);
         }
 

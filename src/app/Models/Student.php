@@ -62,16 +62,16 @@ class Student extends Authenticatable {
             ])
             ->withTimestamps()
             ->where(function ($query) {
-                $query->where('team_members.active_to', '>=', now())
-                    ->orWhereNull('team_members.active_to');
+                $query->where('teams.active_to', '>=', now())
+                    ->orWhereNull('teams.active_to');
             })
             ->limit(1);
     }
 
     public function can_be_invited() : bool {
         $hasTeam = $this->teams()->where(function ($query) {
-            $query->whereNull('team_members.active_to')
-                ->orWhere('team_members.active_to', '>=', now());
+            $query->whereNull('teams.active_to')
+                ->orWhere('teams.active_to', '>=', now());
         })->exists();
 
         return !$hasTeam;
