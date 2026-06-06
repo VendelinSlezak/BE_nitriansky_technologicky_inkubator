@@ -20,6 +20,7 @@ This repository contains the **backend** for the **Nitra Technology Incubator fu
 
 ```
 docker compose up
+docker compose exec app php artisan migrate:fresh --seed
 ```
 
 and backend will be on localhost:8080
