@@ -449,7 +449,7 @@ class ChallengeController extends Controller
 
     public function getRegistrationRequests()
     {
-        $challenges = Challenge::where('status', 'in_evaluation')->with(['users', 'files'])->get();
+        $challenges = Challenge::where('status', 'proposed')->with(['users', 'files'])->get();
         return response()->json(['challenges' => ChallengeResource::collection($challenges)], Response::HTTP_OK);
     }
 
@@ -457,35 +457,41 @@ class ChallengeController extends Controller
     {
         $validated = $request->validate([
             'mentor_id' => 'required|exists:users,id',
-            'milestones' => 'required|array|min:1',
+            'milestones' => 'nullable|array', 
             'milestones.*.date_of_completion' => 'required|date',
             'milestones.*.name' => 'required|string|max:255',
             'milestones.*.description' => 'required|string'
         ]);
 
         $challenge = Challenge::findOrFail($id);
-        if ($challenge) {
-            $milestone = Milestone::create([
-                'challenge_id' => $id,
-                'title' => $validated['milestones'][0]['name'],
-                'description' => $validated['milestones'][0]['description'],
-                'date_of_reasisation' => $validated['milestones'][0]['date_of_completion'],
-                'comment' => '',
-                'is_finished' => false
-            ]);
+
+        DB::transaction(function () use ($challenge, $validated) {
+            if (!empty($validated['milestones'])) {
+                foreach ($validated['milestones'] as $milestoneData) {
+                    Milestone::create([
+                        'challenge_id' => $challenge->id,
+                        'title' => $milestoneData['name'],
+                        'description' => $milestoneData['description'],
+                        'date_of_reasisation' => $milestoneData['date_of_completion'],
+                        'comment' => '',
+                        'is_finished' => false
+                    ]);
+                }
+            }
 
             $challenge->update([
                 'mentor_id' => $validated['mentor_id'],
                 'status' => 'in_progress',
             ]);
 
-            $challenge->attached_team->update([
-                'status' => 'active',
-            ]);
+            if ($challenge->attached_team) {
+                $challenge->attached_team->update([
+                    'status' => 'active',
+                ]);
+            }
+        });
 
-            return response()->json(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
-        }
-
+        return response()->json(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
     }
 
     public function sendToCommission(Request $request, $id)
@@ -521,5 +527,22 @@ class ChallengeController extends Controller
     public function getChallenge(Challenge $challenge)
     {
         return response()->json(['challenge' => new ChallengeResource($challenge)], Response::HTTP_OK);
+    }
+
+    public function moveBackToOpen(Challenge $challenge) {
+        $challenge->update([
+            'status' => 'open',
+            'commission_comment' => null
+        ]);
+
+        $challenge->commission_members()->detach();
+
+        if ($challenge->attached_team) {
+            $challenge->attached_team()->update([
+                'active_from' => null
+            ]);
+        }
+
+        return response(['message' => 'Výzva bola úspešne stiahnutá z komisie'], Response::HTTP_OK);
     }
 }

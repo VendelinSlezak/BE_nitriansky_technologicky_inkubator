@@ -121,10 +121,10 @@ class CompanyController extends Controller
                 ->get();
         }
         else if($user->role === 'company_member') {
-            $company = $user->company->first();
-            $company_admin = $company->user;
+            $company_admin = $user->company_employee->company->user;
             $challenges = Challenge::where('user_id', $company_admin->id)
                 ->whereNot('status', 'proposed')
+                ->whereNot('status', 'open')
                 ->whereNot('status', 'finished')
                 ->where('product_owner_id', $user->id)
                 ->get();
@@ -135,7 +135,7 @@ class CompanyController extends Controller
                 'id' => $challenge->id,
                 'status' => $challenge->status,
                 'name_of_project' => $challenge->name,
-                'name_of_product_owner' => $challenge->product_owner->name,
+                'product_owner_name' => $challenge->product_owner->name,
                 'fileName' => $challenge->proposal_file->original_name,
                 'fileUrl' => $challenge->proposal_file->url,
                 'description' => $challenge->description,
@@ -146,7 +146,7 @@ class CompanyController extends Controller
                 $data['status'] = 'open';
             }
 
-            if($challenge->status === 'in_progress' || $challenge->status=== 'finished') {
+            if($challenge->status === 'in_evaluation' || $challenge->status === 'in_progress' || $challenge->status=== 'finished') {
                 $data['name_of_team'] = $challenge->attached_team->name;
                 $data['team_members'] = $challenge->attached_team->teamMembers->map(function ($teamMember) {
                     return [

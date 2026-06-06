@@ -60,6 +60,7 @@ Route::prefix('auth')->group(function () {
             Route::post('/challenge/{id}/add-milestone', [ChallengeController::class, 'addMilestone']);
             Route::delete('/milestone/{milestone}', [ChallengeController::class, 'destroyMilestone']);
 
+            Route::post('/challenge/{challenge}/move-back-to-open', [ChallengeController::class, 'moveBackToOpen']);
             Route::post('challenge/{id}/send-to-commission', [ChallengeController::class, 'sendToCommission']);
             Route::post('challenge/{id}/start-realisation', [ChallengeController::class, 'startRealisation']);
             Route::get('/challenges', [ChallengeController::class, 'adminChallengesInfo']);
