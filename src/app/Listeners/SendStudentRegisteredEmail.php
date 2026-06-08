@@ -25,6 +25,6 @@ class SendStudentRegisteredEmail
      */
     public function handle(StudentRegistered $event): void
     {
-        Mail::to("nti@bleskos.com")->queue(new NewStudentRegisteredMail($event->user, $event->student));
+        Mail::to(config('mail.admin_email'))->queue(new NewStudentRegisteredMail($event->user, $event->student));
     }
 }

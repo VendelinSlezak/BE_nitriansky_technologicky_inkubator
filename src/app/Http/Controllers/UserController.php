@@ -273,7 +273,7 @@ class UserController extends Controller
                 });
                 break;
 
-            case 'company':
+            case 'company_admin':
                 DB::transaction(function () use ($validated, $fileService, $request) {
                     $user = User::create([
                         'name' => $validated['name'],

@@ -23,8 +23,8 @@ class Recaptcha implements ValidationRule
             return;
         }
 
-        // if (isset($data['score']) && $data['score'] < config('services.recaptcha.min_score', 0.5)) {
-        //     $fail('Vaša aktivita vyzerá ako automatizovaná. Skúste to znova.');
-        // }
+        if (isset($data['score']) && $data['score'] < config('services.recaptcha.min_score', 0.5)) {
+            $fail('Vaša aktivita vyzerá ako automatizovaná. Skúste to znova.');
+        }
     }
 }

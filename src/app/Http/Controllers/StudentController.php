@@ -249,7 +249,6 @@ class StudentController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Internal server error',
-                'error' => $e->getMessage() // for debug only
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

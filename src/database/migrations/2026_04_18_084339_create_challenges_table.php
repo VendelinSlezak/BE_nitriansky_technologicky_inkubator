@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('challenges', function (Blueprint $table) {
             $table->id();
             $table->string('program', 1);
-            $table->string('name', 45);
+            $table->mediumText('name');
             $table->mediumText('description');
             $table->foreignId('proposal_file_id')->constrained('files')->onDelete('cascade');
             $table->double('reward')->nullable();

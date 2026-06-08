@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class TeamMember extends Model
+class TeamMember extends Pivot
 {
     protected $table = 'team_member';
     protected $id = ['team_id', 'student_id'];

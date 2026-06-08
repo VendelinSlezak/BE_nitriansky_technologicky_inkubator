@@ -14,7 +14,7 @@ class TeamSeeder extends Seeder
     public function run(): void
     {
         $now = now();
-        $oneWeekLater = now()->addWeek(); // Vytvorí novú inštanciu s dátumom o 7 dní
+        $oneWeekLater = now()->addWeek();
 
         DB::table('teams')->insert([
 

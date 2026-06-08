@@ -17,7 +17,7 @@ use App\Http\Controllers\FileController;
 use App\Http\Controllers\CommissionMemberController;
 
 Route::prefix('auth')->group(function () {
-    // Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1');
+    // Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:6,1'); // úmyselne zakomentované aby to neznemožňovalo množstvo prihlásení pri vývoji
     Route::post('/login', [AuthController::class, 'login']);
     Route::prefix('registration')->group(function () {
         Route::post('student', [RegistrationController::class, 'registerStudent']);

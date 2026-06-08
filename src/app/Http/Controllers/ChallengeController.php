@@ -14,6 +14,7 @@ use App\Events\ProgramAChallengeProposed;
 use App\Events\ProgramBChallengeProposed;
 use App\Models\Milestone;
 use App\Models\User;
+use App\Models\Team;
 
 class ChallengeController extends Controller
 {
@@ -62,36 +63,12 @@ class ChallengeController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $challenge = Challenge::with(['files', 'program_a_categories'])->findOrFail($id);
         return new ChallengeResource($challenge);
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 
     public function getThreeRandomChallenges() {
@@ -160,7 +137,6 @@ class ChallengeController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Registrácia výzvy zlyhala. Skúste to neskôr.',
-                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -208,7 +184,6 @@ class ChallengeController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Registrácia výzvy zlyhala. Skúste to neskôr.',
-                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ]);
         }
     }
@@ -384,29 +359,34 @@ class ChallengeController extends Controller
             'technical_specification' => 'required|file'
         ]);
 
-        $fileRecord = $fileService->uploadAndCreateRecord(
-            file: $request->file('technical_specification'),
-            subFolder: 'challenges/specifications',
-            disk: 'public'
-        );
+        try {
+            $fileService->uploadAndCreateRecord(
+                $request->file('technical_specification'),
+                'challenges/specifications',
+                'public',
+                function (File $fileRecord) use ($validated) {
+                    $newChallenge = $challenge->create([
+                        'program' => $validated['type'],
+                        'name' => $validated['name'],
+                        'program_a_category_id' => $validated['category_id'] ?? null,
+                        'reward' => $validated['reward'] ?? null,
+                        'description' => $validated['description'],
+                        'status' => 'open',
+                        'user_id' => 1,
+                        'proposal_file_id' => $fileRecord->id,
+                    ]);
+                }
+            );
 
-        // 2. Teraz vytvoríme výzvu a priamo jej priradíme ID nového súboru.
-        // Nahraď 'technical_specification_file_id' presným názvom stĺpca, ktorý máš v migrácii challenges.
-        $newChallenge = $challenge->create([
-            'program' => $validated['type'],
-            'name' => $validated['name'],
-            'program_a_category_id' => $validated['category_id'] ?? null,
-            'reward' => $validated['reward'] ?? null,
-            'description' => $validated['description'],
-            'status' => 'open',
-            'user_id' => 1,
-            'proposal_file_id' => $fileRecord->id, // Týmto prepojíš výzvu so súborom
-        ]);
-
-        return response()->json([
-            'message' => 'Výzva bola úspešne vytvorená spolu so špecifikáciou.',
-            'challenge' => $newChallenge->load('file') // ak máš v modeli definovaný vzťah (belongsTo)
-        ], Response::HTTP_CREATED);
+            return response()->json([
+                'message' => 'Výzva bola úspešne vytvorená spolu so špecifikáciou.',
+            ], Response::HTTP_CREATED);
+        }
+        catch(Exception $e) {
+            return response()->json([
+                'message' => 'Nastala chyba pri vytváraní výzvy',
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function acceptChallenge(Challenge $challenge)
@@ -494,7 +474,7 @@ class ChallengeController extends Controller
         return response()->json(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
     }
 
-    public function sendToCommission(Request $request, $id)
+    public function sendToCommission(Request $request, $id, FileService $fileService)
     {
         $validated = $request->validate([
             'team_id' => 'required|exists:teams,id',
@@ -504,8 +484,10 @@ class ChallengeController extends Controller
         ]);
 
         $challenge = Challenge::findOrFail($id);
+        $team = Team::findOrFail($validated['team_id']);
+        $otherTeams = Team::where('challenge_id', $challenge->id)->where('id', '!=', $team->id)->get();
 
-        DB::transaction(function () use ($challenge, $validated) {
+        DB::transaction(function () use ($challenge, $validated, $team, $otherTeams, $fileService) {
             $challenge->update([
                 'status' => 'in_evaluation'
             ]);
@@ -517,9 +499,23 @@ class ChallengeController extends Controller
             }
 
             $challenge->commission_members()->syncWithoutDetaching($membersData);
-            $challenge->attached_team()->update([
+            $team->update([
                 'active_from' => now()
             ]);
+
+            foreach ($otherTeams as $otherTeam) {
+                $fileService->deleteFile($otherTeam->proposal_of_implementation);
+                $fileService->deleteFile($otherTeam->cover_letter);
+                $otherTeamMembers = $otherTeam->all_team_members()->get();
+                foreach ($otherTeamMembers as $otherTeamMember) {
+                    info($otherTeamMember->toArray());
+                    info($otherTeamMember->pivot->toArray());
+                    info($otherTeamMember->pivot->statuory_declaration);
+                    $fileService->deleteFile($otherTeamMember->pivot->statuory_declaration);
+                }
+                $otherTeam->all_team_members()->detach();
+                $otherTeam->delete();
+            }
         });
         return response(['message' => 'Výzva bola úspešne aktualizovaná'], Response::HTTP_OK);
     }

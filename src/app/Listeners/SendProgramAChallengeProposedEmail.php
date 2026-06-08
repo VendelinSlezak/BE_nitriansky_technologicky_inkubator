@@ -23,6 +23,6 @@ class SendProgramAChallengeProposedEmail
      */
     public function handle(ProgramAChallengeProposed $event): void
     {
-        Mail::to("nti@bleskos.com")->queue(new NewProgramAChallengeMail($event->challenge));
+        Mail::to(config('mail.admin_email'))->queue(new NewProgramAChallengeMail($event->challenge));
     }
 }

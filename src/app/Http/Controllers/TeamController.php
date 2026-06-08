@@ -44,6 +44,7 @@ class TeamController extends Controller
             'members.*.email' => 'required_with:members|email|exists:users,email',
             'proposal_of_implementation' => 'required|file|max:2048',
             'cover_letter' => 'required|file|max:2048',
+            'statuory_declaration' => 'required|file|max:2048',
         ]);
 
         $challenge = Challenge::findOrFail($validated['challenge_id']);
@@ -65,57 +66,66 @@ class TeamController extends Controller
                         $request->file('cover_letter'),
                         'cover_letters',
                         'private',
-                        function (File $CLfileRecord) use ($POIfileRecord, $validated) {
-                            $currentUser = auth()->user();
-                            $members = Arr::get($validated, 'members', []);
+                        function (File $CLfileRecord) use ($POIfileRecord, $validated, $fileService, $request) {
+                            return $fileService->uploadAndCreateRecord(
+                                $request->file('statuory_declaration'),
+                                'statutory_declarations',
+                                'private',
+                                function (File $SDfileRecord) use ($POIfileRecord, $CLfileRecord, $validated) {
+                                    $currentUser = auth()->user();
+                                    $members = Arr::get($validated, 'members', []);
 
-                            $invitedEmails = collect($members)
-                                ->pluck('email')
-                                ->reject(fn($email) => $email === $currentUser->email)
-                                ->unique();
+                                    $invitedEmails = collect($members)
+                                        ->pluck('email')
+                                        ->reject(fn($email) => $email === $currentUser->email)
+                                        ->unique();
 
-                            $allEmails = collect($invitedEmails)->push($currentUser->email);
+                                    $allEmails = collect($invitedEmails)->push($currentUser->email);
 
-                            $students = Student::query()
-                                ->join('users', 'students.user_id', '=', 'users.id')
-                                ->whereIn('users.email', $allEmails)
-                                ->select('students.*')
-                                ->lockForUpdate()
-                                ->get();
+                                    $students = Student::query()
+                                        ->join('users', 'students.user_id', '=', 'users.id')
+                                        ->whereIn('users.email', $allEmails)
+                                        ->select('students.*')
+                                        ->lockForUpdate()
+                                        ->get();
 
-                            foreach ($students as $student) {
-                                if ($student->can_be_invited() == false) {
-                                    throw new Exception("Student {$student->user->email} is not allowed to be invited");
+                                    foreach ($students as $student) {
+                                        if ($student->can_be_invited() == false) {
+                                            throw new Exception("Student {$student->user->email} is not allowed to be invited");
+                                        }
+                                    }
+
+                                    $team = Team::create([
+                                        'name' => $validated['name_of_team'],
+                                        'status' => 'draft',
+                                        'active_from' => null,
+                                        'active_to' => null,
+                                        'challenge_id' => $validated['challenge_id'],
+                                        'proposal_of_implementation_id' => $POIfileRecord->id,
+                                        'cover_letter_id' => $CLfileRecord->id,
+                                    ]);
+
+                                    $syncData = [];
+                                    foreach ($students as $student) {
+                                        if($student->user_id === $currentUser->id) {
+                                            $syncData[$student->id]['status'] = 'teamleader';
+                                            $syncData[$student->id]['statuory_declaration_id'] = $SDfileRecord->id;
+                                        }
+                                        else {
+                                            $syncData[$student->id]['status'] = 'invited';
+                                        }
+                                    }
+                                    $team->teamMembers()->sync($syncData);
+
+                                    foreach ($invitedEmails as $email) {
+                                        event(new StudentInvited($email, $team));
+                                    }
+
+                                    return response()->json([
+                                        'message' => 'Team created successfully'
+                                    ], Response::HTTP_OK);
                                 }
-                            }
-
-                            $team = Team::create([
-                                'name' => $validated['name_of_team'],
-                                'status' => 'draft',
-                                'active_from' => null,
-                                'active_to' => null,
-                                'challenge_id' => $validated['challenge_id'],
-                                'proposal_of_implementation_id' => $POIfileRecord->id,
-                                'cover_letter_id' => $CLfileRecord->id,
-                            ]);
-
-                            $syncData = [];
-                            foreach ($students as $student) {
-                                $status = ($student->user_id === $currentUser->id) ? 'teamleader' : 'invited';
-                                $syncData[$student->id] = [
-                                    'status' => $status
-                                ];
-                            }
-                            // Zachované teamMembers()
-                            $team->teamMembers()->sync($syncData);
-
-                            foreach ($invitedEmails as $email) {
-                                event(new StudentInvited($email, $team));
-                            }
-
-                            return response()->json([
-                                'message' => 'Team created successfully'
-                            ], Response::HTTP_OK);
+                            );
                         }
                     );
                 }
@@ -135,14 +145,6 @@ class TeamController extends Controller
         $team->load('teamMembers');
 
         return response()->json(new TeamResource($team));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
     }
 
     /**
@@ -175,7 +177,7 @@ class TeamController extends Controller
     }
 
     /**
-     * Manuálne vytvorenie tímu (Napr. administrátorom cez IDčká užívateľov)
+     * Manuálne vytvorenie tímu
      */
     public function createTeam(Request $request, FileService $fileService)
     {
@@ -269,67 +271,69 @@ class TeamController extends Controller
             unset($teamData['name_of_team']);
         }
 
-        $oldProposalId = null;
-        $oldCoverLetterId = null;
+        try {
+            $oldProposalId = null;
+            $oldCoverLetterId = null;
 
-        if ($request->hasFile('proposal_of_implementation')) {
-            $oldProposalId = $team->proposal_of_implementation_id;
+            if ($request->hasFile('proposal_of_implementation')) {
+                $oldProposalId = $team->proposal_of_implementation_id;
 
-            $proposal = $fileService->uploadAndCreateRecord(
-                file: $request->file('proposal_of_implementation'),
-                subFolder: 'challenges/documents',
-                disk: 'public'
-            );
+                $proposal = $fileService->uploadAndCreateRecord(
+                    file: $request->file('proposal_of_implementation'),
+                    subFolder: 'challenges/documents',
+                    disk: 'public'
+                );
 
-            $teamData['proposal_of_implementation_id'] = $proposal->id;
-        }
+                $teamData['proposal_of_implementation_id'] = $proposal->id;
+            }
 
-        if ($request->hasFile('cover_letter')) {
-            $oldCoverLetterId = $team->cover_letter_id;
-
-            $coverLetter = $fileService->uploadAndCreateRecord(
-                file: $request->file('cover_letter'),
-                subFolder: 'challenges/documents',
-                disk: 'public'
-            );
-
-            $teamData['cover_letter_id'] = $coverLetter->id;
-        }
-
-        if (!empty($teamData)) {
-            $team->update($teamData);
-        }
-
-        if ($oldProposalId || $oldCoverLetterId) {
-            try {
-                DB::transaction(function () use ($oldProposalId, $oldCoverLetterId) {
-                    if ($oldProposalId) {
+            if ($oldProposalId) {
+                    DB::transaction(function () use ($oldProposalId) {
                         File::destroy($oldProposalId);
-                    }
+                    });
+            }
 
-                    if ($oldCoverLetterId) {
-                        File::destroy($oldCoverLetterId);
-                    }
+            if ($request->hasFile('cover_letter')) {
+                $oldCoverLetterId = $team->cover_letter_id;
+
+                $coverLetter = $fileService->uploadAndCreateRecord(
+                    file: $request->file('cover_letter'),
+                    subFolder: 'challenges/documents',
+                    disk: 'public'
+                );
+
+                $teamData['cover_letter_id'] = $coverLetter->id;
+            }
+
+            if ($oldCoverLetterId) {
+                DB::transaction(function () use ($oldCoverLetterId) {
+                    File::destroy($oldCoverLetterId);
                 });
-            } catch (Throwable $e) {
-                return response()->json([
-                    'message' => 'Something went wrong while deleting old files: ' . $e->getMessage()
-                ], Response::HTTP_INTERNAL_SERVER_ERROR);
             }
-        }
 
-        if (array_key_exists('members', $filledData)) {
-            $syncData = [];
+            if (!empty($teamData)) {
+                $team->update($teamData);
+            }
 
-            if (is_array($filledData['members'])) {
-                foreach ($filledData['members'] as $member) {
-                    $syncData[$member['id']] = [
-                        'status' => $member['status'],
-                    ];
+            if (array_key_exists('members', $filledData)) {
+                $syncData = [];
+
+                if (is_array($filledData['members'])) {
+                    foreach ($filledData['members'] as $member) {
+                        $syncData[$member['id']] = [
+                            'status' => $member['status'],
+                        ];
+                    }
                 }
+                $team->teamMembers()->sync($syncData);
             }
-            $team->teamMembers()->sync($syncData);
         }
+        catch (Throwable $e) {
+            return response()->json([
+                'message' => 'Something went wrong while deleting old files'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+
         return response()->json(['message' => 'Team updated successfully'], Response::HTTP_OK);
     }
     /**
@@ -383,7 +387,7 @@ class TeamController extends Controller
             });
         } catch (Throwable $e) {
             return response()->json([
-                'message' => 'Something went wrong: ' . $e->getMessage()
+                'message' => 'Something went wrong'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

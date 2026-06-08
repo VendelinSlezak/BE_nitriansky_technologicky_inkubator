@@ -23,6 +23,6 @@ class SendCompanyRegisteredEmail
      */
     public function handle(CompanyRegistered $event): void
     {
-        Mail::to("nti@bleskos.com")->queue(new NewCompanyRegisteredMail($event->user, $event->company));
+        Mail::to(config('mail.admin_email'))->queue(new NewCompanyRegisteredMail($event->user, $event->company));
     }
 }

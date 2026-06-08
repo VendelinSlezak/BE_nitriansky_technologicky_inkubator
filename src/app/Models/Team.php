@@ -10,12 +10,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Team extends Model
 {
+    use SoftDeletes;
     protected $table = 'teams';
     protected $id = 'id';
     protected $fillable = ['name', 'active_from', 'active_to', 'challenge_id', 'proposal_of_implementation_id', 'cover_letter_id', 'status'];
 
     public function challenge() : BelongsTo {
         return $this->belongsTo(Challenge::class, 'challenge_id');
+    }
+
+    public function all_team_members() : BelongsToMany
+    {
+        return $this->belongsToMany(Student::class, 'team_members')->withPivot('statuory_declaration_id')->using(TeamMember::class);
     }
 
     public function teamMembers() : BelongsToMany

@@ -20,7 +20,7 @@ class Article extends Model
     }
 
     public function image(): BelongsTo {
-        return $this->belongsTo(File::class);
+        return $this->belongsTo(File::class, 'image_id');
     }
 
 }

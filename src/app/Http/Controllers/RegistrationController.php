@@ -28,7 +28,7 @@ class RegistrationController extends Controller
             'password' => 'required|confirmed',
             'gdpr' => 'required|accepted',
             'cv' => 'required|file|max:2048',
-            // 'g-recaptcha-response' => ['required', new Recaptcha],
+            // 'g-recaptcha-response' => ['required', new Recaptcha],  // úmyselne zakomentované aby sa nestalo že systém nás pri prezentácií nepustí dovnútra kvôli captcha
         ]);
 
         try {
@@ -63,7 +63,6 @@ class RegistrationController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Registrácia zlyhala. Skúste to neskôr.',
-                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -81,7 +80,7 @@ class RegistrationController extends Controller
             'password' => 'required|confirmed',
             'logo' => 'required|file|max:2048',
             'gdpr' => 'required|accepted',
-            // 'g-recaptcha-response' => ['required', new Recaptcha],
+            // 'g-recaptcha-response' => ['required', new Recaptcha],  // úmyselne zakomentované aby sa nestalo že systém nás pri prezentácií nepustí dovnútra kvôli captcha
         ]);
 
         try {
@@ -121,7 +120,6 @@ class RegistrationController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Registrácia zlyhala. Skúste to neskôr.',
-                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

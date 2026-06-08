@@ -20,38 +20,6 @@ class CompanyController extends Controller
         return CompanyResource::collection($companies);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
-    }
-
     public function getAllLogos()
     {
         $logos = Company::select('company_name', 'logo_id')
@@ -219,7 +187,6 @@ class CompanyController extends Controller
         catch (Throwable $e) {
             return response()->json([
                 'message' => 'Internal server error',
-                'error' => $e->getMessage() // for debug only
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 

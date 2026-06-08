@@ -20,7 +20,7 @@ class ArticleResource extends JsonResource
             'perex' => $this->perex,
             'content' => $this->content,
             'author' => $this->user->name,
-            'image_url' => asset('storage/' . $this->image->path),
+            'image_url' => $this->image->url,
             'image_description' => $this->image_description,
             'created_at' => $this->created_at,
         ];

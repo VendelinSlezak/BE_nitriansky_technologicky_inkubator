@@ -60,7 +60,6 @@ class ArticleController extends Controller
         catch(Throwable $e) {
             return response()->json([
                 'message' => 'Pridanie článku zlyhala. Skúste to neskôr.',
-                'error' => config('app.debug') ? $e->getMessage() : null // Debug info len pre vývoj
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -111,7 +110,6 @@ class ArticleController extends Controller
         catch(\Throwable $e) {
             return response()->json([
                 'message' => 'Aktualizácia zlyhala.',
-                'error' => config('app.debug') ? $e->getMessage() : null
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
@@ -135,7 +133,6 @@ class ArticleController extends Controller
         catch(\Throwable $e) {
             return response()->json([
                 'message' => 'Zmazanie zlyhalo.',
-                'error' => config('app.debug') ? $e->getMessage() : null
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }

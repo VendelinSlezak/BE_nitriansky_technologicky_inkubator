@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('company_name', 80);
-            $table->string('company_address', 150);
+            $table->mediumText('company_name');
+            $table->mediumText('company_address');
             $table->mediumText('description');
             $table->string('ico', 8);
             $table->string('dic', 10);
             $table->mediumText('category');
-            $table->string('name_of_contact_person', 60);
+            $table->mediumText('name_of_contact_person');
             $table->boolean('is_approved_by_admin');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('logo_id')->constrained('files')->onDelete('cascade');

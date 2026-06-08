@@ -32,19 +32,10 @@ class ProgramAController extends Controller
         $category = ProgramACategory::create([
             'title' => $validated['title'],
             'description_of_skills' => $validated['skills_description'],
-            'statutory_declaration_id' => 1, //TODO
             'status' => "visible"
         ]);
 
         return response()->json(['id' => $category->id],Response::HTTP_OK);
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
     }
 
     /**

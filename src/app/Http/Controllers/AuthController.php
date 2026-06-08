@@ -33,7 +33,6 @@ class AuthController extends Controller {
             'token' => $token,
             'name' => $user->name,
             'role' => $user->role,
-            'avatar' => null, // TODO
             'dashboard' => $user->getDashboardUrl(),
         ], Response::HTTP_OK);
     }
@@ -55,7 +54,7 @@ class AuthController extends Controller {
     public function resetPasswordRequest(Request $request) {
         $validated = $request->validate([
             'email' => ['required', 'email', 'exists:users,email'],
-            // 'g-recaptcha-response' => ['required', new Recaptcha],
+            // 'g-recaptcha-response' => ['required', new Recaptcha], // úmyselne zakomentované aby sa nestalo že systém nás pri prezentácií nepustí dovnútra kvôli captcha
         ]);
 
         $user = User::where('email', $validated['email'])->first();

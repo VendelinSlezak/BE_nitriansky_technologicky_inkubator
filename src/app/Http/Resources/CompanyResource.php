@@ -19,7 +19,7 @@ class CompanyResource extends JsonResource
             'company_name' => $this->company_name,
             'description' => $this->description,
             'category' => $this->category,
-            'logo_url' => asset('storage/' . $this->logo->path),
+            'logo_url' => $this->logo->url,
         ];
     }
 }

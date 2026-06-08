@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('program_a_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 80);
+            $table->mediumText('title');
             $table->mediumText('description_of_skills');
-            $table->foreignId('statutory_declaration_id')->constrained('files')->onDelete('cascade');
             $table->enum('status', ['visible', 'invisible'])->default('visible');
             $table->timestamps();
             $table->softDeletes();

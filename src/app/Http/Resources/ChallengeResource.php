@@ -46,15 +46,13 @@ class ChallengeResource extends JsonResource
                 'teams' => $this->when(
                     $this->status === 'open',
                     function() {
-                    return $this->relationLoaded('teams')
-                        ? $this->teams->count()
-                        : $this->teams()->count();
+                        return $this->teams->where('status', 'waiting_for_approval')->count();
                     },
                     1),
             ]),
 
             $this->mergeWhen($request->routeIs('challenge-get') && $this->status == 'open', [
-                'all_teams' => $this->teams->map(function($team) {
+                'all_teams' => $this->teams->where('status', 'waiting_for_approval')->map(function($team) {
                     return [
                         'id' => $team->id,
                         'name_of_team' => $team->name,

@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('status', 100); // "invited", "teamleader", "team_member"
             $table->dateTime('active_from')->nullable();
             $table->dateTime('active_to')->nullable();
-            $table->foreignId('statuory_declaration_id')->nullable()->constrained('files')->onDelete('cascade');
+            $table->foreignId('statuory_declaration_id')->nullable()->constrained('files')->onDelete('set null');
             $table->timestamps();
         });
     }
