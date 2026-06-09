@@ -15,31 +15,30 @@ class ProgramACategorySeeder extends Seeder
     {
         DB::table('program_a_categories')->insert([
             [
+                'title' => 'Vývoj softvéru',
+                'description_of_skills' => 'objektové technológie, úvod do softvérového inžinierstva, mobilné aplikácie, senzory, manažment projektov, testovanie',
+                'status' => 'visible'
+            ],
+            [
                 'title' => 'AI a dátové technológie',
-                'description_of_skills' => 'Zaklady AI v pythone, Uvod do strojoveho ucenia, Neuronove siete',
+                'description_of_skills' => 'databázové systémy, počítačová analýza dát, AI, úvod do strojového učenia, neurónové siete, hĺbková analýza dát',
                 'status' => 'visible'
             ],
             [
-                'title' => 'Web development',
-                'description_of_skills' => 'Zaklady frontendu a backendu, jeden webový framework',
-                'status' => 'invisible'
-            ],
-            [
-                'title' => 'IoT',
-                'description_of_skills' => 'Zaklady elektroniky, programovanie Arduina',
-                'status' => 'invisible'
-            ],
-            [
-                'title' => 'Siete a kybernetika',
-                'description_of_skills' => 'Zaklady pocitacovych sieti a Kali Linux',
+                'title' => 'Webové aplikácie',
+                'description_of_skills' => 'jazyky webu, FE/BE technológie, webové aplikácie na platforme Java',
                 'status' => 'visible'
             ],
             [
-                'title' => 'Mobilne aplikacie',
-                'description_of_skills' => 'Zaklady Javy a Kotlin',
+                'title' => 'Herný vývoj',
+                'description_of_skills' => 'herné vývojové prostredia, vývoj 3D aplikácií, virtuálna a rozšírená realita',
+                'status' => 'visible'
+            ],
+            [
+                'title' => 'IoT a embedded systémy',
+                'description_of_skills' => 'programovanie v jazyku C, internet vecí, inteligentné systémy, robotické a priemyselné systémy',
                 'status' => 'visible'
             ]
-
         ]);
     }
 }
